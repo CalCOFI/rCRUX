@@ -1,8 +1,5 @@
 #A few examples of get_blast_seeds
 
 get_blast_seeds("TAGAACAGGCTCCTCTAG" , "TTAGATACCCCACTATGC" ,
-                "D:/blast_seeds", "12S_V5F1",
-                "D:/accessionTaxa.sql",
-                primer_specificity_database = "nt", num_permutations = 50,
-                organism = c("7776"), mismatch = 5, minimum_length = 5,
-                maximum_length = 1000)
+                "D:/blast_seeds", "12S_V5F1", "D:/accessionTaxa.sql",
+                organism = c("7776"), MAX_TARGET_PER_TEMPLATE = 10)

@@ -44,24 +44,33 @@ save_output_as_csv <- function(file_name, description, file_out, Metabarcode){
 ################################################################################
 #get_blast_seeds
 
-get_blast_seeds <- function(forward_primer, reverse_primer, file_out_dir,
-                            Metabarcode_name, accessionTaxa, num_aligns = 50000,
-                            organism = c(organism_to_search),
+#What is organism_to_search?
+get_blast_seeds <- function(forward_primer, reverse_primer,
+                            file_out_dir, Metabarcode_name,
+                            accessionTaxa, 
+                            organism = c(organism_to_search), mismatch = 3,
+                            minimum_length = 5, maximum_length = 500,
                             num_permutations = 25,
-                            primer_specificity_database = "nt", mismatch = 3,
-                            minimum_length = 5, maximum_length = 500){ 
+                            primer_specificity_database = "nt",
+                            hitsize='1000000', evalue='100000',
+                            word_size='6',
+                            MAX_TARGET_PER_TEMPLATE = '5000',
+                            NUM_TARGETS_WITH_PRIMERS ='500000', ...,
+                            return_table = TRUE){ 
   
+  #Make the directory to put everything in
   Metabarcode_name = Metabarcode_name
-  
   dir.create(file.path(paste0(file_out_dir, Metabarcode_name)))
   
   # search for amplicons using f and r primers
   primer_search_results <- primer_search(forward_primer, reverse_primer,
                                          num_aligns = num_aligns,
-                                         organism =  organism,
+                                         organism = organism,
                                          num_permutations = num_permutations,
                                          primer_specificity_database = primer_specificity_database,
-                                         HITSIZE = '100000', EVALUE = '100000')
+                                         hitsize = hitsize, evalue = evalue,
+                                         MAX_TARGET_PER_TEMPLATE = MAX_TARGET_PER_TEMPLATE,
+                                         NUM_TARGETS_WITH_PRIMERS = NUM_TARGETS_WITH_PRIMERS, ...)  
   
   # make dataframe
   colnames <- c("gi",
@@ -81,19 +90,24 @@ get_blast_seeds <- function(forward_primer, reverse_primer, file_out_dir,
   colnames(primer_search_blast_out) <- colnames
   # add break an error messagr -> check primers or use highr taxpnomic rank
   
-  url <- list.search(primer_search_results, grepl('http', .), 'character')
+  # create url, a list of url strings returned by primer_search
+  url <- list()
+  for(e in primer_search_results) {
+    url <- append(url, e$url)
+  }
   
-  t <- length(url)
-  times <-odds(1:t)
-  
-  for (i in times){
+  for (e in url){
     #get url and reformat the output of blast search (there is a smarter way to do this....)
-    print(i)
-    primer_search_response <- httr::GET(url[[i]])
-    print(primer_search_response)
+    #is the latter part of this comment referring to the last two lines?
+    primer_search_response <- httr::GET(e)
+    
     #parse the blast hits into something human friendly
     primer_search_blast_out1 <- parse_primer_hits(primer_search_response)
-    primer_search_blast_out <- rbind(primer_search_blast_out, primer_search_blast_out1) 
+    primer_search_blast_out <- rbind(primer_search_blast_out, primer_search_blast_out1)
+    
+    #print useful metadata
+    print(paste('Response URL: ', e))
+    print(paste('Response Size: ', object.size(e)))
     
   }
   
@@ -125,5 +139,8 @@ get_blast_seeds <- function(forward_primer, reverse_primer, file_out_dir,
   save_output_as_csv(primer_search_blast_out, "_raw_primerTree_output", out, Metabarcode_name)
   make_hist_save_pdf(bla$product_length, "_post_filter_product_lengths_of_primerTree_output",  out, Metabarcode_name)
   
-  return(to_be_blasted_entries)
+  #return if you're supposed to
+  if(return_table) {
+    return(to_be_blasted_entries)
+  }
 }

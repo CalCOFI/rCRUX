@@ -1,0 +1,9 @@
+Trying
+
+get_blast_seeds("TAGAACAGGCTCCTCTAG" , "TTAGATACCCCACTATGC" ,
+                "D:/blast_seeds", "12S_V5F1", "D:/accessionTaxa.sql",
+                organism = c("7776"))
+                
+after cleaning up get_blast_seeds in a way that should preserve its functionality, only making it a bit more efficient and elegant.
+
+Arguments aren't being passed correctly... I'll further clean that up then try to do this again tomorrow.
