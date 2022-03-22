@@ -2,4 +2,4 @@
 
 get_blast_seeds("TAGAACAGGCTCCTCTAG" , "TTAGATACCCCACTATGC" ,
                 "D:/blast_seeds", "12S_V5F1", "D:/accessionTaxa.sql",
-                organism = c("7776"), MAX_TARGET_PER_TEMPLATE = 10)
+                organism = c("7776"), MAX_TARGET_PER_TEMPLATE = 10, return_table = FALSE)
