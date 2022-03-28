@@ -44,11 +44,10 @@ save_output_as_csv <- function(file_name, description, file_out, Metabarcode){
 ################################################################################
 #get_blast_seeds
 
-#What is organism_to_search?
 get_blast_seeds <- function(forward_primer, reverse_primer,
                             file_out_dir, Metabarcode_name,
                             accessionTaxa, 
-                            organism = c(organism_to_search), mismatch = 3,
+                            organism, mismatch = 3,
                             minimum_length = 5, maximum_length = 500,
                             num_permutations = 25,
                             primer_specificity_database = "nt",
@@ -56,11 +55,7 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
                             word_size='6',
                             MAX_TARGET_PER_TEMPLATE = '5000',
                             NUM_TARGETS_WITH_PRIMERS ='500000', ...,
-                            return_table = TRUE){ 
-  
-  #Make the directory to put everything in
-  Metabarcode_name = Metabarcode_name
-  dir.create(file.path(paste0(file_out_dir, Metabarcode_name)))
+                            return_table = TRUE){
   
   # search for amplicons using f and r primers
   primer_search_results <- primer_search(forward_primer, reverse_primer,
@@ -70,7 +65,13 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
                                          primer_specificity_database = primer_specificity_database,
                                          hitsize = hitsize, evalue = evalue,
                                          MAX_TARGET_PER_TEMPLATE = MAX_TARGET_PER_TEMPLATE,
-                                         NUM_TARGETS_WITH_PRIMERS = NUM_TARGETS_WITH_PRIMERS, ...)  
+                                         NUM_TARGETS_WITH_PRIMERS = NUM_TARGETS_WITH_PRIMERS, ...)
+  
+  # create url, a list of url strings returned by primer_search
+  url <- list()
+  for(e in primer_search_results) {
+    url <- append(url, e$url)
+  }
   
   # make dataframe
   colnames <- c("gi",
@@ -90,20 +91,14 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
   colnames(primer_search_blast_out) <- colnames
   # add break an error messagr -> check primers or use highr taxpnomic rank
   
-  # create url, a list of url strings returned by primer_search
-  url <- list()
-  for(e in primer_search_results) {
-    url <- append(url, e$url)
-  }
-  
   for (e in url){
     #get url and reformat the output of blast search (there is a smarter way to do this....)
     #is the latter part of this comment referring to the last two lines?
     primer_search_response <- httr::GET(e)
     
     #parse the blast hits into something human friendly
-    primer_search_blast_out1 <- parse_primer_hits(primer_search_response)
-    primer_search_blast_out <- rbind(primer_search_blast_out, primer_search_blast_out1)
+    primer_search_blast_out_temp <- parse_primer_hits(primer_search_response)
+    primer_search_blast_out <- rbind(primer_search_blast_out, primer_search_blast_out_temp)
     
     #print useful metadata
     print(paste('Response URL: ', e))
@@ -131,7 +126,11 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
   
   
   
-  out <- paste0(file_out_dir, Metabarcode_name, "/")
+  out <- paste0(file_out_dir, Metabarcode_name, "/") 
+  
+  #Make the directory to put everything in
+  Metabarcode_name = Metabarcode_name
+  dir.create(file.path(paste0(file_out_dir, Metabarcode_name)))
   
   # save output
   save_output_as_csv(to_be_blasted_entries, "_primerTree_output_with_taxonomy", out, Metabarcode_name)
