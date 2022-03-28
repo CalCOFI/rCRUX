@@ -57,20 +57,23 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
                             NUM_TARGETS_WITH_PRIMERS ='500000', ...,
                             return_table = TRUE){
   
-  # search for amplicons using f and r primers
-  primer_search_results <- primer_search(forward_primer, reverse_primer,
-                                         num_aligns = num_aligns,
-                                         organism = organism,
-                                         num_permutations = num_permutations,
-                                         primer_specificity_database = primer_specificity_database,
-                                         hitsize = hitsize, evalue = evalue,
-                                         MAX_TARGET_PER_TEMPLATE = MAX_TARGET_PER_TEMPLATE,
-                                         NUM_TARGETS_WITH_PRIMERS = NUM_TARGETS_WITH_PRIMERS, ...)
+
   
   # create url, a list of url strings returned by primer_search
   url <- list()
-  for(e in primer_search_results) {
-    url <- append(url, e$url)
+  for(e in organism) {
+    # search for amplicons using f and r primers
+    primer_search_results <- primer_search(forward_primer, reverse_primer,
+                                           num_aligns = num_aligns,
+                                           organism = organism,
+                                           num_permutations = num_permutations,
+                                           primer_specificity_database = primer_specificity_database,
+                                           hitsize = hitsize, evalue = evalue,
+                                           MAX_TARGET_PER_TEMPLATE = MAX_TARGET_PER_TEMPLATE,
+                                           NUM_TARGETS_WITH_PRIMERS = NUM_TARGETS_WITH_PRIMERS, ...)
+    for(f in primer_search_results) {
+      url <- append(url, e$url)
+    }
   }
   
   # make dataframe
@@ -105,6 +108,9 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
     print(paste('Response Size: ', object.size(e)))
     
   }
+  
+  #remove duplicate rows from primer_search_blast_out
+  primer_search_blast_out <- distinct(primer_search_blast_out)
   
   #make primer_search_blast_out df a tibble
   as_tibble(primer_search_blast_out)
