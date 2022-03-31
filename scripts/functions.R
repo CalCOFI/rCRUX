@@ -146,6 +146,7 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
   
   #return if you're supposed to
   if(return_table) {
+    print("dogs")
     return(to_be_blasted_entries)
   }
 }
