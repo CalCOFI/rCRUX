@@ -105,7 +105,7 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
     
     #print useful metadata
     print(paste('Response URL: ', e))
-    print(paste('Response Size: ', object.size(e)))
+    print(paste('Response Size: ', object.size(primer_search_response)))
     
   }
   
