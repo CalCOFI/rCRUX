@@ -6,3 +6,7 @@ accession_taxa_path <- "D:/accessionTaxa.sql"
 get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
                 blast_seeds_parent, "12S_V5F1", accession_taxa_path,
                 organism = c("7776"), MAX_TARGET_PER_TEMPLATE = 10, return_table = FALSE)
+
+get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
+                blast_seeds_parent, "12S_V5F1", accession_taxa_path,
+                organism = c("7776", "7777"), return_table = FALSE)

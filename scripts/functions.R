@@ -65,7 +65,7 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
     # search for amplicons using f and r primers
     primer_search_results <- primer_search(forward_primer, reverse_primer,
                                            num_aligns = num_aligns,
-                                           organism = organism,
+                                           organism = e,
                                            num_permutations = num_permutations,
                                            primer_specificity_database = primer_specificity_database,
                                            hitsize = hitsize, evalue = evalue,
