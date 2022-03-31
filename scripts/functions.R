@@ -72,7 +72,7 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
                                            MAX_TARGET_PER_TEMPLATE = MAX_TARGET_PER_TEMPLATE,
                                            NUM_TARGETS_WITH_PRIMERS = NUM_TARGETS_WITH_PRIMERS, ...)
     for(f in primer_search_results) {
-      url <- append(url, e$url)
+      url <- append(url, f$url)
     }
   }
   
