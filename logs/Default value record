@@ -1,0 +1,16 @@
+Before 2022-03-31 at 6:10 pm, any tests logged in this repo were done using a version of get_blast_seeds that had the following header:
+
+get_blast_seeds <- function(forward_primer, reverse_primer,
+                            file_out_dir, Metabarcode_name,
+                            accessionTaxa, 
+                            organism, mismatch = 3,
+                            minimum_length = 5, maximum_length = 500,
+                            num_permutations = 25,
+                            primer_specificity_database = "nt",
+                            hitsize='1000000', evalue='100000',
+                            word_size='6',
+                            MAX_TARGET_PER_TEMPLATE = '5000',
+                            NUM_TARGETS_WITH_PRIMERS ='500000', ...,
+                            return_table = TRUE)
+                            
+This is important because many of them did not override the default values or overrode only some of them. We are reduing the number of default values.

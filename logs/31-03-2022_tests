@@ -18,3 +18,24 @@ test2 <- get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
                 
 Both rendered one response of size 44738048
 The second also rendered a response of size 460064. As expected that results in a slightly larger output. (28,276 KB with taxonomy, 6,337 KB without vs 28,288 KB with taxonomy, 6,340 KB without)
+
+6:05pm
+
+Running the following:
+
+
+test1 <- get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
+                         blast_seeds_parent, "12S_V5F1_1", accession_taxa_path,
+                         num_permutations = 25, hitsize='1000000', evalue='100000',
+                         word_size='6', MAX_TARGET_PER_TEMPLATE = '5000',
+                         NUM_TARGETS_WITH_PRIMERS ='500000',
+                         organism = c("7776"), return_table = FALSE)
+
+test2 <- get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
+                         blast_seeds_parent, "12S_V5F1_1", accession_taxa_path,
+                         num_permutations = 25, hitsize='1000000', evalue='100000',
+                         word_size='6', MAX_TARGET_PER_TEMPLATE = '5000',
+                         NUM_TARGETS_WITH_PRIMERS ='500000',
+                         organism = c("7776", "7777"), return_table = FALSE)
+                         
+So it looks like I accidentally pointed them at the same folder. Similar results however. The main purpose was to verify that removing the defaults didn't break anything.

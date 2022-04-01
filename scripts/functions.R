@@ -49,12 +49,7 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
                             accessionTaxa, 
                             organism, mismatch = 3,
                             minimum_length = 5, maximum_length = 500,
-                            num_permutations = 25,
-                            primer_specificity_database = "nt",
-                            hitsize='1000000', evalue='100000',
-                            word_size='6',
-                            MAX_TARGET_PER_TEMPLATE = '5000',
-                            NUM_TARGETS_WITH_PRIMERS ='500000', ...,
+                            primer_specificity_database = "nt", ...,
                             return_table = TRUE){
   
 
@@ -64,13 +59,9 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
   for(e in organism) {
     # search for amplicons using f and r primers
     primer_search_results <- primer_search(forward_primer, reverse_primer,
-                                           num_aligns = num_aligns,
                                            organism = e,
-                                           num_permutations = num_permutations,
-                                           primer_specificity_database = primer_specificity_database,
-                                           hitsize = hitsize, evalue = evalue,
-                                           MAX_TARGET_PER_TEMPLATE = MAX_TARGET_PER_TEMPLATE,
-                                           NUM_TARGETS_WITH_PRIMERS = NUM_TARGETS_WITH_PRIMERS, ...)
+                                           primer_specificity_database = primer_specificity_database, 
+                                           ...)
     for(f in primer_search_results) {
       url <- append(url, f$url)
     }
@@ -146,7 +137,6 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
   
   #return if you're supposed to
   if(return_table) {
-    print("dogs")
     return(to_be_blasted_entries)
   }
 }
