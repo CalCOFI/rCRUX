@@ -40,6 +40,19 @@ save_output_as_csv <- function(file_name, description, file_out, Metabarcode){
   return(write.table(file_name, file = write_to, row.names=FALSE, sep = ","))
 }
 
+################################################################################
+# Function to attempt parse_primer_hits and fail less loudly
+# Equivalent to parse_primer_hits() if the argument is a legal argument
+# If the argument is illegal, returns FALSE, which the program can use to respond appropriately
+
+try_parse_hits <- function(response) {
+  tryCatch(parse_primer_hits(response),
+           error = function(e) {
+             return(e)
+           },
+           finally = {})
+}
+
 
 ################################################################################
 #get_blast_seeds
@@ -86,12 +99,10 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
   # add break an error messagr -> check primers or use highr taxpnomic rank
   
   for (e in url){
-    #get url and reformat the output of blast search (there is a smarter way to do this....)
-    #is the latter part of this comment referring to the last two lines?
     primer_search_response <- httr::GET(e)
     
     #parse the blast hits into something human friendly
-    primer_search_blast_out_temp <- parse_primer_hits(primer_search_response)
+    primer_search_blast_out_temp <- try_parse_hits(primer_search_response)
     primer_search_blast_out <- rbind(primer_search_blast_out, primer_search_blast_out_temp)
     
     #print useful metadata
