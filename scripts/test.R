@@ -1,6 +1,7 @@
 #This file will test a function for compiling the URLs from multiple primer_searches
 
 test <- function(organism, ...) {
+  print(commandArgs())
   url <- list()
   for(e in organism) {
     results <- primer_search(organism = e, ...)

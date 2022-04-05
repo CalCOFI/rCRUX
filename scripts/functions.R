@@ -80,6 +80,8 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
     }
   }
   
+  url <- append(url, "https://www.google.com")
+  
   # make dataframe
   colnames <- c("gi",
                 "accession",
@@ -103,7 +105,13 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
     
     #parse the blast hits into something human friendly
     primer_search_blast_out_temp <- try_parse_hits(primer_search_response)
-    primer_search_blast_out <- rbind(primer_search_blast_out, primer_search_blast_out_temp)
+    if(class(primer_search_blast_out) == "data.frame") {
+      primer_search_blast_out <- rbind(primer_search_blast_out, primer_search_blast_out_temp)
+    }
+    else {
+      message(paste(e, " is not a valid url. It will be ignored."))
+      message(primer_search_blast_out_temp)
+    }
     
     #print useful metadata
     print(paste('Response URL: ', e))
