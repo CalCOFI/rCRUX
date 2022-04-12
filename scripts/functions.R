@@ -80,10 +80,6 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
     }
   }
   
-  #For testing purposes
-  
-  url <- append(url, "https://www.google.com")
-  
   # make dataframe
   colnames <- c("gi",
                 "accession",
