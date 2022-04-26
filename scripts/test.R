@@ -14,3 +14,4 @@ test <- function(organism, ...) {
 
 urls <- test(c("7776", "7777"), forward = "TNGAACAGGCTCCTCTAG", reverse = "TTAGATACCCCACTATGC",
              MAX_TARGET_PER_TEMPLATE = 10)
+test <- primer_search("TTTT", "TTTT", organism = "dogf")

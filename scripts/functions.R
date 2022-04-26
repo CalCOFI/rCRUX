@@ -65,26 +65,13 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
                             primer_specificity_database = "nt", ...,
                             return_table = TRUE){
   
-
   
-  # create url, a list of url strings returned by primer_search
-  url <- list()
-  for(e in organism) {
-    # search for amplicons using f and r primers
-    primer_search_results <- primer_search(forward_primer, reverse_primer,
-                                           organism = e,
-                                           primer_specificity_database = primer_specificity_database, 
-                                           ...)
-    for(f in primer_search_results) {
-      url <- append(url, f$url)
-    }
-  }
-  
-  #For testing purposes
-  
-  url <- append(url, "https://www.google.com")
   
   # make dataframe
+  
+  # set up empty tibbles and variables...
+  primer_search_blast_out <- data.frame(matrix(ncol = 11, nrow = 0))
+  # column names
   colnames <- c("gi",
                 "accession",
                 "product_length",
@@ -96,30 +83,47 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
                 "reverse_stop",
                 "product_start",
                 "product_stop")
-  
-  # set up empty tibbles and variables...
-  primer_search_blast_out <- data.frame(matrix(ncol = 11, nrow = 0))
   colnames(primer_search_blast_out) <- colnames
   # add break an error messagr -> check primers or use highr taxpnomic rank
+  # I don't know what the above comment means -Luna
   
-  for (e in url){
-    primer_search_response <- httr::GET(e)
-    
-    #parse the blast hits into something human friendly
-    primer_search_blast_out_temp <- try_parse_hits(primer_search_response)
-    if(class(primer_search_blast_out_temp) == "data.frame") {
-      primer_search_blast_out <- rbind(primer_search_blast_out, primer_search_blast_out_temp)
+  # Iterate over the organisms
+  # For each organism, aggregate all the urls, then try to grab stuff from each
+  for(e in organism) {
+    # create url, a list of url strings returned by primer_search
+    url <- list()
+    # search for amplicons using f and r primers
+    primer_search_results <- primer_search(forward_primer, reverse_primer,
+                                           organism = e,
+                                           primer_specificity_database = primer_specificity_database, 
+                                           ...)
+    for(f in primer_search_results) {
+      url <- append(url, f$url)
     }
-    else {
-      message(paste(e, " is not a valid url. It will be ignored."))
-      message(primer_search_blast_out_temp)
-      print()
+    
+    # Iterate through the urls and aggregate them into the data frame
+    for (u in url){
+      primer_search_response <- httr::GET(u)
+      
+      #parse the blast hits into something human friendly
+      primer_search_blast_out_temp <- try_parse_hits(primer_search_response)
+      if(class(primer_search_blast_out_temp) == "data.frame") {
+        primer_search_blast_out <- rbind(primer_search_blast_out, primer_search_blast_out_temp)
+      }
+      else {
+        message(paste(u, " is not a valid url. It will be ignored."))
+        message(paste("The error was generated while processing the organism ",
+                        e))
+        message(primer_search_blast_out_temp)
+        writeLines()
+      }
+      
+      #print useful metadata
+      print(paste('Organism: ', e))
+      print(paste('Response URL: ', u))
+      print(paste('Response Size: ', object.size(primer_search_response)))
+      
     }
-    
-    #print useful metadata
-    print(paste('Response URL: ', e))
-    print(paste('Response Size: ', object.size(primer_search_response)))
-    
   }
   
   #remove duplicate rows from primer_search_blast_out
@@ -134,7 +138,8 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
     filter(product_length <= maximum_length) %>%
     mutate(amplicon_length = product_length - nchar(forward_primer) - nchar(reverse_primer))
   
-  # fetch taxonomy associated with the Blast results and arange in alphabetical order starting with species > genus > family > order > class > phylum > superkingdom  - not sure this speeds up blast, but if you are ocd it makes you feel better about life :)
+  # fetch taxonomy associated with the Blast results and arange in alphabetical order starting with species > genus > family > order > class > phylum > superkingdom
+  # - not sure this speeds up blast, but if you are ocd it makes you feel better about life :)
   
   bla <- filter(filter_long_and_short_reads, !grepl(' ', accession))
   
