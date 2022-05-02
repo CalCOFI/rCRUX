@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ################################################################################
 #Ancillary Functions
 
@@ -327,5 +326,4 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
   if(return_table) {
     return(to_be_blasted_entries)
   }
->>>>>>> 70948974274f271cdd70e39f75849086e33fa1ad
 }

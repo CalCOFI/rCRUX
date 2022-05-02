@@ -17,5 +17,9 @@ test2 <- get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
 # This demonstrates the error handling
 # "dog" is actually a valid organism! Sadly, "dogpf" is not.
 
+test3 <- get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
+                         blast_seeds_parent, "12S_V5F1_1", accession_taxa_path,
+                         organism = c("7776", "7777", "dogpf"), return_table = FALSE)
+
 
 
