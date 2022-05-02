@@ -4,7 +4,7 @@ get_blast_seeds() is a function that makes a request to NCBI's [primer designer 
 
 # setup
 
-get_blast_seeds requires several libraries to run. Install any packages **other than ** in the libraries.R file that you don't have installed then run libraries.R.
+get_blast_seeds requires several libraries to run. Install any packages **other than primer_tree** in the libraries.R file that you don't have installed then run libraries.R.
 
 Run the functions.R file to define get_blast_seeds and all of its ancillary functions.
 
