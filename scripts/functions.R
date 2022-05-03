@@ -278,7 +278,7 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
     else {
       message(paste(e, " is not a valid url. It will be ignored."))
       message(primer_search_blast_out_temp)
-      writelines("")
+      writeLines("")
     }
     
     #print useful metadata
@@ -325,5 +325,8 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
   #return if you're supposed to
   if(return_table) {
     return(to_be_blasted_entries)
+  }
+  else {
+    return(NULL)
   }
 }
