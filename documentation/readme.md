@@ -66,8 +66,10 @@ Example: I want to set "Exon junction span" to 10. I open the source of the prim
 
 I copy PRIMER_ON_SPLICE_SITE and add it to get_blast_seeds:
 
-```get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
+```
+get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
                 blast_seeds_parent, "12S_V5F1", accession_taxa_path,
                 organism = c("7776"), MAX_TARGET_PER_TEMPLATE = 10,
                 PRIMER_ON_SPLICE_SITE = "10"
-                return_table = FALSE)```
+                return_table = FALSE)
+```
