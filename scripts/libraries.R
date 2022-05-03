@@ -2,7 +2,6 @@
 library(lubridate)
 library(XML)
 library(httr)
-library(primerTree)
 library(tidyverse)
 library(tidyr)
 library(dplyr)
@@ -14,3 +13,7 @@ library(taxonomizr)
 library(data.table)
 library(RCurl)
 library(parallel)
+
+#Make sure you are using the custom version of primerTree
+#See readme for installation instructions
+library(primerTree)
