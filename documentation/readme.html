@@ -173,14 +173,46 @@ pre code {
 </div>
 <div id="setup" class="section level1">
 <h1>setup</h1>
-<p>get_blast_seeds requires several libraries to run. Install any packages <strong>other than primer_tree</strong> in the libraries.R file that you don’t have installed then run libraries.R.</p>
+<p>get_blast_seeds requires several libraries to run. Install each of the following packages that you do not yet have installed:</p>
+<pre><code>install.packages(lubridate)
+install.packages(XML)
+install.packages(httr)
+install.packages(tidyverse)
+install.packages(tidyr)
+install.packages(dplyr)
+install.packages(ape)
+install.packages(tibble)
+install.packages(rlist)
+install.packages(rlang)
+install.packages(taxonomizr)
+install.packages(data.table)
+install.packages(RCurl)
+install.packages(parallel)</code></pre>
+<p>Additionally, run the following code block to install a modified version of primerTree. See the seciont below for more information.</p>
+<pre><code># If you already use primerTree this may interfere with scripts that use the primer_search function
+
+remove.packages(&quot;primerTree&quot;)
+
+devtools::install_github(&quot;LunaGal/primerTree&quot;)</code></pre>
 <p>Run the functions.R file to define get_blast_seeds and all of its ancillary functions.</p>
 <p>get_blast_seeds uses a local sqlite database to associate taxonomic data with the data it downloads from ncbi. The accession_taxa_setup.R file contains a script to build the sqlite database. Edit line 4 to the appropriate directory then run the whole script. (It can be whatever directory works best for you, but be sure to take note of it because you will need it for get_blast_seeds.)</p>
-<p>At this point, you are ready to use get_blast_seeds. You can run the example.R file if you like. Edit the third and fourth lines to the appropriate directories. blast_seeds_parent is the directory that the results folder will be created inside. accesssion_taxa_path is the full path to sqlite database created by accession_taxa_setup.R.</p>
+<pre><code># Uses the taxonomizr library to generate an sqlite database
+
+library(taxonomizr)
+
+# Make sure to edit this line
+taxonomizr_directory &lt;- &quot;D:/test&quot;
+
+wd &lt;- getwd()
+dir.create(taxonomizr_directory)
+setwd(taxonomizr_directory)
+prepareDatabase(&#39;accessionTaxa.sql&#39;)
+setwd(wd)</code></pre>
+<p>At this point, you are ready to use get_blast_seeds. You can run the fragment below, taken from the example.R file if you like. Edit the third and fourth lines to the appropriate directories. blast_seeds_parent is the directory that the results folder will be created inside. accesssion_taxa_path is the full path to sqlite database created by accession_taxa_setup.R.</p>
 </div>
 <div id="a-note-on-primertree" class="section level1">
 <h1>A Note on primerTree</h1>
-<p>The current version of get_blast_seeds relies on a tweaked version of primer_search. Instead of the canonical primerTree, install the fork by running the script in tweaked_primerTree.R. If you do not have any version of primerTree installed, you can run just line 6.</p>
+<p>The current version of get_blast_seeds relies on a tweaked version of primer_search. Instead of the canonical primerTree, install the fork by running the script in tweaked_primerTree.R. If you do not have any version of primerTree installed, you can run just line 6. Note that because this slightly changes the behavior of primer_search, it may interfere with any scripts that use the canonical version of primerTree.</p>
 </div>
 <div id="get_blast_seeds-usage" class="section level1">
 <h1>get_blast_seeds usage</h1>
