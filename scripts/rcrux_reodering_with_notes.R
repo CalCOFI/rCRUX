@@ -303,8 +303,7 @@ run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, blast_lo
         
         # for blank blastdbcommand files, check next accession
         # it looks like the truth of the first condition should imply the falsity of the last condition
-        # To-do: figure out what on earth this whole block does
-        # 
+        # The purpose of this block is to save unusual results either to accessions_not_found (if they weren't there) or too_many_Ns S(if it has too many Ns)
         if ((file.info(input)$size == 0 && dim(to_be_blasted_entries1)[1] != 0) || any(grepl(number_Ns_in_blast_seed, readLines(input)))) {
           # compile observations that are not in the database in too_new_for_you
           if (file.info(input)$size == 0) {
@@ -440,5 +439,4 @@ run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, blast_lo
       break
     }
   }
-  
 }
