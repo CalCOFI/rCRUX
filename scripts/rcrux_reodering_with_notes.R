@@ -253,9 +253,10 @@ run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, blast_lo
   
   repeat {
     
-    # What are these for?
+    # These variables control whether max_or_seq_to_blast is incremented
     i <- 1
     s <- 1
+
     # Adding these here to make the scope less weird
     max_or_seq_to_blast <- seq_to_blast
     end <- 0
@@ -274,6 +275,7 @@ run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, blast_lo
       # for every number between one and the max number to blast do this loop
       # this is at least one thing s is for
       # Is there a reason for this not to be a for loop?
+        # Yes; it compares two variables
       while(s <= max_or_seq_to_blast){
         
         # Choose one element of to_be_blasted_entries1 at random
@@ -304,43 +306,41 @@ run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, blast_lo
         # for blank blastdbcommand files, check next accession
         # it looks like the truth of the first condition should imply the falsity of the last condition
         # The purpose of this block is to save unusual results either to accessions_not_found (if they weren't there) or too_many_Ns S(if it has too many Ns)
-        if ((file.info(input)$size == 0 && dim(to_be_blasted_entries1)[1] != 0) || any(grepl(number_Ns_in_blast_seed, readLines(input)))) {
-          # compile observations that are not in the database in too_new_for_you
-          if (file.info(input)$size == 0) {
-            print("....is not in your BLAST database")
-            too_new_for_you <- rbind(too_new_for_you, subset_for_blast)
-            # Does this overwrite an existing csv?
-            save_output_as_csv(too_new_for_you, "_accessions_not_found_in_your_blast_DB", file_out_dir, Metabarcode_name)
-            i = i + 1
-          }
-          # compile observations with too many Ns in another csv
-          # also deletes the blastdbcmd output file then creates an empty one at that location??
-          else if (any(grepl(number_Ns_in_blast_seed, readLines(input)))){
-            print("....has too Many Ns!")
-            too_many_Ns <- rbind(too_many_Ns, subset_for_blast)
-            save_output_as_csv(too_many_Ns, paste0("_accessions_with_more_than_", number_Ns_in_blast_seed ,"_in_a_row"), file_out_dir, Metabarcode_name)
-            unlink(input)
-            file.create(input)
-            i = i +1
-          }
-          # Logically, this should never happen. What is going on??
-          else if (file.info(input)$size == 0 && dim(to_be_blasted_entries1)[1] == 0) {
-            s = max_or_seq_to_blast
-          }
-          # if lost a read to too many N's or not in db do not advance the counter, if there are no more hits in the to be blasted file advance the counter one
-          # I think the above comment is meant to be associated with the if block below??  
+        # compile observations that are not in the database in too_new_for_you
+        if (file.info(input)$size == 0 && dim(to_be_blasted_entries1)[1] != 0) {
+          print("....is not in your BLAST database")
+          too_new_for_you <- rbind(too_new_for_you, subset_for_blast)
+          # Does this overwrite an existing csv?
+          save_output_as_csv(too_new_for_you, "_accessions_not_found_in_your_blast_DB", file_out_dir, Metabarcode_name)
+          i = i + 1
         }
+        # compile observations with too many Ns in another csv
+        # also deletes the blastdbcmd output file then creates an empty one at that location??
+        else if (any(grepl(number_Ns_in_blast_seed, readLines(input)))){
+          print("....has too Many Ns!")
+          too_many_Ns <- rbind(too_many_Ns, subset_for_blast)
+          save_output_as_csv(too_many_Ns, paste0("_accessions_with_more_than_", number_Ns_in_blast_seed ,"_in_a_row"), file_out_dir, Metabarcode_name)
+          unlink(input)
+          file.create(input)
+          i = i +1
+        }
+
+        # if lost a read to too many N's or not in db do not advance the counter, if there are no more hits in the to be blasted file advance the counter one
+        # I think the above comment is meant to be associated with the if block below??  
 
         # To-do: circle back here when you know what i and s do
         if(i == s && s != max_or_seq_to_blast){
           s = s + 1
           i = i + 1
           
-        } else if ( i != s && s != max_or_seq_to_blast ) {
+        }
+        else if ( i != s && s != max_or_seq_to_blast ) {
           s = s
           i = i - 1
           
-        } else {
+        }
+        else {
+          # ie end
           s = max_or_seq_to_blast + 1
         }
         
@@ -431,7 +431,9 @@ run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, blast_lo
         break
       }
       
-    } else {
+    }
+    
+    else {
       
       fetch_rcrux_taxonomy(blast_out, accessionTaxa, file_out_dir, Metabarcode_name)
       get_fasta_no_hyp(blast_out, file_out_dir, Metabarcode_name)
