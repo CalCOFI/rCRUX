@@ -9,7 +9,6 @@
 
 # Apparent global variable dependencies:
   # blast_out
-  # blast_low
   # to_be_blasted_entries
   # too_many_Ns
   # too_new_for_you
@@ -46,7 +45,7 @@ rcrux_blast <- function(file_out_dir, metabarcode_name,
     else {
       print("Starting BLAST")
       make_initial_files(file_out_dir, metabarcode_name, number_Ns_in_blast_seed)
-      run_serial_blast(file_out_dir, metabarcode_name, blast_out, blast_low, to_be_blasted_entries, to_be_blasted_entries1, too_many_Ns, too_new_for_you, duplicated_blast_out, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, number_Ns_in_blast_seed = "NNNN", dbType = "'nucl'")
+      run_serial_blast(file_out_dir, metabarcode_name, blast_out, to_be_blasted_entries, to_be_blasted_entries1, too_many_Ns, too_new_for_you, duplicated_blast_out, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, number_Ns_in_blast_seed = "NNNN", dbType = "'nucl'")
     }
   }
   
@@ -63,7 +62,7 @@ rcrux_blast <- function(file_out_dir, metabarcode_name,
     else {
       print("resuming BLASTING where you left off")
       load_incomplete_files(file_out_dir, metabarcode_name)
-      run_serial_blast(file_out_dir, metabarcode_name, blast_out, blast_low, to_be_blasted_entries, to_be_blasted_entries1, too_many_Ns, too_new_for_you, duplicated_blast_out, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, number_Ns_in_blast_seed = "NNNN", dbType = "'nucl'")
+      run_serial_blast(file_out_dir, metabarcode_name, blast_out, to_be_blasted_entries, to_be_blasted_entries1, too_many_Ns, too_new_for_you, duplicated_blast_out, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, number_Ns_in_blast_seed = "NNNN", dbType = "'nucl'")
     }  
   }
   
@@ -81,7 +80,6 @@ rcrux_blast <- function(file_out_dir, metabarcode_name,
 
 # Global variables modified/created:
   # blast_out
-  # blast_low
   # to_be_blasted_entries
   # too_many_Ns
   # too_new_for_you
@@ -154,9 +152,6 @@ make_initial_files <- function(i_file_out, i_Metabarcode, number_Ns_in_blast_see
   blast_out <<- data.frame(matrix(ncol = 10, nrow = 0))
   colnames(blast_out) <<- colnames
   
-  blast_low <<- data.frame(matrix(ncol = 10, nrow = 0))
-  colnames(blast_low) <<- colnames
-  
   to_be_blasted_entries <- suppressWarnings(read_csv(paste0(i_file_out, i_Metabarcode, "_primerTree_output_with_taxonomy.csv"))) # figure out error at some point
   # Why as tibble?? It should already by a tibble
   to_be_blasted_entries <<- as_tibble(to_be_blasted_entries)
@@ -228,16 +223,31 @@ load_incomplete_files <- function(file_out, Metabarcode, number_Ns_in_blast_seed
 }
 
 #################################
-#
+# Sample seq_to_blast from to_be_blasted_entries1
+# Use blastdbcmd to create a fasta from the sample
+# Run blastn with the fasta as an argument
+# Saves outputs to too_many_Ns, too_new_for_you, blast_out1, and blast_out
+# blast_out1 is results from this blast, blast_out is all of them
+# Updates to_be_blasted_entries to reflect things that have been blasted
+
+# To-do
+  # Clean up the part that runs blastn
+  # See if there is a way to pass a character vector to blastn as the query
+  # This can probably be changed to while(nrow(to_be_blasted_entries1) > 0) and remove any logic about when to break
 
 # Calls:
   # run_blastdbcommand
   # run_blastn
   # save_output_as_csv
+  # blast_tracker
+  # fetch_rcrux_taxonomy
+  # get_fasta_no_hyp
+  # blast_tracker
 
 # Apparent global variable dependencies:
 
 # Global variables modified/created:
+  # None
 
 # Other dependencies:
   # run_blastdbcommand must create a file at the path given by input
@@ -246,7 +256,7 @@ load_incomplete_files <- function(file_out, Metabarcode, number_Ns_in_blast_seed
   # Function to run serial blast
   # the too many N's and new to you while loop used to be a function.  Fix someday
 
-run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, blast_low, to_be_blasted_entries, to_be_blasted_entries1, too_many_Ns, too_new_for_you, duplicated_blast_out, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, seq_to_blast = 200, number_Ns_in_blast_seed = "NNNN", dbType = "'nucl'"){
+run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, to_be_blasted_entries, to_be_blasted_entries1, too_many_Ns, too_new_for_you, duplicated_blast_out, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, seq_to_blast = 200, number_Ns_in_blast_seed = "NNNN", dbType = "'nucl'"){
   
   blastdbcmd <- paste0(blast_tools,"/bin/blastdbcmd")
   blastn <- paste0(blast_tools,"/bin/blastn")
@@ -254,6 +264,7 @@ run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, blast_lo
   repeat {
     
     # These variables control whether max_or_seq_to_blast is incremented
+    # I'm pretty sure they could go inside the if block below
     i <- 1
     s <- 1
 
@@ -272,96 +283,58 @@ run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, blast_lo
       
       print(paste0("Get usable accessions for BLAST round number ", blast_count, ":" ))
       
-      # for every number between one and the max number to blast do this loop
-      # this is at least one thing s is for
-      # Is there a reason for this not to be a for loop?
-        # Yes; it compares two variables
-      while(s <= max_or_seq_to_blast){
-        
-        # Choose one element of to_be_blasted_entries1 at random
-        # Note that this does not alter to_be_blasted_entries1
-        subset_for_blast <- sample_n(to_be_blasted_entries1, 1, replace = FALSE)
-        
-        # The accession number of the sample
-        blast_acc <- subset_for_blast$accession[1]
-        
-        # Determine the database to use
-        # This really looks like it could just be a function
-        # Default
-        blast_db_1 <- paste0(blast_db, "/", subset_for_blast$database_used_for_blast[1])
-        # Check for conditions where you should not use the default
-        if (subset_for_blast$database_used_for_blast[1] == "refseq_representative_genomes" && subset_for_blast$superkingdom[1] == "Eukaryota") {
-          blast_db_1 <- paste0(blast_db, "/ref_euk_rep_genomes")
-        }
-        else if (subset_for_blast$database_used_for_blast[1] == "refseq_representative_genomes" && subset_for_blast$superkingdom[1] == "Bacteria") {
-          blast_db_1 <- paste0(blast_db, "/ref_prok_rep_genomes")
-        }
-        
-        # update the path for blastdbcmd's output, then run it
-        print(paste0("....trying ", blast_acc))
-        unlink(paste0(file_out_dir , "blastdbcmd_test_output.txt"))
-        input <- paste0(file_out_dir, "blastdbcmd_test_output_",s,"_.txt")
-        run_blastdbcommand(subset_for_blast, blastdbcmd, blast_db_1, input, dbType)
-        
-        # for blank blastdbcommand files, check next accession
-        # it looks like the truth of the first condition should imply the falsity of the last condition
-        # The purpose of this block is to save unusual results either to accessions_not_found (if they weren't there) or too_many_Ns S(if it has too many Ns)
-        # compile observations that are not in the database in too_new_for_you
-        if (file.info(input)$size == 0 && dim(to_be_blasted_entries1)[1] != 0) {
-          print("....is not in your BLAST database")
-          too_new_for_you <- rbind(too_new_for_you, subset_for_blast)
-          # Does this overwrite an existing csv?
-          save_output_as_csv(too_new_for_you, "_accessions_not_found_in_your_blast_DB", file_out_dir, Metabarcode_name)
-          i = i + 1
-        }
-        # compile observations with too many Ns in another csv
-        # also deletes the blastdbcmd output file then creates an empty one at that location??
-        else if (any(grepl(number_Ns_in_blast_seed, readLines(input)))){
-          print("....has too Many Ns!")
-          too_many_Ns <- rbind(too_many_Ns, subset_for_blast)
-          save_output_as_csv(too_many_Ns, paste0("_accessions_with_more_than_", number_Ns_in_blast_seed ,"_in_a_row"), file_out_dir, Metabarcode_name)
-          unlink(input)
-          file.create(input)
-          i = i +1
-        }
+  # Remove the FASTA from the previous round
+  unlink(paste0(file_out_dir , "blastdbcmd_test_output.txt"))
 
-        # if lost a read to too many N's or not in db do not advance the counter, if there are no more hits in the to be blasted file advance the counter one
-        # I think the above comment is meant to be associated with the if block below??  
-
-        # To-do: circle back here when you know what i and s do
-        if(i == s && s != max_or_seq_to_blast){
-          s = s + 1
-          i = i + 1
-          
-        }
-        else if ( i != s && s != max_or_seq_to_blast ) {
-          s = s
-          i = i - 1
-          
-        }
-        else {
-          # ie end
-          s = max_or_seq_to_blast + 1
-        }
-        
-      }  
+  # Variable to track what parts of to_be_blasted_entries1 has been used without modifying it
+  unsampled_indices <- c(1:nrow(to_be_blasted_entries1))
+  for(i in 1:max_or_seq_to_blast) {
+    # Take our sample and extract necessary information
+    sample_index <- sample(unsampled_indices, 1)
+    unsampled_indices <- unsampled_indices[unsampled_indices!=sample_index]
+    sample_row <- to_be_blasted_entries1[sample_index,]
+    sample_accession <- sample_row$accession
+    sample_db <- paste0(blast_db, "/", sample_row$database_used_for_blast)
+    # Correct for the way refseq subdivides data
+    if(sample_row$database_used_for_blast ==  "refseq_representative_genomes") {
+      if(sample_row$superkingdom == "Eukaryota") {
+        sample_db <- paste0(blast_db, "/ref_euk_rep_genomes")
+      }
+      else {
+        sample_db <- paste0(blast_db, "/ref_prok_rep_genomes")
+      }
     }
+
+    message(paste0("....trying ", sample_accession))
+    blastdbcmd_out_path <- paste0(file_out_dir, "blastdbcmd_test_output_", i, "_.txt")
+    run_blastdbcommand(sample_row, blastdbcmd, sample_db, blastdbcmd_out_path, "nucl")
+
+    # Check for problems, record them in the appropriate files
+    if (file.info(blastdbcmd_out_path)$size == 0 && dim(to_be_blasted_entries1)[1] != 0) {
+      print("....is not in your BLAST database")
+      too_new_for_you <- rbind(too_new_for_you, sample_row)
+      save_output_as_csv(too_new_for_you, "_accessions_not_found_in_your_blast_DB", file_out_dir, Metabarcode_name)
+    }
+    else if (any(grepl(number_Ns_in_blast_seed, readLines(blastdbcmd_out_path)))){
+      print("....has too Many Ns!")
+      too_many_Ns <- rbind(too_many_Ns, subset_for_blast)
+      save_output_as_csv(too_many_Ns, paste0("_accessions_with_more_than_", number_Ns_in_blast_seed ,"_in_a_row"), file_out_dir, Metabarcode_name)
+      unlink(blastdbcmd_out_path)
+    }
+  }
     
-    #concatonate blast seed files
-    # Is this meant to be read.FASTA ? If so why is the input formatted wrong?
-    # Similarly, is that supposed to be write.FASTA? Perhaps this is because of an outdated package?
-    patt <- "_.txt$"
-    fasta <- readFasta(file_out_dir, patt)
+    # Concatonate blast seed files into a single FASTA
+    pattern <- "_.txt$"
+    fasta <- readFasta(file_out_dir, pattern)
     writeFasta(fasta, paste0(file_out_dir , "blastdbcmd_test_output.txt"))
     
     # delete files created earlier
-    # they either got written to blastdbcmd_test_output.txt
     for (j in 1:max_or_seq_to_blast){
       unlink(paste0(file_out_dir , "blastdbcmd_test_output_", j , "_.txt"))
     }
     
     # This variable subtly changes purpose several times through this function
-    # The name is admirably concise but not alwasy descriptive
+    # The name is admirably concise but not always descriptive
     # I'd like to do some creative refactoring on the uses of this variable
     input <- paste0(file_out_dir, "blastdbcmd_test_output.txt")
     
@@ -369,6 +342,8 @@ run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, blast_lo
     # Could we split this function into two parts? Most things that happen above
       # 1) Are conceptually connected by involving blastdbcmd
       # 2) Seem to write their outputs to one file that can easily be passed to the next function
+
+    # Call blastn with the big FASTA as its query
     if (file.info(input)$size != 0){
       print("....BLASTing")
       print(paste0("....round....", blast_count, ":" ))
@@ -386,6 +361,7 @@ run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, blast_lo
       
       # This appears to be created solely to count the number of rows
       # Perhaps there is a better way to count the number of observations that meet a particular set of criteria?
+      # Also we shouldn't be duplicating hits anymore, I think?
       duplicated_blast_out1 <- blast_out1[duplicated(blast_out1$accession) | duplicated(blast_out1$accession, fromLast=TRUE)]
       d <- nrow(duplicated_blast_out1)
       print(paste0("........", d, " duplicated hits"))
@@ -404,7 +380,7 @@ run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, blast_lo
       print(paste0("...The total number of blast hits for this run is: ", nt))
       
       
-      # remove observations from the primertree output that did not have a blast hit.
+      # Remove accessions that match the accessions queries before
       # To-do: review how filtering datatables works in R to better understand this
       to_be_blasted_entries1 <-setDT(to_be_blasted_entries1)[!blast_out, on = .(accession = accession)]
       to_be_blasted_entries1 <-setDT(to_be_blasted_entries1)[!too_many_Ns, on = .(accession = accession)]
@@ -433,8 +409,8 @@ run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, blast_lo
       
     }
     
+    # Perform various cleanup operations
     else {
-      
       fetch_rcrux_taxonomy(blast_out, accessionTaxa, file_out_dir, Metabarcode_name)
       get_fasta_no_hyp(blast_out, file_out_dir, Metabarcode_name)
       print(paste0(Metabarcode_name, " BLASTing complete! Find output in: ", file_out_dir, Metabarcode_name))
@@ -442,3 +418,4 @@ run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, blast_lo
     }
   }
 }
+

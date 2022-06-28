@@ -2,6 +2,9 @@
 
 # Libraries
 
+
+
+
 library(lubridate)
 library(XML)
 library(httr)
@@ -285,11 +288,6 @@ get_blastdbcommand_variables <- function(data_infile) {
 
 run_blastdbcommand <- function(data_infile, blastdbcmd, blast_db, input, dbType) {
   blastdbcommand_vars <- get_blastdbcommand_variables(data_infile)
-  print("run_blastdbcmd")
-  print(paste(blastdbcmd, " ", c("-db", blast_db, 
-                                 "-dbtype", dbType,
-                                 "-entry",  blastdbcommand_vars,
-                                 "-out", input)))
   blastdbcmd_out <- system2(command = blastdbcmd,
                             args = c("-db", blast_db, 
                                      "-dbtype", dbType,
