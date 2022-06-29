@@ -288,7 +288,8 @@ get_blastdbcommand_variables <- function(data_infile) {
 
 run_blastdbcommand <- function(data_infile, blastdbcmd, blast_db, input, dbType) {
   blastdbcommand_vars <- get_blastdbcommand_variables(data_infile)
-  blastdbcmd_out <- system2(command = blastdbcmd,
+  # This assumes you have it in your path because that's a cleaner way for this to work
+  blastdbcmd_out <- system2(command = "blastdbcmd",
                             args = c("-db", blast_db, 
                                      "-dbtype", dbType,
                                      "-entry",  blastdbcommand_vars,
@@ -362,7 +363,8 @@ run_blastn <- function(data_infile , blastn, blast_db, evalue = 1e-6, align = 50
                 "evalue",
                 "BLAST_db_taxids") 
   cores <- parallel::detectCores()
-  blast_out1 <- system2(command = blastn, 
+  # Assumes in your path because that works better for my specific enviro
+  blast_out1 <- system2(command = "blastn", 
                         args = c("-db", blast_db, 
                                  "-query", data_infile, 
                                  "-outfmt", '"6 saccver length pident qacc slen sstart send sseq evalue staxids"', 
@@ -411,7 +413,7 @@ get_taxonomizer_from_accession <- function(input, accessionTaxa_path){
 # the too many N's and new to you while loop used to be a function.  Fix someday
 #
 
-run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, blast_low, to_be_blasted_entries, to_be_blasted_entries1, too_many_Ns, too_new_for_you, duplicated_blast_out, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, seq_to_blast = 200, number_Ns_in_blast_seed = "NNNN", dbType = "'nucl'"){
+run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, blast_low, to_be_blasted_entries, to_be_blasted_entries1, too_many_Ns, too_new_for_you, duplicated_blast_out, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, seq_to_blast = 200, number_Ns_in_blast_seed = "NNNN", dbType = "nucl"){
   
   blastdbcmd = paste0(blast_tools,"/bin/blastdbcmd")
   blastn = paste0(blast_tools,"/bin/blastn")
@@ -611,7 +613,7 @@ rcrux_blast <- function(file_out_dir, Metabarcode_name, blast_tools, blast_db, a
       print("Starting BLAST")
       suppressMessages(make_initial_files(file_out_dir, Metabarcode_name, number_Ns_in_blast_seed))
       print(to_be_blasted_entries1)
-      run_serial_blast(file_out_dir, Metabarcode_name, blast_out, blast_low, to_be_blasted_entries, to_be_blasted_entries1, too_many_Ns, too_new_for_you, duplicated_blast_out, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, number_Ns_in_blast_seed = "NNNN", dbType = "'nucl'")
+      run_serial_blast(file_out_dir, Metabarcode_name, blast_out, blast_low, to_be_blasted_entries, to_be_blasted_entries1, too_many_Ns, too_new_for_you, duplicated_blast_out, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, number_Ns_in_blast_seed = "NNNN", dbType = "nucl")
       
     }
   } else {
@@ -624,7 +626,7 @@ rcrux_blast <- function(file_out_dir, Metabarcode_name, blast_tools, blast_db, a
       print("resuming BLASTING where you left off")
       suppressMessages(load_incomplete_files(file_out_dir, Metabarcode_name))
       
-      run_serial_blast(file_out_dir, Metabarcode_name, blast_out, blast_low, to_be_blasted_entries, to_be_blasted_entries1, too_many_Ns, too_new_for_you, duplicated_blast_out, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, number_Ns_in_blast_seed = "NNNN", dbType = "'nucl'")
+      run_serial_blast(file_out_dir, Metabarcode_name, blast_out, blast_low, to_be_blasted_entries, to_be_blasted_entries1, too_many_Ns, too_new_for_you, duplicated_blast_out, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, number_Ns_in_blast_seed = "NNNN", dbType = "nucl")
       
     }  
   }
@@ -881,7 +883,7 @@ get_blast_seeds_multi_taxa_or_db <- function(forward_primer, reverse_primer, fil
 }
 
 
-run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, blast_low, to_be_blasted_entries, to_be_blasted_entries1, too_many_Ns, too_new_for_you, duplicated_blast_out, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, seq_to_blast = 1000, number_Ns_in_blast_seed = "NNNN", dbType = "'nucl'"){
+run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, blast_low, to_be_blasted_entries, to_be_blasted_entries1, too_many_Ns, too_new_for_you, duplicated_blast_out, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, seq_to_blast = 1000, number_Ns_in_blast_seed = "NNNN", dbType = "nucl"){
   
   blastdbcmd = paste0(blast_tools,"/bin/blastdbcmd")
   blastn = paste0(blast_tools,"/bin/blastn")

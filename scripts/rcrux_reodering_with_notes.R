@@ -45,7 +45,7 @@ rcrux_blast <- function(file_out_dir, metabarcode_name,
     else {
       print("Starting BLAST")
       make_initial_files(file_out_dir, metabarcode_name, number_Ns_in_blast_seed)
-      run_serial_blast(file_out_dir, metabarcode_name, blast_out, to_be_blasted_entries, to_be_blasted_entries1, too_many_Ns, too_new_for_you, duplicated_blast_out, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, number_Ns_in_blast_seed = "NNNN", dbType = "'nucl'")
+      run_serial_blast(file_out_dir, metabarcode_name, blast_out, to_be_blasted_entries1, too_many_Ns, too_new_for_you, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, number_Ns_in_blast_seed = "NNNN", dbType = "'nucl'")
     }
   }
   
@@ -62,7 +62,7 @@ rcrux_blast <- function(file_out_dir, metabarcode_name,
     else {
       print("resuming BLASTING where you left off")
       load_incomplete_files(file_out_dir, metabarcode_name)
-      run_serial_blast(file_out_dir, metabarcode_name, blast_out, to_be_blasted_entries, to_be_blasted_entries1, too_many_Ns, too_new_for_you, duplicated_blast_out, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, number_Ns_in_blast_seed = "NNNN", dbType = "'nucl'")
+      run_serial_blast(file_out_dir, metabarcode_name, blast_out, to_be_blasted_entries1, too_many_Ns, too_new_for_you, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, number_Ns_in_blast_seed = "NNNN", dbType = "'nucl'")
     }  
   }
   
@@ -236,13 +236,12 @@ load_incomplete_files <- function(file_out, Metabarcode, number_Ns_in_blast_seed
   # This can probably be changed to while(nrow(to_be_blasted_entries1) > 0) and remove any logic about when to break
 
 # Calls:
-  # run_blastdbcommand
-  # run_blastn
   # save_output_as_csv
   # blast_tracker
   # fetch_rcrux_taxonomy
   # get_fasta_no_hyp
-  # blast_tracker
+  # run_blastdbcommand
+  # run_blastn
 
 # Apparent global variable dependencies:
 
@@ -256,7 +255,7 @@ load_incomplete_files <- function(file_out, Metabarcode, number_Ns_in_blast_seed
   # Function to run serial blast
   # the too many N's and new to you while loop used to be a function.  Fix someday
 
-run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, to_be_blasted_entries, to_be_blasted_entries1, too_many_Ns, too_new_for_you, duplicated_blast_out, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, seq_to_blast = 200, number_Ns_in_blast_seed = "NNNN", dbType = "'nucl'"){
+run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, to_be_blasted_entries1, too_many_Ns, too_new_for_you, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, seq_to_blast = 200, number_Ns_in_blast_seed = "NNNN", dbType = "'nucl'"){
   
   blastdbcmd <- paste0(blast_tools,"/bin/blastdbcmd")
   blastn <- paste0(blast_tools,"/bin/blastn")
@@ -369,8 +368,7 @@ run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, to_be_bl
       # remove duplicates
       blast_out <- setDT(blast_out)[order(-amplicon_length, accession), head(.SD, 1), by = accession]
       save_output_as_csv(blast_out, "_blasted_entries", file_out_dir, Metabarcode_name)
-      
-      # blasted_number appears to be created after being used... potential issue
+
       # not totally sure what this block does, but it appears to log something about the blast
       nt <- nrow(blast_out)
       new <- n - (n + blasted_number  - nt)
@@ -419,3 +417,289 @@ run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, to_be_bl
   }
 }
 
+#################################
+# Wraps write.table to point things at the right directory and to append the metabarcode name
+
+save_output_as_csv <- function(file_name, description, file_out, Metabarcode){
+  write_to = paste0(file_out, Metabarcode, description, ".csv")
+  return(write.table(file_name, file = write_to, row.names=FALSE, sep = ","))
+}
+
+#################################
+# 
+
+# To-do
+  # 
+
+# Calls:
+  # None
+
+# Apparent global variable dependencies:
+  # 
+
+# Global variables modified/created:
+  # blast_count
+  # blasted_number
+
+# Other dependencies:
+  # 
+
+# Legacy comments (This was grouped with blast_tracker and this comment was above blast_tracker):
+  # Function to save current blast run data in .txt files
+
+extract_blast_tracker  <- function(file_out, Metabarcode){
+  blast_tracker_file <- file.path(paste0(file_out, Metabarcode, "blast_tracker.txt"))
+  get_vars <- file(blast_tracker_file,open="r")
+  lines <-readLines(get_vars)
+  blast_count <<- as.numeric(lines[1])
+  blasted_number <<- as.numeric(lines[2])
+  close(get_vars)
+}
+
+#################################
+# 
+
+# To-do
+  # 
+
+# Calls:
+  # None
+
+# Apparent global variable dependencies:
+  # 
+
+# Global variables modified/created:
+  # 
+
+# Other dependencies:
+  # 
+
+# Legacy comments:
+  # Function to save current blast run data in .txt files
+
+blast_tracker <- function(description, file_out, Metabarcode, blast_count, blasted_number){
+  blast_tracker_file <- file.path(paste0(file_out, Metabarcode, description, ".txt"))
+  blast_tracker = file(blast_tracker_file,"w");
+  write(c(blast_count, blasted_number), blast_tracker ,sep = "/n",append = FALSE, ncolumns = 1);
+  close(blast_tracker)
+} 
+
+#################################
+# 
+
+# To-do
+  # 
+
+# Calls:
+  # get_taxonomizr_from_accession
+
+# Apparent global variable dependencies:
+  # 
+
+# Global variables modified/created:
+  # 
+
+# Other dependencies:
+  # 
+
+# Legacy comments:
+  # Function to add taxonomy to blast output
+
+fetch_rcrux_taxonomy <- function(blast_out, accessionTaxa, file_out_dir, Metabarcode_name){
+  Metabarcode_name = Metabarcode_name
+  print(paste0("Fetching taxonomy for BLAST output"))
+  
+  blast_out_with_taxonomy <- get_taxonomizer_from_accession(blast_out, accessionTaxa)
+  
+  print(paste0("...saving_results"))
+  save_output_as_csv(blast_out_with_taxonomy, "_blasted_entries_with_taxonomy", file_out_dir, Metabarcode_name)
+}
+
+#################################
+# 
+
+# To-do
+  # 
+
+# Calls:
+  # None
+
+# Apparent global variable dependencies:
+  # 
+
+# Global variables modified/created:
+  # 
+
+# Other dependencies:
+  # 
+
+# Legacy comments:
+  # None
+
+get_fasta_no_hyp <- function(dupt, file_out_dir, Metabarcode_name){
+  dupt_no_hiyp <- dupt %>% mutate(sequence = gsub("-", "", sequence))
+  fasta <- character(nrow(dupt_no_hiyp) * 2)
+  fasta[c(TRUE, FALSE)] <- paste0(">", dupt_no_hiyp$accession)
+  fasta[c(FALSE, TRUE)] <- dupt_no_hiyp$sequence
+  writeLines(fasta, paste0(file_out_dir, Metabarcode_name, ".fasta"))
+}
+
+#################################
+# 
+
+# To-do
+  # 
+
+# Calls:
+  # get_blastdbcommand_variables
+
+# Apparent global variable dependencies:
+  # 
+
+# Global variables modified/created:
+  # 
+
+# Other dependencies:
+  # 
+
+# Legacy comments:
+  # function to run blastdbcommand given the function to get the blastdbcommand variables function above - gets sequence to blast. Saves a file in the working directory called blastdbcmd_test_output.txt:
+
+run_blastdbcommand <- function(data_infile, blastdbcmd, blast_db, input, dbType) {
+  blastdbcommand_vars <- get_blastdbcommand_variables(data_infile)
+  # This assumes you have it in your path because that's a cleaner way for this to work for me specifically
+  blastdbcmd_out <- system2(command = "blastdbcmd",
+                            args = c("-db", blast_db, 
+                                     "-dbtype", dbType,
+                                     "-entry",  blastdbcommand_vars,
+                                     "-out", input),
+                            wait = TRUE, stdout = TRUE)
+}
+
+#################################
+# 
+
+# To-do
+  # 
+
+# Calls:
+  # None
+
+# Apparent global variable dependencies:
+  # 
+
+# Global variables modified/created:
+  # 
+
+# Other dependencies:
+  # 
+
+# Legacy comments:
+  # Function to run blastn and then parse results as a table
+
+run_blastn <- function(data_infile , blastn, blast_db, evalue = 1e-6, align = 50000, coverage = 50, perID = 70) {
+  blast_db <- paste0(blast_db,"/nt")
+  colnames <- c("accession",
+                "amplicon_length",
+                "pident",
+                "query_accession",
+                "accession_sequence_length", 
+                "amplicon_start",
+                "amplicon_stop",
+                "sequence",
+                "evalue",
+                "BLAST_db_taxids") 
+  cores <- parallel::detectCores()
+  # Assumes in your path because that works better for my specific enviro
+  blast_out1 <- system2(command = "blastn", 
+                        args = c("-db", blast_db, 
+                                 "-query", data_infile, 
+                                 "-outfmt", '"6 saccver length pident qacc slen sstart send sseq evalue staxids"', 
+                                 "-evalue", evalue,
+                                 #"-ungapped", not an inclusive option
+                                 "-num_alignments", align,
+                                 "-qcov_hsp_perc", coverage,
+                                 "-perc_identity", perID,
+                                 "-num_threads ", cores),
+                        wait = TRUE,
+                        stdout = TRUE) %>%
+    as_tibble() %>% 
+    separate(col = value, 
+             into = colnames,
+             sep = "\t",
+             convert = TRUE)
+}
+
+#################################
+# 
+
+# To-do
+  # 
+
+# Calls:
+  # None
+
+# Apparent global variable dependencies:
+  # 
+
+# Global variables modified/created:
+  # 
+
+# Other dependencies:
+  # 
+
+# Legacy comments:
+  # Function uses taxonimizer to pull taxonomy from accessions and also collects taxids.   
+  # Why not just use taxids recovered from blast?  Well blast sometimes pulls multiple taxids.  How annoying.... 
+
+get_taxonomizer_from_accession <- function(input, accessionTaxa_path){
+  input_taxid <<- accessionToTaxa(input$accession, accessionTaxa_path)
+  
+  input_taxonomy <<- getTaxonomy(input_taxid,accessionTaxa_path,desiredTaxa = c("species","superkingdom", "kingdom", "phylum", "subphylum", "superclass", "class", "subclass", "order", "family", "subfamily", "genus", "infraorder", "subcohort", "superorder", "superfamily", "tribe", "subspecies", "subgenus", "species group", "parvorder", "varietas"))
+  
+  input_taxonomy <<- cbind('accession'=input$accession, 'taxID'=input_taxid, input_taxonomy)
+  input_taxonomy <<- as_tibble(input_taxonomy)
+  # Join the blast output and taxonomy tibbles
+  return(full_join(input, input_taxonomy, by = "accession"))
+}
+
+#################################
+# 
+
+# To-do
+  # 
+
+# Calls:
+  # None
+
+# Apparent global variable dependencies:
+  # 
+
+# Global variables modified/created:
+  # 
+
+# Other dependencies:
+  # 
+
+# Legacy comments:
+  # Function to get the blastdbcommand variables from the datatable.  
+  # function chooses accession and range from first row of the infile and formats it for blastdbcommand:
+
+get_blastdbcommand_variables <- function(data_infile) {
+  blastdbcommand_accession <-
+    data_infile %>% slice_head( n = 1) %>% pull(accession)
+  blastdbcommand_start <-
+    data_infile %>% slice_head( n = 1) %>% pull(forward_stop)
+  blastdbcommand_stop <-
+    data_infile %>% slice_head( n = 1) %>% pull(reverse_stop)
+  
+  if (blastdbcommand_start < blastdbcommand_stop) {
+    blastdbcommand_start <- blastdbcommand_start + 1
+    blastdbcommand_stop <- blastdbcommand_stop - 1
+    return(paste(blastdbcommand_accession," -range ", blastdbcommand_start,"-", blastdbcommand_stop, sep = ''))
+  } else {
+    blastdbcommand_start <- blastdbcommand_start - 1
+    blastdbcommand_stop <- blastdbcommand_stop + 1
+    return(paste(blastdbcommand_accession," -range ", blastdbcommand_stop,"-", blastdbcommand_start, sep = ''))
+  }
+}
