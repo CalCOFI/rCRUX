@@ -27,10 +27,9 @@ library(parallel)
 
 # Apparent global variable dependencies:
   # blast_out
-  # to_be_blasted_entries
+  # to_be_blasted_entries1
   # too_many_Ns
   # too_new_for_you
-  # duplicated_blast_out
   # blast_count
   # blasted_number
 
@@ -569,7 +568,7 @@ get_fasta_no_hyp <- function(dupt, file_out_dir, Metabarcode_name){
 # Uses a helper function to build part of the arguments
 
 # To-do
-  # Right now run_serial_blast does some of the work of parsing information to send her and blastdbcommand_vars does some of the work. Ideally only one function does that work
+  # Right now run_serial_blast does some of the work of parsing information to send here and blastdbcommand_vars does some of the work. Ideally only one function does that work
 
 # Calls:
   # get_blastdbcommand_variables
@@ -664,7 +663,7 @@ run_blastn <- function(data_infile , blastn, blast_db, evalue = 1e-6, align = 50
   # 
 
 # Global variables modified/created:
-  # input_taxid
+  # None
 
 # Other dependencies:
   # taxonomizr sqlite
