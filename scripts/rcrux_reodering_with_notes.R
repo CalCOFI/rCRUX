@@ -62,7 +62,7 @@ rcrux_blast <- function(file_out_dir, metabarcode_name,
     else {
       print("Starting BLAST")
       make_initial_files(file_out_dir, metabarcode_name, number_Ns_in_blast_seed)
-      run_serial_blast(file_out_dir, metabarcode_name, blast_out, to_be_blasted_entries1, too_many_Ns, too_new_for_you, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, number_Ns_in_blast_seed = "NNNN", dbType = "'nucl'")
+      run_serial_blast(file_out_dir, metabarcode_name, blast_out, to_be_blasted_entries1, too_many_Ns, too_new_for_you, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, number_Ns_in_blast_seed = "NNNN", dbtype = "'nucl'")
     }
   }
   
@@ -79,7 +79,7 @@ rcrux_blast <- function(file_out_dir, metabarcode_name,
     else {
       print("resuming BLASTING where you left off")
       load_incomplete_files(file_out_dir, metabarcode_name)
-      run_serial_blast(file_out_dir, metabarcode_name, blast_out, to_be_blasted_entries1, too_many_Ns, too_new_for_you, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, number_Ns_in_blast_seed = "NNNN", dbType = "'nucl'")
+      run_serial_blast(file_out_dir, metabarcode_name, blast_out, to_be_blasted_entries1, too_many_Ns, too_new_for_you, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, number_Ns_in_blast_seed = "NNNN", dbtype = "'nucl'")
     }  
   }
   
@@ -272,7 +272,7 @@ load_incomplete_files <- function(file_out, Metabarcode, number_Ns_in_blast_seed
   # Function to run serial blast
   # the too many N's and new to you while loop used to be a function.  Fix someday
 
-run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, to_be_blasted_entries1, too_many_Ns, too_new_for_you, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, seq_to_blast = 200, number_Ns_in_blast_seed = "NNNN", dbType = "'nucl'"){
+run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, to_be_blasted_entries1, too_many_Ns, too_new_for_you, blast_count, blasted_number,blast_tools, blast_db, accessionTaxa, seq_to_blast = 200, number_Ns_in_blast_seed = "NNNN", dbtype = "nucl"){
   
   blastdbcmd <- paste0(blast_tools,"/bin/blastdbcmd")
   blastn <- paste0(blast_tools,"/bin/blastn")
@@ -566,6 +566,7 @@ get_fasta_no_hyp <- function(dupt, file_out_dir, Metabarcode_name){
 #################################
 # Given a line from a datatable, the location of blastdbcmd, a blast dbl, and an output path calls blastdbcmd with those arguments
 # Uses a helper function to build part of the arguments
+# write is for testing purposes
 
 # To-do
   # Right now run_serial_blast does some of the work of parsing information to send here and blastdbcommand_vars does some of the work. Ideally only one function does that work
@@ -585,15 +586,26 @@ get_fasta_no_hyp <- function(dupt, file_out_dir, Metabarcode_name){
 # Legacy comments:
   # function to run blastdbcommand given the function to get the blastdbcommand variables function above - gets sequence to blast. Saves a file in the working directory called blastdbcmd_test_output.txt:
 
-run_blastdbcommand <- function(data_infile, blastdbcmd, blast_db, output_path, dbtype = "nucl") {
-  blastdbcommand_vars <- get_blastdbcommand_variables(data_infile)
-  # This assumes you have it in your path because that's a cleaner way for this to work for me specifically
-  blastdbcmd_out <- system2(command = "blastdbcmd",
-                            args = c("-db", blast_db, 
-                                     "-dbtype", dbType,
-                                     "-entry",  blastdbcommand_vars,
-                                     "-out", output_path),
-                            wait = TRUE, stdout = TRUE)
+run_blastdbcommand <- function(data_infile, blastdbcmd, blast_db, output_path, dbtype = "nucl", write = TRUE) {
+  if(write) {
+    blastdbcommand_vars <- get_blastdbcommand_variables(data_infile)
+    # This assumes you have it in your path because that's a cleaner way for this to work for me specifically
+    blastdbcmd_out <- system2(command = "blastdbcmd",
+                              args = c("-db", blast_db, 
+                                      "-dbtype", dbtype,
+                                      "-entry",  blastdbcommand_vars,
+                                      "-out", output_path),
+                              wait = TRUE, stdout = TRUE)
+  }
+  else {
+    blastdbcommand_vars <- get_blastdbcommand_variables(data_infile)
+    # This assumes you have it in your path because that's a cleaner way for this to work for me specifically
+    blastdbcmd_out <- system2(command = "blastdbcmd",
+                              args = c("-db", blast_db, 
+                                      "-dbtype", dbtype,
+                                      "-entry",  blastdbcommand_vars),
+                              wait = TRUE, stdout = TRUE)
+  }
 }
 
 #################################
