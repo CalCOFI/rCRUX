@@ -3,7 +3,7 @@
 library(taxonomizr)
 
 # Make sure to edit this line
-taxonomizr_directory <- "D:/test"
+taxonomizr_directory <- "/data/home/galoscarleo/taxonomy"
 
 wd <- getwd()
 dir.create(taxonomizr_directory)
