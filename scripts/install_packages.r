@@ -13,7 +13,6 @@ install.packages("data.table", repos='http://cran.us.r-project.org')
 install.packages("RCurl", repos='http://cran.us.r-project.org')
 install.packages("parallel", repos='http://cran.us.r-project.org')
 
-remove.packages("primerTree")
 if(!require("devtools", quietly = TRUE)) {
     install.packages("devtools")
 }
