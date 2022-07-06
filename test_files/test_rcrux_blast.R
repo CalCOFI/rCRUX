@@ -740,6 +740,6 @@ get_blastdbcommand_variables <- function(data_infile) {
 }
 
 rcrux_blast("D:/12S_V5F/","12S_V5F",
-            "C:/Program Files/NCBI/blast-BLAST_VERSION+",
-            "D:/nt",
-            "/Volumes/rCRUX/taxonomizr_data/accessionTaxa.sql")
+            "/data/home/galoscarleo/ncbi-blast-2.13.0+/bin",
+            "/data/home/galoscarleo/nt",
+            "/data/home/galoscarleo/taxonomy/accessionTaxa.sql")

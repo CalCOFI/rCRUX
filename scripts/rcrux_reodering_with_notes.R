@@ -299,45 +299,45 @@ run_serial_blast <- function(file_out_dir, Metabarcode_name, blast_out, to_be_bl
       
       print(paste0("Get usable accessions for BLAST round number ", blast_count, ":" ))
       
-    # Remove the FASTA from the previous round
-    unlink(paste0(file_out_dir , "blastdbcmd_test_output.txt"))
+      # Remove the FASTA from the previous round
+      unlink(paste0(file_out_dir , "blastdbcmd_test_output.txt"))
 
-    # Variable to track what parts of to_be_blasted_entries1 has been used without modifying it
-    unsampled_indices <- c(1:nrow(to_be_blasted_entries1))
-    for(i in 1:max_or_seq_to_blast) {
-      # Take our sample and extract necessary information
-      sample_index <- sample(unsampled_indices, 1)
-      unsampled_indices <- unsampled_indices[unsampled_indices!=sample_index]
-      sample_row <- to_be_blasted_entries1[sample_index,]
-      sample_accession <- sample_row$accession
-      sample_db <- paste0(blast_db, "/", sample_row$database_used_for_blast)
-      # Correct for the way refseq subdivides data
-      if(sample_row$database_used_for_blast ==  "refseq_representative_genomes") {
-        if(sample_row$superkingdom == "Eukaryota") {
-          sample_db <- paste0(blast_db, "/ref_euk_rep_genomes")
+      # Variable to track what parts of to_be_blasted_entries1 has been used without modifying it
+      unsampled_indices <- c(1:nrow(to_be_blasted_entries1))
+      for(i in 1:max_or_seq_to_blast) {
+        # Take our sample and extract necessary information
+        sample_index <- sample(unsampled_indices, 1)
+        unsampled_indices <- unsampled_indices[unsampled_indices!=sample_index]
+        sample_row <- to_be_blasted_entries1[sample_index,]
+        sample_accession <- sample_row$accession
+        sample_db <- paste0(blast_db, "/", sample_row$database_used_for_blast)
+        # Correct for the way refseq subdivides data
+        if(sample_row$database_used_for_blast ==  "refseq_representative_genomes") {
+          if(sample_row$superkingdom == "Eukaryota") {
+            sample_db <- paste0(blast_db, "/ref_euk_rep_genomes")
+          }
+          else {
+            sample_db <- paste0(blast_db, "/ref_prok_rep_genomes")
+          }
         }
-        else {
-          sample_db <- paste0(blast_db, "/ref_prok_rep_genomes")
+
+        message(paste0("....trying ", sample_accession))
+        blastdbcmd_out_path <- paste0(file_out_dir, "blastdbcmd_test_output_", i, "_.txt")
+        run_blastdbcommand(sample_row, blastdbcmd, sample_db, blastdbcmd_out_path, "nucl")
+
+        # Check for problems, record them in the appropriate files
+        if (file.info(blastdbcmd_out_path)$size == 0 && dim(to_be_blasted_entries1)[1] != 0) {
+          print("....is not in your BLAST database")
+          too_new_for_you <- rbind(too_new_for_you, sample_row)
+          save_output_as_csv(too_new_for_you, "_accessions_not_found_in_your_blast_DB", file_out_dir, Metabarcode_name)
+        }
+        else if (any(grepl(number_Ns_in_blast_seed, readLines(blastdbcmd_out_path)))){
+          print("....has too Many Ns!")
+          too_many_Ns <- rbind(too_many_Ns, subset_for_blast)
+          save_output_as_csv(too_many_Ns, paste0("_accessions_with_more_than_", number_Ns_in_blast_seed ,"_in_a_row"), file_out_dir, Metabarcode_name)
+          unlink(blastdbcmd_out_path)
         }
       }
-
-      message(paste0("....trying ", sample_accession))
-      blastdbcmd_out_path <- paste0(file_out_dir, "blastdbcmd_test_output_", i, "_.txt")
-      run_blastdbcommand(sample_row, blastdbcmd, sample_db, blastdbcmd_out_path, "nucl")
-
-      # Check for problems, record them in the appropriate files
-      if (file.info(blastdbcmd_out_path)$size == 0 && dim(to_be_blasted_entries1)[1] != 0) {
-        print("....is not in your BLAST database")
-        too_new_for_you <- rbind(too_new_for_you, sample_row)
-        save_output_as_csv(too_new_for_you, "_accessions_not_found_in_your_blast_DB", file_out_dir, Metabarcode_name)
-      }
-      else if (any(grepl(number_Ns_in_blast_seed, readLines(blastdbcmd_out_path)))){
-        print("....has too Many Ns!")
-        too_many_Ns <- rbind(too_many_Ns, subset_for_blast)
-        save_output_as_csv(too_many_Ns, paste0("_accessions_with_more_than_", number_Ns_in_blast_seed ,"_in_a_row"), file_out_dir, Metabarcode_name)
-        unlink(blastdbcmd_out_path)
-      }
-    }
     
     # Concatonate blast seed files into a single FASTA
     pattern <- "_.txt$"
@@ -606,6 +606,7 @@ run_blastdbcommand <- function(data_infile, blastdbcmd, blast_db, output_path, d
                                       "-entry",  blastdbcommand_vars),
                               wait = TRUE, stdout = TRUE)
   }
+  return(blastdbcmd_out)
 }
 
 #################################
@@ -649,7 +650,6 @@ run_blastn <- function(data_infile , blastn, blast_db, evalue = 1e-6, align = 50
                                  "-query", data_infile, 
                                  "-outfmt", '"6 saccver length pident qacc slen sstart send sseq evalue staxids"', 
                                  "-evalue", evalue,
-                                 #"-ungapped", not an inclusive option
                                  "-num_alignments", align,
                                  "-qcov_hsp_perc", coverage,
                                  "-perc_identity", perID,
