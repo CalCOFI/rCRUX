@@ -11,7 +11,6 @@ install.packages("rlang", repos='http://cran.us.r-project.org')
 install.packages("taxonomizr", repos='http://cran.us.r-project.org')
 install.packages("data.table", repos='http://cran.us.r-project.org')
 install.packages("RCurl", repos='http://cran.us.r-project.org')
-install.packages("parallel", repos='http://cran.us.r-project.org')
 
 if(!require("devtools", quietly = TRUE)) {
     install.packages("devtools")
