@@ -213,6 +213,20 @@ save_state <- function(dir, output_table, unsampled_indices, too_many_Ns, not_in
     write(not_in_db, file = paste0(save_dir, "not_in_db.txt"))
 }
 
+# Attach taxonomy data to an input table
+# input: a datatable
+# accessionTaxa_path: the path to an accessionTaxa sql
+get_taxonomizer_from_accession <- function(input, accessionTaxa_path){
+    input_taxid <- accessionToTaxa(input$accession, accessionTaxa_path)
+
+    input_taxonomy <- getTaxonomy(input_taxid,accessionTaxa_path,desiredTaxa = c("species","superkingdom", "kingdom", "phylum", "subphylum", "superclass", "class", "subclass", "order", "family", "subfamily", "genus", "infraorder", "subcohort", "superorder", "superfamily", "tribe", "subspecies", "subgenus", "species group", "parvorder", "varietas"))
+
+    input_taxonomy <- cbind('accession'=input$accession, 'taxID'=input_taxid, input_taxonomy)
+    input_taxonomy <- as_tibble(input_taxonomy)
+    # Join the blast output and taxonomy tibbles
+    return(full_join(input, input_taxonomy, by = "accession"))
+}
+
 # Wrapper function for sample
 # If the sample size is larger than the population, returns the input vector
 # Otherwise returns the result of sampling
