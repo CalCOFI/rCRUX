@@ -2,8 +2,8 @@
 
 # These file directories need to be changed to locations on your device
 
-blast_seeds_parent <- "xyz"
-accession_taxa_path <- "xyz"
+blast_seeds_parent <- "D:/blast_seeds_test"
+accession_taxa_path <- "D:/taxonomizr_data/accessionTaxa.sql"
 
 # This example tries to maximize the amount of information downloaded
 
