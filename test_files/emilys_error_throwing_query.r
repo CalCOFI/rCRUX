@@ -182,8 +182,8 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
   }
 }
 
-accession_taxa_path <- "D:/taxonomizr_data/accessionTaxa.sql"
-blast_seeds_parent <- "D:/emily_test_output"
+accession_taxa_path <- "/data/home/galoscarleo/taxonomy/accessionTaxa.sql"
+blast_seeds_parent <- "/data/home/galoscarleo/emily_test_output"
 testCO1 <- get_blast_seeds("GGWACWGGWTGAACWGTWTAYCCYCC", "TANACYTCnGGRTGNCCRAARAAYCA",
                           blast_seeds_parent, "CO1_063022", accession_taxa_path,
                           num_permutations = 20, hitsize='1000000', evalue='100000',
