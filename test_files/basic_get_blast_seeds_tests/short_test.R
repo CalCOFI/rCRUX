@@ -1,5 +1,7 @@
-# Test the basic functionality of get_blast_seeds
-# accession_taxa_path <- "/data/home/galoscarleo/taxonomy/accessionTaxa.sql"
+# This line is to ensure this is testing the latest version of RCRUX.dev
+devtools::install_github("LunaGal/RCRUX.dev")
+
+accession_taxa_path <- "/data/home/galoscarleo/taxonomy/accessionTaxa.sql"
 
 
 sink("short_test_out.txt")
