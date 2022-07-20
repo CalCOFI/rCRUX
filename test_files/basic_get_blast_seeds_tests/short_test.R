@@ -2,7 +2,7 @@
 devtools::install_github("LunaGal/RCRUX.dev")
 
 accession_taxa_path <- "/data/home/galoscarleo/taxonomy/accessionTaxa.sql"
-db_path <- ""
+db_path <- "/data/home/galoscarleo/nt"
 
 
 sink("short_test_out.txt")
@@ -54,11 +54,23 @@ tryCatch(
 )
 closeAllConnections()
 
-sink("rcrux_blast_test_out.txt")
-err <- file("rcrux_blast_test_err.txt", open = "w")
+sink("rcrux_blast_short_test_out.txt")
+err <- file("rcrux_blast_short_test_err.txt", open = "w")
 sink(err, type = "message")
 tryCatch(
-    RCRUX.dev::rcrux_blast("12S_V5F1/12S_V5F1_primerTree_output_with_taxonomy.csv",
+    RCRUX.dev::rcrux_blast("short_test/12S_V5F1/12S_V5F1_primerTree_output_with_taxonomy.csv",
+                            "blast_test_save", db_path, accession_taxa_path),
+    error = function(e) {
+        message(e, "\n")
+    }
+)
+closeAllConnections()
+
+sink("rcrux_blast_large_test_out.txt")
+err <- file("rcrux_blast_large_test_err.txt", open = "w")
+sink(err, type = "message")
+tryCatch(
+    RCRUX.dev::rcrux_blast("large_test/12S_V5F1/12S_V5F1_primerTree_output_with_taxonomy.csv",
                             "blast_test_save", db_path, accession_taxa_path),
     error = function(e) {
         message(e, "\n")
