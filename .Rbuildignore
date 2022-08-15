@@ -1,0 +1,9 @@
+^\.Rproj\.user$
+^\.vscode$
+^documentation$
+^examples$
+^old_code$
+^test_files$
+^test_seeds$
+^outputs$
+^LICENSE\.md$
