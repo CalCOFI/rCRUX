@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to save data in .csv files</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for save_output_as_csv"><tr><td>save_output_as_csv</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Function to save data in .csv files</h2>
+
+<h3>Description</h3>
+
+<p>Calls write.table with file_name as the first argument
+and &lt;file_out&gt;&lt;Metabarcode&gt;&lt;description&gt;.csv as the second
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+save_output_as_csv(file_name, description, file_out, Metabarcode)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>file_name</code></td>
+<td>
+<p>the object to write</p>
+</td></tr>
+<tr valign="top"><td><code>description</code></td>
+<td>
+<p>a string to include in the .csv name
+directly before the extension</p>
+</td></tr>
+<tr valign="top"><td><code>file_out</code></td>
+<td>
+<p>a parent directory; it should end in a /</p>
+</td></tr>
+<tr valign="top"><td><code>Metabarcode</code></td>
+<td>
+<p>a label that appears before the file name</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>The value of write.table
+</p>
+
+
+</div></body></html>

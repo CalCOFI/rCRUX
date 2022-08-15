@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Query primer_blast and generate a .csv to use for rcrux_blast</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for get_blast_seeds"><tr><td>get_blast_seeds</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Query primer_blast and generate a .csv to use for rcrux_blast</h2>
+
+<h3>Description</h3>
+
+<p>get_blast_seeds uses a modified version of <code>primerTree::primer_search()</code> to
+query NCBI's <a href="https://www.ncbi.nlm.nih.gov/tools/primer-blast/">primer BLAST</a>
+tool, filters the results, then aggregates them into a single data.frame.
+As a side effect, it creates a directory at <code>file_out_dir</code> if one doesn't yet
+exist, then creates a subdirectory inside <code>file_out_dir</code> named after
+<code>Metabarcode_name</code>. It creates two files inside that directory, one
+representing the output and the other representing the output without added
+taxonomy.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+get_blast_seeds(
+  forward_primer,
+  reverse_primer,
+  file_out_dir,
+  Metabarcode_name,
+  accessionTaxa,
+  organism,
+  mismatch = 3,
+  minimum_length = 5,
+  maximum_length = 500,
+  primer_specificity_database = "nt",
+  ...,
+  return_table = TRUE
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>forward_primer</code></td>
+<td>
+<p>passed to primer_search, which turns it into a list of
+each primer it could be based on its degenerate primers, then passes
+each one in turn to NCBI</p>
+</td></tr>
+<tr valign="top"><td><code>reverse_primer</code></td>
+<td>
+<p>passed to primer_search, which turns it into a list of
+each primer it could be based on its degenerate primers, then passes
+each one in turn to NCBI</p>
+</td></tr>
+<tr valign="top"><td><code>file_out_dir</code></td>
+<td>
+<p>the parent directory to place the data in.</p>
+</td></tr>
+<tr valign="top"><td><code>Metabarcode_name</code></td>
+<td>
+<p>used to name the subdirectory and the files. If a
+directory named Metabarcode_name does not exist in file_out_dir, a
+new directory will be created. get_blast_seeds appends
+Metabarcode_name to the beginning of each of the two files it
+generates.</p>
+</td></tr>
+<tr valign="top"><td><code>accessionTaxa</code></td>
+<td>
+<p>the path to sql created by taxonomizr</p>
+</td></tr>
+<tr valign="top"><td><code>organism</code></td>
+<td>
+<p>a vector of character vectors. Each character vector is
+passed in turn to primer_search, which passes them to NCBI.
+get_blast_seeds aggregates all of the results into a single file.</p>
+</td></tr>
+<tr valign="top"><td><code>mismatch</code></td>
+<td>
+<p>the highest acceptable mismatch value. parse_primer_hits
+returns a table with a mismatch column. get_blast_seeds removes each
+row with a mismatch greater than the specified value.</p>
+</td></tr>
+<tr valign="top"><td><code>minimum_length</code></td>
+<td>
+<p>parse_primer_hits returns a table with a product_length
+column. get_blast_seeds removes each row that has a value less than
+minimum_length in the product_length column.</p>
+</td></tr>
+<tr valign="top"><td><code>maximum_length</code></td>
+<td>
+<p>parse_primer_hits returns a table with a
+product_length column. get_blast_seeds removes each row that has a
+value greater than maximum_length in the product_length column</p>
+</td></tr>
+<tr valign="top"><td><code>primer_specificity_database</code></td>
+<td>
+<p>passed to primer_search, which passes it
+to NCBI</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments passed to primer_search, which passes it to
+NCBI</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>a data.frame containing the same information as the .csv it generates
+</p>
+
+
+<h3>Additional arguments passed to primer BLAST</h3>
+
+<p>get_blast_seeds passes many parameters to NCBI's primer blast tool. You can
+match the parameters to the fields available in the GUI here. First, use your
+browser to view the page source. Search for the field you are interested in
+by searching for the title of the field. It should be enclosed in a tag.
+Inside the label tag, it says <code style="white-space: pre;">for = "&lt;name_of_parameter&gt;"</code>. Copy the string
+after for = and add it to get_blast_seeds as the name of a parameter, setting
+it equal to whatever you like.
+</p>
+<p>Example: I want to set &quot;Exon junction span&quot; to 10. I open the source of the
+primer designing tool and look for that string. I find the following:</p>
+<pre>&lt;label class="m" for="PRIMER_ON_SPLICE_SITE"&gt;Exon junction span&lt;/label&gt;
+</pre>
+<p>I copy PRIMER_ON_SPLICE_SITE and add it to get_blast_seeds:</p>
+<pre>get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
+             blast_seeds_parent, "12S_V5F1", accession_taxa_path,
+             organism = c("7776"), MAX_TARGET_PER_TEMPLATE = 10,
+             PRIMER_ON_SPLICE_SITE = "10"
+             return_table = FALSE)
+</pre>
+
+
+</div></body></html>

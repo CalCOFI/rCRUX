@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Helper function to save the state of a running blast search</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for save_state"><tr><td>save_state</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Helper function to save the state of a running blast search</h2>
+
+<h3>Description</h3>
+
+<p>Helper function to save the state of a running blast search
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+save_state(
+  save_dir,
+  output_table,
+  unsampled_indices,
+  too_many_ns,
+  not_in_db,
+  num_rounds
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>save_dir</code></td>
+<td>
+<p>the directory to save in</p>
+</td></tr>
+<tr valign="top"><td><code>output_table</code></td>
+<td>
+<p>the outputs generated so far</p>
+</td></tr>
+<tr valign="top"><td><code>unsampled_indices</code></td>
+<td>
+<p>a vector of indices not yet sampled</p>
+</td></tr>
+<tr valign="top"><td><code>too_many_ns</code></td>
+<td>
+<p>a vector of indices that result
+in a fasta with too many Ns</p>
+</td></tr>
+<tr valign="top"><td><code>not_in_db</code></td>
+<td>
+<p>a vector of indices not found in the local
+database</p>
+</td></tr>
+<tr valign="top"><td><code>num_rounds</code></td>
+<td>
+<p>the number of rounds so far</p>
+</td></tr>
+</table>
+
+
+</div></body></html>

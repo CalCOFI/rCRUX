@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Call primer_search with several parameters and aggregate the...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for iterative_primer_search"><tr><td>iterative_primer_search</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Call primer_search with several parameters and aggregate the results</h2>
+
+<h3>Description</h3>
+
+<p>This function acts like primer_search and parse_primer hits all in one. Its
+parameters are very similar to primer_search, but it takes vectors for
+organism and for database and performs a primer search for each combination.
+It downgrades errors from primer_search and parse_primer_hits into warnings.
+This is useful when searching for a large number of different combinations,
+allowing the function to output successful results.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+iterative_primer_search(forward, reverse, organisms, db = "nt", ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>forward</code></td>
+<td>
+<p>the forward primer</p>
+</td></tr>
+<tr valign="top"><td><code>reverse</code></td>
+<td>
+<p>the reverse primer</p>
+</td></tr>
+<tr valign="top"><td><code>organisms</code></td>
+<td>
+<p>a character vector containing an id or name parseable by
+NCBI as an organism. If it is a vector with multiple entries, each
+entry will be queried separately.</p>
+</td></tr>
+<tr valign="top"><td><code>db</code></td>
+<td>
+<p>which NCBI database to search.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>a data.table summarizing the results of several primer_searches
+</p>
+
+
+</div></body></html>
