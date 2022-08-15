@@ -46,3 +46,6 @@ outputs
 #
 .DS_Store
 path_setup.R
+blast_test_*
+new_seeds_test
+large_test
