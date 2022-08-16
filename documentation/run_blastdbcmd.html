@@ -25,6 +25,10 @@ run_blastdbcmd(query_row, db, ncbi_bin = NULL)
 <h3>Arguments</h3>
 
 <table summary="R argblock">
+<tr valign="top"><td><code>query_row</code></td>
+<td>
+<p>a row from get_blast_seeds</p>
+</td></tr>
 <tr valign="top"><td><code>db</code></td>
 <td>
 <p>a directory with a blast-formatted database</p>
@@ -32,10 +36,6 @@ run_blastdbcmd(query_row, db, ncbi_bin = NULL)
 <tr valign="top"><td><code>ncbi_bin</code></td>
 <td>
 <p>if not null use it as the parent directory for blastn</p>
-</td></tr>
-<tr valign="top"><td><code>row</code></td>
-<td>
-<p>a row from get_blast_seeds</p>
 </td></tr>
 </table>
 

@@ -9,7 +9,7 @@ save_state(
   output_table,
   unsampled_indices,
   too_many_ns,
-  not_in_db,
+  blastdbcmd_failed,
   num_rounds
 )
 }
@@ -23,7 +23,7 @@ save_state(
 \item{too_many_ns}{a vector of indices that result
 in a fasta with too many Ns}
 
-\item{not_in_db}{a vector of indices not found in the local
+\item{blastdbcmd_failed}{a vector of indices not found in the local
 database}
 
 \item{num_rounds}{the number of rounds so far}

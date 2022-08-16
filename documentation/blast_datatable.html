@@ -27,6 +27,8 @@ blast_datatable(
   save_dir,
   db,
   accession_taxa_path,
+  ncbi_bin = NULL,
+  force_db = FALSE,
   sample_size = 1000,
   wildcards = "NNNN"
 )
@@ -54,6 +56,16 @@ current state</p>
 <td>
 <p>a path to an sql created by
 <code>taxonomizr::prepareDatabase()</code></p>
+</td></tr>
+<tr valign="top"><td><code>ncbi_bin</code></td>
+<td>
+<p>the directory that the blast+ suite is in. If NULL, the
+program will use your PATH environmental variable to locate them</p>
+</td></tr>
+<tr valign="top"><td><code>force_db</code></td>
+<td>
+<p>if true, try to use blast databases that don't appear to
+be blast databases</p>
 </td></tr>
 <tr valign="top"><td><code>sample_size</code></td>
 <td>

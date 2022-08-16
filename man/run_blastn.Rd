@@ -7,7 +7,7 @@
 run_blastn(
   fasta,
   db_dir,
-  temp = "temp.fasta",
+  temp = NULL,
   ncbi_bin = NULL,
   evalue = 1e-06,
   align = 50000,

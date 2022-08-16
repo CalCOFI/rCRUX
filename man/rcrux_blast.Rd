@@ -9,7 +9,9 @@ rcrux_blast(
   db_dir,
   accession_taxa_path,
   working_dir,
+  metabarcode,
   expand_vectors = TRUE,
+  warnings = 0,
   ...
 )
 }
@@ -23,8 +25,16 @@ taxonomizr}
 
 \item{working_dir}{a directory in which to save partial and complete output}
 
+\item{metabarcode}{a prefix for the fasta}
+
 \item{expand_vectors}{logical, determines whether to expand too_many_Ns
 and not_in db into real tables and write them in the output directory}
+
+\item{warnings}{value to set the "warn" option to during the function call.
+On exit it returns to the previous value. Setting this argument to
+NULL will not change the option.}
+
+\item{...}{additional arguments passed to \code{\link[RCRUX.dev:blast_datatable]{RCRUX.dev::blast_datatable()}}}
 }
 \description{
 rcrux_ blast uses \code{\link[RCRUX.dev:blast_datatable]{RCRUX.dev::blast_datatable()}} to search against a blast

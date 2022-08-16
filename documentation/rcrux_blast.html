@@ -27,7 +27,9 @@ rcrux_blast(
   db_dir,
   accession_taxa_path,
   working_dir,
+  metabarcode,
   expand_vectors = TRUE,
+  warnings = 0,
   ...
 )
 </pre>
@@ -53,10 +55,24 @@ taxonomizr</p>
 <td>
 <p>a directory in which to save partial and complete output</p>
 </td></tr>
+<tr valign="top"><td><code>metabarcode</code></td>
+<td>
+<p>a prefix for the fasta</p>
+</td></tr>
 <tr valign="top"><td><code>expand_vectors</code></td>
 <td>
 <p>logical, determines whether to expand too_many_Ns
 and not_in db into real tables and write them in the output directory</p>
+</td></tr>
+<tr valign="top"><td><code>warnings</code></td>
+<td>
+<p>value to set the &quot;warn&quot; option to during the function call.
+On exit it returns to the previous value. Setting this argument to
+NULL will not change the option.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments passed to <code>blast_datatable()</code></p>
 </td></tr>
 </table>
 
