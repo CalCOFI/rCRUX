@@ -23,12 +23,26 @@
 #' @param accession_taxa_path a path to the accessionTaxa sql created by
 #'        taxonomizr
 #' @param working_dir a directory in which to save partial and complete output
+#' @param metabarcode a prefix for the fasta
 #' @param expand_vectors logical, determines whether to expand too_many_Ns
 #'        and not_in db into real tables and write them in the output directory
+#' @param warnings value to set the "warn" option to during the function call.
+#'        On exit it returns to the previous value. Setting this argument to
+#'        NULL will not change the option.
+#' @param ... additional arguments passed to [RCRUX.dev::blast_datatable()]
 #' @return NULL
 #' @export
 rcrux_blast <- function(seeds_path, db_dir, accession_taxa_path, working_dir,
-                        expand_vectors = TRUE, ...) {
+                        metabarcode, expand_vectors = TRUE, warnings = 0, ...) {
+    # So that run_blastdbcmd doesn't overwhelm the user with errors
+    # Possibly we should discard the warnings from blastdb as it's entirely
+    # expected to encounter so values that are not in the database.
+    if (!is.null(warnings)) {
+        old_warnings <- getOption("warn")
+        on.exit(options(warn = old_warnings))
+        options(warn = warnings)
+    }
+
     output_dir <- paste(working_dir, "rcrux_blast_output", sep = "/")
     save_dir <- paste(working_dir, "rcrux_blast_save", sep = "/")
     dir.create(working_dir)
@@ -42,6 +56,23 @@ rcrux_blast <- function(seeds_path, db_dir, accession_taxa_path, working_dir,
     summary_csv_path <- paste(output_dir, "summary.csv", sep = "/")
     write.csv(output_table, file = summary_csv_path, row.names = FALSE)
 
+    # Write a fasta
+    get_fasta_no_hyp(output_table, output_dir, metabarcode)
+    
+    # filter step
+    taxa_table <- output_table %>%
+        dplyr::filter_at(dplyr::vars(genus), dplyr::all_vars(!is.na(.))) %>%
+        dplyr::filter_at(dplyr::vars(genus,family), dplyr::all_vars(!is.na(.)))
+
+    # Taxonomy file format (tidyr and dplyr)
+    taxa_table <- taxa_table %>%
+        select(accession, superkingdom, phylum, class, order, family, genus, species) %>%
+        unite(taxonomic_path, superkingdom:species, sep = ";", remove = TRUE, na.rm = FALSE)
+    
+    # Write the thing
+    taxa_table_path <- paste0(output_dir, "/", metabarcode, "taxonomy.tab")
+    write.table(taxa_table, file = taxa_table_path, row.names = FALSE)
+
     # Read condensed vectors and expand them
     if (expand_vectors) {
         too_many_ns_path <- paste(save_dir, "too_many_ns.txt", sep = "/")
@@ -50,11 +81,19 @@ rcrux_blast <- function(seeds_path, db_dir, accession_taxa_path, working_dir,
         too_many_ns_csv_path <- paste(output_dir, "too_many_ns.csv", sep = "/")
         write.csv(too_many_ns, file = too_many_ns_csv_path, row.names = FALSE)
 
-        not_in_db_path <- paste(save_dir, "not_in_db.txt", sep = "/")
-        not_in_db_indices <- as.numeric(readLines(not_in_db_path))
-        not_in_db <- blast_seeds[not_in_db_indices, ]
-        not_in_db_csv_path <- paste(output_dir, "not_in_db.csv", sep = "/")
-        write.csv(not_in_db, file = not_in_db_csv_path, row.names = FALSE)
+        blastdbcmd_failed_path <- paste(save_dir, "blastdbcmd_failed.txt", sep = "/")
+        blastdbcmd_failed_indices <- as.numeric(readLines(blastdbcmd_failed_path))
+        blastdbcmd_failed <- blast_seeds[blastdbcmd_failed_indices, ]
+        blastdbcmd_failed_csv_path <- paste(output_dir, "blastdbcmd_failed.csv", sep = "/")
+        write.csv(blastdbcmd_failed, file = blastdbcmd_failed_csv_path, row.names = FALSE)
     }
     return(NULL)
+}
+
+get_fasta_no_hyp <- function(dupt, file_out_dir, Metabarcode_name) {
+    dupt_no_hiyp <- dupt %>% mutate(sequence = gsub("-", "", sequence))
+    fasta <- character(nrow(dupt_no_hiyp) * 2)
+    fasta[c(TRUE, FALSE)] <- paste0(">", dupt_no_hiyp$accession)
+    fasta[c(FALSE, TRUE)] <- dupt_no_hiyp$sequence
+    writeLines(fasta, paste0(file_out_dir, "/", Metabarcode_name, "_.fasta"))
 }

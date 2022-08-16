@@ -10,7 +10,7 @@
 #' @param ncbi_bin: if not null use it as the parent directory for blastn
 #' @return a tibble representing the blastn results
 #' @export
-run_blastn <- function(fasta, db_dir, temp = "temp.fasta", ncbi_bin = NULL,
+run_blastn <- function(fasta, db_dir, temp = NULL, ncbi_bin = NULL,
                     evalue = 1e-6, align = 50000, coverage = 50, perID = 70) {
     # This is a hacky workaround to deal with the fact
     # that blastn wants a file path as a query
@@ -20,7 +20,12 @@ run_blastn <- function(fasta, db_dir, temp = "temp.fasta", ncbi_bin = NULL,
     # 1) This way, the script can still generally be visualized functionally
     # 2) It allows for easy changes if we ever figure out an elegant way to do
     # the handoff
-    # Use tempfile() for this instead
+    if (is.null(temp)) {
+        temp <- tempfile()
+    }
+
+    message("Generated a temporary fasta at ", temp)
+
     writeLines(fasta, con = temp)
 
     # Determine arguments

@@ -48,6 +48,8 @@
 #'        [taxonomizr::prepareDatabase()]
 #' @param ncbi_bin the directory that the blast+ suite is in. If NULL, the
 #'        program will use your PATH environmental variable to locate them
+#' @param force_db if true, try to use blast databases that don't appear to
+#'        be blast databases
 #' @param sample_size the number of entries to accumulate into a fasta before
 #'        calling blastn
 #' @param wildcards a character vector representing the number of wildcards to
@@ -55,13 +57,18 @@
 #' @return A data.frame representing the output of blastn
 #' @export
 blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
-                            ncbi_bin = NULL,
+                            ncbi_bin = NULL, force_db = FALSE,
                             sample_size = 1000, wildcards = "NNNN") {
+
+    if (!(check_db(db) || force_db)) {
+        stop(db, " is probably not a blast database.
+        Use force_db = TRUE to try it anyway.")
+    }
 
     # Default values for tracker variables
     num_rounds <- 1
     too_many_ns <- NULL
-    not_in_db <- NULL
+    blastdbcmd_failed <- NULL
     output_table <- NULL
     unsampled_indices <- seq_along(blast_seeds$accession)
 
@@ -75,8 +82,8 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
         ns_path <- paste(save_dir, "too_many_ns.txt", sep = "/")
         too_many_ns <- as.numeric(readLines(con = ns_path))
 
-        not_in_db_path <- paste(save_dir, "not_in_db.txt", sep = "/")
-        not_in_db <- as.numeric(readLines(con = not_in_db_path))
+        blastdbcmd_failed_path <- paste(save_dir, "blastdbcmd_failed.txt", sep = "/")
+        blastdbcmd_failed <- as.numeric(readLines(con = blastdbcmd_failed_path))
 
         unsampled_indices_path <-
             paste(save_dir, "unsampled_indices.txt", sep = "/")
@@ -84,7 +91,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
             as.numeric(readLines(con = unsampled_indices_path))
 
         output_table_path <- paste(save_dir, "output_table.txt", sep = "/")
-        output_table <- read.csv(output_table_path)
+        output_table <- read.csv(output_table_path, colClasses = "character")
     }
 
     while (length(unsampled_indices) > 0) {
@@ -112,7 +119,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
             # This causes an error because there are no characters to check, so
             # the if has nothing to operate on. This kludgey `or` fixes that.
             if (length(fasta) == 0 || nchar(fasta) == 0) {
-                not_in_db <- append(not_in_db, index)
+                blastdbcmd_failed <- append(blastdbcmd_failed, index)
             }
             else if (length(grep(wildcards, fasta)) > 0) {
                 too_many_ns <- append(too_many_ns, index)
@@ -123,42 +130,54 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
             pb$tick()
         }
 
-        # run blastn and aggregate results
-        blastn_output <- run_blastn(aggregate_fasta, db, ncbi_bin)
-
-        # remove accesssion numbers found by blast
-        # this is not the most elegant way to do it but it's not the worst...
-        in_output <- blast_seeds$accession %in% blastn_output$accession
-        in_output_indices <- seq_along(blast_seeds$accession)[in_output]
-        # this message is to verify that I am doing this right
-        message(length(in_output_indices),
-                "indices were removed by the filtration step.")
-        unsampled_indices <-
-            unsampled_indices[!unsampled_indices %in% in_output_indices]
-
-        # Add output to existing output
-        if (is.null(output_table)) {
-            output_table <- blastn_output
+        if (!is.character(aggregate_fasta)) {
+            message("aggregate_fasta has value ", aggregate_fasta)
+            message("It may have encountered no useable accession numbers. Proceeding to next round.")
         }
+
         else {
-            output_table <- tibble::add_row(output_table, blastn_output)
-        }
+            # run blastn and aggregate results
+            blastn_output <- run_blastn(aggregate_fasta, db, ncbi_bin)
 
-        # Remove duplicated accessions, keeping the longest sequence
-        output_table <- output_table %>%
-            dplyr::group_by(accession) %>%
-            dplyr::filter(amplicon_length == max(amplicon_length)) %>%
-            dplyr::filter(!(duplicated(accession)))
-        output_table <- dplyr::ungroup(output_table)
+            # remove accesssion numbers found by blast
+            # this is not the most elegant way to do it but it's not the worst...
+            in_output <- blast_seeds$accession %in% blastn_output$accession
+            in_output_indices <- seq_along(blast_seeds$accession)[in_output]
+            # this message is to verify that I am doing this right
+            message(length(in_output_indices),
+                    "indices were removed by the filtration step.")
+            unsampled_indices <-
+                unsampled_indices[!unsampled_indices %in% in_output_indices]
+
+            # Add output to existing output
+            if (is.null(output_table)) {
+                output_table <- blastn_output
+            }
+            else {
+                output_table <- tibble::add_row(output_table, blastn_output)
+            }
+
+            # Remove duplicated accessions, keeping the longest sequence
+            output_table <- output_table %>%
+                dplyr::group_by(accession) %>%
+                dplyr::filter(amplicon_length == max(amplicon_length)) %>%
+                dplyr::filter(!(duplicated(accession)))
+            output_table <- dplyr::ungroup(output_table)
+        }
 
         # save the state of the blast
         num_rounds <- num_rounds + 1
         save_state(save_dir, output_table, unsampled_indices, too_many_ns,
-            not_in_db, num_rounds)
+            blastdbcmd_failed, num_rounds)
     }
 
     # If we get a taxid from blastn can we just use that?
     output_table_taxonomy <-
         get_taxonomizr_from_accession(output_table, accession_taxa_path)
     return(output_table_taxonomy)
+}
+
+# True if the db is a blast database, false if it's not
+check_db <- function(db) {
+    try(system2("blastdbcmd", args = c("-db", db, "-info"), stdout = FALSE)) == 0
 }

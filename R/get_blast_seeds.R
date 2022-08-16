@@ -13,12 +13,19 @@
 #' # Additional arguments passed to primer BLAST
 #'
 #' get_blast_seeds passes many parameters to NCBI's primer blast tool. You can
-#' match the parameters to the fields available in the GUI here. First, use your
+#' match the parameters to the fields available in the GUI
+#' [here](https://www.ncbi.nlm.nih.gov/tools/primer-blast/). First, use your
 #' browser to view the page source. Search for the field you are interested in
 #' by searching for the title of the field. It should be enclosed in a tag.
 #' Inside the label tag, it says `for = "<name_of_parameter>"`. Copy the string
 #' after for = and add it to get_blast_seeds as the name of a parameter, setting
 #' it equal to whatever you like.
+#' 
+#' As of 2022-08-16, the primer blast GUI
+#' contains some options that are not implemented by primer_search.
+#' primer_search doesn't include explicit documentation of allowed options, but
+#' it will quickly report if an option isn't allowed, so trial and error will
+#' not be very time consuming.
 #'
 #' Example: I want to set "Exon junction span" to 10. I open the source of the
 #' primer designing tool and look for that string. I find the following:

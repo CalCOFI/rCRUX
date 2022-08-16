@@ -11,7 +11,7 @@
 <h3>Description</h3>
 
 <p>Given a datatable with the column names of the datatable returned by
-<code>RCRUX.dev::get_blast_seeds()</code>, use blastdbcmd to convert entries into
+<code>get_blast_seeds()</code>, use blastdbcmd to convert entries into
 fasta files, then uses blastn to query ncbi databases for those
 sequences. It compiles the results of blastn into a data.frame that it
 returns. Additionally, it saves its state as text files in a specified
@@ -27,7 +27,6 @@ blast_datatable(
   save_dir,
   db,
   accession_taxa_path,
-  ncbi_bin = NULL,
   sample_size = 1000,
   wildcards = "NNNN"
 )
@@ -55,11 +54,6 @@ current state</p>
 <td>
 <p>a path to an sql created by
 <code>taxonomizr::prepareDatabase()</code></p>
-</td></tr>
-<tr valign="top"><td><code>ncbi_bin</code></td>
-<td>
-<p>the directory that the blast+ suite is in. If NULL, the
-program will use your PATH environmental variable to locate them</p>
 </td></tr>
 <tr valign="top"><td><code>sample_size</code></td>
 <td>
@@ -98,7 +92,7 @@ aggregating the results in a single data.frame.
 local files as it goes. This allows the function to resume a partially
 completed blast, mitigating the consequences of encountering an
 error or experiencing other interruptions. The local files are written to
-<code>save_dir</code> by <code>RCRUX.dev::save_state()</code>. Manually changing these files is not
+<code>save_dir</code> by <code>save_state()</code>. Manually changing these files is not
 suggested as it can change the behavior of blast_datatable. To start from an
 incomplete blast_datatable, specify the same save_dir as the incomplete
 blast. blast_datable will automatically detect save files and resume from
