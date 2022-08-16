@@ -68,7 +68,25 @@ RCRUX uses the taxonomizr package. taxonomizr requires a local sqlite database a
 
 get_blast_seeds uses modified versions of functions from the primerTree package to submit queries to NCBI's primer BLAST tool, then aggregates results into a single data.frame. primer_search expands degenerate primers into each possible non-degenerate primer and submits a query for each. get_blast_seeds further multiplies the number of queries by allowing the user to query the primers for each organism in a vector. get_blast_seeds collects all these results from primer_search, filters them based on product length, and adds taxonomic data using the taxonomizr package.
 
-## Important Options
+## Search options
+
+get_blast_seeds passes many parameters to NCBI's primer blast tool. You can match the parameters to the fields available in the GUI here. First, use your browser to view the page source. Search for the field you are interested in by searching for the title of the field. It should be enclosed in a tag. Inside the label tag, it says for = "<name_of_parameter>". Copy the string after for = and add it to get_blast_seeds as the name of a parameter, setting it equal to whatever you like.
+
+As of 2022-08-16, the primer blast GUI contains some options that are not implemented by primer_search. primer_search doesn't include explicit documentation of allowed options, but it will quickly report if an option isn't allowed, so trial and error will not be very time consuming. 
+
+Example: I want to set "Exon junction span" to 10. I open the source of the primer designing tool and look for that string. I find the following:
+
+`<label class="m" for="PRIMER_ON_SPLICE_SITE">Exon junction span</label>`
+
+I copy PRIMER_ON_SPLICE_SITE and add it to get_blast_seeds:
+
+```
+get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
+             blast_seeds_parent, "12S_V5F1", accession_taxa_path,
+             organism = c("7776"), MAX_TARGET_PER_TEMPLATE = 10,
+             PRIMER_ON_SPLICE_SITE = "10"
+             return_table = FALSE)
+```
 
 ### Organism
 
