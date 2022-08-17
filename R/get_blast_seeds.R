@@ -20,7 +20,7 @@
 #' Inside the label tag, it says `for = "<name_of_parameter>"`. Copy the string
 #' after for = and add it to get_blast_seeds as the name of a parameter, setting
 #' it equal to whatever you like.
-#' 
+#'
 #' As of 2022-08-16, the primer blast GUI
 #' contains some options that are not implemented by primer_search.
 #' primer_search doesn't include explicit documentation of allowed options, but
@@ -71,6 +71,10 @@
 #'        value greater than maximum_length in the product_length column
 #' @param primer_specificity_database passed to primer_search, which passes it
 #'        to NCBI
+#' @param HITSIZE a primer BLAST search parameter set high to maximize the
+#'        number of observations returned.
+#' @param NUM_TARGETS_WITH_PRIMERS a primer BLAST search parameter set high to
+#'        maximize the number of observations returned.
 #' @param ... additional arguments passed to primer_search, which passes it to
 #'        NCBI
 #' @return a data.frame containing the same information as the .csv it generates
@@ -80,7 +84,9 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
                             accessionTaxa,
                             organism, mismatch = 3,
                             minimum_length = 5, maximum_length = 500,
-                            primer_specificity_database = "nt", ...,
+                            primer_specificity_database = "nt",
+                            HITSIZE = 100000, NUM_TARGETS_WITH_PRIMERS = 100000,
+                            ...,
                             return_table = TRUE) {
 
     # Start by making the directory and checking for the sql and whatnot.

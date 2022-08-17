@@ -15,6 +15,8 @@ get_blast_seeds(
   minimum_length = 5,
   maximum_length = 500,
   primer_specificity_database = "nt",
+  HITSIZE = 1e+05,
+  NUM_TARGETS_WITH_PRIMERS = 1e+05,
   ...,
   return_table = TRUE
 )
@@ -57,6 +59,12 @@ value greater than maximum_length in the product_length column}
 \item{primer_specificity_database}{passed to primer_search, which passes it
 to NCBI}
 
+\item{HITSIZE}{a primer BLAST search parameter set high to maximize the
+number of observations returned.}
+
+\item{NUM_TARGETS_WITH_PRIMERS}{a primer BLAST search parameter set high to
+maximize the number of observations returned.}
+
 \item{...}{additional arguments passed to primer_search, which passes it to
 NCBI}
 }
@@ -90,14 +98,18 @@ it will quickly report if an option isn't allowed, so trial and error will
 not be very time consuming.
 
 Example: I want to set "Exon junction span" to 10. I open the source of the
-primer designing tool and look for that string. I find the following:\preformatted{<label class="m" for="PRIMER_ON_SPLICE_SITE">Exon junction span</label>
-}
+primer designing tool and look for that string. I find the following:
 
-I copy PRIMER_ON_SPLICE_SITE and add it to get_blast_seeds:\preformatted{get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
+\if{html}{\out{<div class="sourceCode">}}\preformatted{<label class="m" for="PRIMER_ON_SPLICE_SITE">Exon junction span</label>
+}\if{html}{\out{</div>}}
+
+I copy PRIMER_ON_SPLICE_SITE and add it to get_blast_seeds:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
              blast_seeds_parent, "12S_V5F1", accession_taxa_path,
              organism = c("7776"), MAX_TARGET_PER_TEMPLATE = 10,
              PRIMER_ON_SPLICE_SITE = "10"
              return_table = FALSE)
-}
+}\if{html}{\out{</div>}}
 }
 

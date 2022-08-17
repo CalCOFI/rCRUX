@@ -35,6 +35,8 @@ get_blast_seeds(
   minimum_length = 5,
   maximum_length = 500,
   primer_specificity_database = "nt",
+  HITSIZE = 1e+05,
+  NUM_TARGETS_WITH_PRIMERS = 1e+05,
   ...,
   return_table = TRUE
 )
@@ -101,6 +103,16 @@ value greater than maximum_length in the product_length column</p>
 <p>passed to primer_search, which passes it
 to NCBI</p>
 </td></tr>
+<tr valign="top"><td><code>HITSIZE</code></td>
+<td>
+<p>a primer BLAST search parameter set high to maximize the
+number of observations returned.</p>
+</td></tr>
+<tr valign="top"><td><code>NUM_TARGETS_WITH_PRIMERS</code></td>
+<td>
+<p>a primer BLAST search parameter set high to
+maximize the number of observations returned.</p>
+</td></tr>
 <tr valign="top"><td><code>...</code></td>
 <td>
 <p>additional arguments passed to primer_search, which passes it to
@@ -133,16 +145,18 @@ it will quickly report if an option isn't allowed, so trial and error will
 not be very time consuming.
 </p>
 <p>Example: I want to set &quot;Exon junction span&quot; to 10. I open the source of the
-primer designing tool and look for that string. I find the following:</p>
-<pre>&lt;label class="m" for="PRIMER_ON_SPLICE_SITE"&gt;Exon junction span&lt;/label&gt;
-</pre>
-<p>I copy PRIMER_ON_SPLICE_SITE and add it to get_blast_seeds:</p>
-<pre>get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
+primer designing tool and look for that string. I find the following:
+</p>
+<div class="sourceCode"><pre>&lt;label class="m" for="PRIMER_ON_SPLICE_SITE"&gt;Exon junction span&lt;/label&gt;
+</pre></div>
+<p>I copy PRIMER_ON_SPLICE_SITE and add it to get_blast_seeds:
+</p>
+<div class="sourceCode"><pre>get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
              blast_seeds_parent, "12S_V5F1", accession_taxa_path,
              organism = c("7776"), MAX_TARGET_PER_TEMPLATE = 10,
              PRIMER_ON_SPLICE_SITE = "10"
              return_table = FALSE)
-</pre>
+</pre></div>
 
 
 </div></body></html>
