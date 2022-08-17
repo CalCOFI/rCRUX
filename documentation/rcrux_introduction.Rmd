@@ -72,7 +72,7 @@ get_blast_seeds uses modified versions of functions from the primerTree package 
 
 get_blast_seeds passes many parameters to NCBI's primer blast tool. You can match the parameters to the fields available in the GUI here. First, use your browser to view the page source. Search for the field you are interested in by searching for the title of the field. It should be enclosed in a tag. Inside the label tag, it says for = "<name_of_parameter>". Copy the string after for = and add it to get_blast_seeds as the name of a parameter, setting it equal to whatever you like.
 
-As of 2022-08-16, the primer blast GUI contains some options that are not implemented by primer_search. primer_search doesn't include explicit documentation of allowed options, but it will quickly report if an option isn't allowed, so trial and error will not be very time consuming. 
+As of 2022-08-16, the primer blast GUI contains some options that are not implemented by primer_search. The table below documents the available options.
 
 Example: I want to set "Exon junction span" to 10. I open the source of the primer designing tool and look for that string. I find the following:
 
@@ -87,6 +87,111 @@ get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
              PRIMER_ON_SPLICE_SITE = "10"
              return_table = FALSE)
 ```
+
+Below is a table of available options.
+
+| Name                                   | Type     | Default      | Description |   |
+|----------------------------------------|----------|--------------|-------------|---|
+| SEQFILE                                | file     | <NA>         |             |   |
+| PRIMER5_START                          | text     | <NA>         |             |   |
+| PRIMER5_END                            | text     | <NA>         |             |   |
+| PRIMER3_START                          | text     | <NA>         |             |   |
+| PRIMER3_END                            | text     | <NA>         |             |   |
+| PRIMER_LEFT_INPUT                      | text     | <NA>         |             |   |
+| PRIMER_RIGHT_INPUT                     | text     | <NA>         |             |   |
+| PRIMER_PRODUCT_MIN                     | text     | 70           |             |   |
+| PRIMER_PRODUCT_MAX                     | text     | 1000         |             |   |
+| PRIMER_NUM_RETURN                      | text     | 10           |             |   |
+| PRIMER_MIN_TM                          | text     | 57           |             |   |
+| PRIMER_OPT_TM                          | text     | 60           |             |   |
+| PRIMER_MAX_TM                          | text     | 63           |             |   |
+| PRIMER_MAX_DIFF_TM                     | text     | 3            |             |   |
+| PRIMER_ON_SPLICE_SITE                  | dropdown | 0            |             |   |
+| SPLICE_SITE_OVERLAP_5END               | text     | 7            |             |   |
+| SPLICE_SITE_OVERLAP_3END               | text     | 4            |             |   |
+| SPLICE_SITE_OVERLAP_3END_MAX           | text     | 8            |             |   |
+| SPAN_INTRON                            | checkbox |              |             |   |
+| MIN_INTRON_SIZE                        | text     | 1000         |             |   |
+| MAX_INTRON_SIZE                        | text     | 1000000      |             |   |
+| SEARCH_SPECIFIC_PRIMER                 | checkbox | on           |             |   |
+| SEARCHMODE                             | dropdown | 0            |             |   |
+| PRIMER_SPECIFICITY_DATABASE            | dropdown | refseq_mrna  |             |   |
+| CUSTOMSEQFILE                          | file     | <NA>         |             |   |
+| EXCLUDE_XM                             | checkbox |              |             |   |
+| EXCLUDE_ENV                            | checkbox |              |             |   |
+| ORGANISM                               | text     | Homo sapiens |             |   |
+| <NA>                                   | button   | <NA>         |             |   |
+| slctOrg                                | text     | <NA>         |             |   |
+| ENTREZ_QUERY                           | text     | <NA>         |             |   |
+| TOTAL_PRIMER_SPECIFICITY_MISMATCH      | dropdown | 1            |             |   |
+| PRIMER_3END_SPECIFICITY_MISMATCH       | dropdown | 1            |             |   |
+| MISMATCH_REGION_LENGTH                 | dropdown | 5            |             |   |
+| TOTAL_MISMATCH_IGNORE                  | dropdown | 6            |             |   |
+| MAX_TARGET_SIZE                        | dropdown | 4000         |             |   |
+| ALLOW_TRANSCRIPT_VARIANTS              | checkbox |              |             |   |
+| <NA>                                   | button   | <NA>         |             |   |
+| NEWWIN                                 | checkbox |              |             |   |
+| SHOW_SVIEWER                           | checkbox | on           |             |   |
+| HITSIZE                                | dropdown | 50000        |             |   |
+| EVALUE                                 | dropdown | 30000        |             |   |
+| WORD_SIZE                              | dropdown | 7            |             |   |
+| MAX_CANDIDATE_PRIMER                   | dropdown | 500          |             |   |
+| NUM_TARGETS                            | text     | 20           |             |   |
+| NUM_TARGETS_WITH_PRIMERS               | text     | 1000         |             |   |
+| MAX_TARGET_PER_TEMPLATE                | text     | 100          |             |   |
+| PRODUCT_MIN_TM                         | text     |              |             |   |
+| PRODUCT_OPT_TM                         | text     |              |             |   |
+| PRODUCT_MAX_TM                         | text     |              |             |   |
+| PRIMER_MIN_SIZE                        | text     | 15           |             |   |
+| PRIMER_OPT_SIZE                        | text     | 20           |             |   |
+| PRIMER_MAX_SIZE                        | text     | 25           |             |   |
+| PRIMER_MIN_GC                          | text     | 20           |             |   |
+| PRIMER_MAX_GC                          | text     | 80           |             |   |
+| GC_CLAMP                               | text     | 0            |             |   |
+| POLYX                                  | text     | 5            |             |   |
+| PRIMER_MAX_END_STABILITY               | text     | 9            |             |   |
+| PRIMER_MAX_END_GC                      | text     | 5            |             |   |
+| TH_OLOGO_ALIGNMENT                     | checkbox |              |             |   |
+| TH_TEMPLATE_ALIGNMENT                  | checkbox |              |             |   |
+| PRIMER_MAX_TEMPLATE_MISPRIMING_TH      | text     | 40           |             |   |
+| PRIMER_PAIR_MAX_TEMPLATE_MISPRIMING_TH | text     | 70           |             |   |
+| PRIMER_MAX_SELF_ANY_TH                 | text     | 45           |             |   |
+| PRIMER_MAX_SELF_END_TH                 | text     | 35           |             |   |
+| PRIMER_PAIR_MAX_COMPL_ANY_TH           | text     | 45           |             |   |
+| PRIMER_PAIR_MAX_COMPL_END_TH           | text     | 35           |             |   |
+| PRIMER_MAX_HAIRPIN_TH                  | text     | 24           |             |   |
+| PRIMER_MAX_TEMPLATE_MISPRIMING         | text     | 12           |             |   |
+| PRIMER_PAIR_MAX_TEMPLATE_MISPRIMING    | text     | 24           |             |   |
+| SELF_ANY                               | text     | 8            |             |   |
+| SELF_END                               | text     | 3            |             |   |
+| PRIMER_PAIR_MAX_COMPL_ANY              | text     | 8            |             |   |
+| PRIMER_PAIR_MAX_COMPL_END              | text     | 3            |             |   |
+| EXCLUDED_REGIONS                       | text     | <NA>         |             |   |
+| OVERLAP                                | text     | <NA>         |             |   |
+| OVERLAP_5END                           | text     | 7            |             |   |
+| OVERLAP_3END                           | text     | 4            |             |   |
+| MONO_CATIONS                           | text     | 50           |             |   |
+| DIVA_CATIONS                           | text     | 1.5          |             |   |
+| CON_DNTPS                              | text     | 0.6          |             |   |
+| SALT_FORMULAR                          | dropdown | 1            |             |   |
+| TM_METHOD                              | dropdown | 1            |             |   |
+| CON_ANEAL_OLIGO                        | text     | 50           |             |   |
+| NO_SNP                                 | checkbox |              |             |   |
+| PRIMER_MISPRIMING_LIBRARY              | dropdown | AUTO         |             |   |
+| LOW_COMPLEXITY_FILTER                  | checkbox | on           |             |   |
+| PICK_HYB_PROBE                         | checkbox |              |             |   |
+| PRIMER_INTERNAL_OLIGO_MIN_SIZE         | text     | 18           |             |   |
+| PRIMER_INTERNAL_OLIGO_OPT_SIZE         | text     | 20           |             |   |
+| PRIMER_INTERNAL_OLIGO_MAX_SIZE         | text     | 27           |             |   |
+| PRIMER_INTERNAL_OLIGO_MIN_TM           | text     | 57           |             |   |
+| PRIMER_INTERNAL_OLIGO_OPT_TM           | text     | 60           |             |   |
+| PRIMER_INTERNAL_OLIGO_MAX_TM           | text     | 63           |             |   |
+| PRIMER_INTERNAL_OLIGO_MIN_GC           | text     | 20           |             |   |
+| PRIMER_INTERNAL_OLIGO_OPT_GC_PERCENT   | text     | 50           |             |   |
+| PRIMER_INTERNAL_OLIGO_MAX_GC           | text     | 80           |             |   |
+| <NA>                                   | button   | <NA>         |             |   |
+| NEWWIN                                 | checkbox |              |             |   |
+| SHOW_SVIEWER                           | checkbox | on           |             |   |
 
 ### Organism
 
