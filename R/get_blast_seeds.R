@@ -84,7 +84,7 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
                             accessionTaxa,
                             organism,
                             minimum_length = 5, maximum_length = 500,
-                            primer_specificity_database = "nt", mismatch = 3
+                            primer_specificity_database = "nt", mismatch = 3,
                             ...,
                             return_table = TRUE) {
 
