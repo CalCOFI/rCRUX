@@ -82,10 +82,9 @@
 get_blast_seeds <- function(forward_primer, reverse_primer,
                             file_out_dir, Metabarcode_name,
                             accessionTaxa,
-                            organism, mismatch = 3,
+                            organism,
                             minimum_length = 5, maximum_length = 500,
                             primer_specificity_database = "nt",
-                            HITSIZE = 100000, NUM_TARGETS_WITH_PRIMERS = 100000,
                             ...,
                             return_table = TRUE) {
 
