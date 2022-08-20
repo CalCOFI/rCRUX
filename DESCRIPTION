@@ -1,15 +1,18 @@
 Package: rCRUX
-Title: What the Package Does (One Line, Title Case)
+Title: rCRUX is a Suite of Tools for Building Metabarcode Reference Libraries by Querying NCBI Databases and Filtering and Formatting the Resulting Data.
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
-           role = c("aut", "cre"),
-           email = "first.last@example.com",
+    person(given = "Luna",
+           family = "Gal",
+           role = c("aut"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    person(given = "Emily",
+           family = "Curd",
+           role = c("aut", "cre"),
+           email = "eecurd@g.ucla.edu",
+           comment = c(ORCID = "https://orcid.org/0000-0003-0336-6852"))
+Description: eDNA metabarcoding is increasingly used to survey biological communities using common universal and novel genetic loci. There is a need for an easy to implement computational tool that can generate metabarcoding reference libraries for any locus, and are specific, and comprehensive. We have reimagined CRUX (Curd et al. 2019) and developed the rCRUX package to fit this need by generating taxonomy and fasta files for any user defined locus.  The typical data pipeline involves using get_blast_seeds() to download and wrangle results from NCBI’s primer BLAST tool, then using rcrux_blast() to search a local NCBI database for matches.
 License: GPL (>= 3)
-Encoding: UTF-8
 Imports:
     tibble,
     dplyr,
@@ -21,6 +24,11 @@ Imports:
     lubridate,
     primerTree,
     progress
+Encoding: UTF-8    
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.0
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
