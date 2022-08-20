@@ -82,12 +82,9 @@
 get_blast_seeds <- function(forward_primer, reverse_primer,
                             file_out_dir, Metabarcode_name,
                             accessionTaxa,
-                            organism, HITSIZE ='1000000', evalue='100000',
-                            word_size='6', MAX_TARGET_PER_TEMPLATE = '5',
-                            NUM_TARGETS_WITH_PRIMERS = '100000',
+                            organism, mismatch = 3,
                             minimum_length = 5, maximum_length = 500,
-                            primer_specificity_database = "nt", mismatch = 3,
-                            ...,
+                            primer_specificity_database = "nt", ...,
                             return_table = TRUE) {
 
     # Start by making the directory and checking for the sql and whatnot.
