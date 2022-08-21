@@ -62,15 +62,15 @@ rcrux_blast <- function(seeds_path, db_dir, accession_taxa_path, working_dir,
     # filter step
     taxa_table <- output_table %>%
         dplyr::filter_at(dplyr::vars(genus), dplyr::all_vars(!is.na(.))) %>%
-        dplyr::filter_at(dplyr::vars(genus,family), dplyr::all_vars(!is.na(.)))
+        dplyr::filter_at(dplyr::vars(genus,family), dplyr::all_vars(!is.na(.))) %>% dplyr:: slice(-1)
 
     # Taxonomy file format (tidyr and dplyr)
     taxa_table <- taxa_table %>%
-        select(accession, superkingdom, phylum, class, order, family, genus, species) %>%
-        unite(taxonomic_path, superkingdom:species, sep = ";", remove = TRUE, na.rm = FALSE)
+        tidyr::select(accession, superkingdom, phylum, class, order, family, genus, species) %>%
+        dplyr::unite(taxonomic_path, superkingdom:species, sep = ";", remove = TRUE, na.rm = FALSE)
     
     # Write the thing
-    taxa_table_path <- paste0(output_dir, "/", metabarcode, "taxonomy.tab")
+    taxa_table_path <- paste0(output_dir, "/", metabarcode, "taxonomy.txt")
     write.table(taxa_table, file = taxa_table_path, row.names = FALSE)
 
     # Read condensed vectors and expand them
