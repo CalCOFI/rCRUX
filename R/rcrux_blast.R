@@ -71,7 +71,7 @@ rcrux_blast <- function(seeds_path, db_dir, accession_taxa_path, working_dir,
     
     # Write the thing
     taxa_table_path <- paste0(output_dir, "/", metabarcode, "_taxonomy.txt")
-    write.table(taxa_table, file = taxa_table_path, row.names = FALSE)
+    write.table(taxa_table, file = taxa_table_path, row.names = FALSE, col.names=FALSE)
 
     # Read condensed vectors and expand them
     if (expand_vectors) {
