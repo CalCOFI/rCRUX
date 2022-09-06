@@ -59,7 +59,7 @@ get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
 
 
 # A .csv is automatically created at this path based on the arguments passed to get_blast_seeds
-# note that using default parameters only 1000 hits are returned from NCBI's primer blast
+# note that using default parameters only 1948 hits are returned from NCBI's primer blast.  Modifying defaults can increase the number of returns by orders of magnitude, see below
 
 csv_path <- "/my/directory/12S_V5F1/12S_V5F1_primerTree_output_with_taxonomy.csv"
 
@@ -68,7 +68,7 @@ rcrux_blast(csv_path, "blast_test_save", db_path, accession_taxa_path)
 
 
 ```
-
+Example output can be found [here](/examples/12S_V5F1_Example_Pipeline_output_generated_9-6-22).
 
 # [get_blast_seeds](https://lunagal.github.io/get_blast_seeds)
 
