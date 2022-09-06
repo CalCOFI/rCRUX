@@ -62,10 +62,9 @@ get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
 # note that using default parameters only 1948 hits are returned from NCBI's primer blast.  Modifying defaults can increase the number of returns by orders of magnitude, see below
 
 csv_path <- "/my/directory/12S_V5F1/12S_V5F1_primerTree_output_with_taxonomy.csv"
+blast_db_out <- "/my/directory/12S_V5F1"
 
-rcrux_blast(csv_path, "blast_test_save", db_path, accession_taxa_path)
-
-
+rcrux_blast(csv_path, blastdb_path, accession_taxa_path, blast_db_out, "12S_V5F1", force_db = TRUE)
 
 ```
 Example output can be found [here](/examples/12S_V5F1_Example_Pipeline_output_generated_9-6-22).
