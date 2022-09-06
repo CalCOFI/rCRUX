@@ -51,7 +51,7 @@ run_blastn <- function(fasta, db_dir, temp = NULL, ncbi_bin = NULL,
                              wait = TRUE,
                              stdout = TRUE)
   } else {
-    blastn <- paste0(ncbi_bin, "blastn", "/")
+    blastn <- paste0(ncbi_bin, "blastn")
     blastn_output <- system2(command = blastn,
                              args = c("-db", db_dir,
                                       "-query", temp,
