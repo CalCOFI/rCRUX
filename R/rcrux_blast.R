@@ -60,14 +60,13 @@ rcrux_blast <- function(seeds_path, db_dir, accession_taxa_path, working_dir,
   get_fasta_no_hyp(output_table, output_dir, metabarcode)
   
   # filter step
-  taxa_table <- output_table %>%
-    dplyr::filter_at(dplyr::vars(genus), dplyr::all_vars(!is.na(.))) %>%
-    dplyr::filter_at(dplyr::vars(genus,family), dplyr::all_vars(!is.na(.))) %>% dplyr::slice(-1)
+  taxa_table <-  dplyr::filter_at(output_table,dplyr::vars(genus), dplyr::all_vars(!is.na(.)))
+  taxa_table <-  dplyr::filter_at(taxa_table,dplyr::vars(genus,family), dplyr::all_vars(!is.na(.)))
+  taxa_table <-dplyr::slice(taxa_table,-1)
   
   # Taxonomy file format (tidyr and dplyr)
-  taxa_table <- taxa_table %>%
-    select(accession, superkingdom, phylum, class, order, family, genus, species) %>%
-    unite(taxonomic_path, superkingdom:species, sep = ";", remove = TRUE, na.rm = FALSE)
+  taxa_table <-  dplyr::select(taxa_table,accession, superkingdom, phylum, class, order, family, genus, species) 
+  taxa_table <-tidyr::unite(taxa_table,taxonomic_path, superkingdom:species, sep = ";", remove = TRUE, na.rm = FALSE)
   
   # Write the thing
   taxa_table_path <- paste0(output_dir, "/", metabarcode, "_taxonomy.txt")
@@ -91,7 +90,7 @@ rcrux_blast <- function(seeds_path, db_dir, accession_taxa_path, working_dir,
 }
 
 get_fasta_no_hyp <- function(dupt, file_out_dir, Metabarcode_name) {
-  dupt_no_hiyp <- dupt %>% mutate(sequence = gsub("-", "", sequence))
+  dupt_no_hiyp <-  dplyr::mutate(dupt, sequence = gsub("-", "", sequence))
   fasta <- character(nrow(dupt_no_hiyp) * 2)
   fasta[c(TRUE, FALSE)] <- paste0(">", dupt_no_hiyp$accession)
   fasta[c(FALSE, TRUE)] <- dupt_no_hiyp$sequence
