@@ -179,12 +179,11 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
 # True if the db is a blast database, false if it's not
 
-if (is.null(ncbi_bin)) {
-  check_db <- function(db) {
+
+check_db <- function(db) {
+    if (is.null(ncbi_bin)) {
       try(system2("blastdbcmd", args = c("-db", db, "-info"), stdout = FALSE)) == 0
-      }
-} else {
-  check_db <- function(db) {
+      } else {
       try(system2(blastdbcmd, args = c("-db", db, "-info"), stdout = FALSE)) == 0
       }
 }
