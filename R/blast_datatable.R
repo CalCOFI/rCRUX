@@ -137,7 +137,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     
     else {
       # run blastn and aggregate results
-      blastn_output <- run_blastn(aggregate_fasta, db, ncbi_bin)
+      blastn_output <- run_blastn(fasta=aggregate_fasta, db_dir=db, ncbi_bin=ncbi_bin)
       
       # remove accesssion numbers found by blast
       # this is not the most elegant way to do it but it's not the worst...
