@@ -184,6 +184,7 @@ if (is.null(ncbi_bin)) {
       try(system2("blastdbcmd", args = c("-db", db, "-info"), stdout = FALSE)) == 0
       }
 }
+
 else {
   check_db <- function(db) {
       try(system2(blastdbcmd, args = c("-db", db, "-info"), stdout = FALSE)) == 0
