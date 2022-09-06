@@ -49,7 +49,7 @@ The following example shows a simple RCRUX pipeline from start to finish. Note t
 
 
 ```
-seeds_path <- "/my/rCRUX_output_directory"
+blast_seeds_parent <- "/my/rCRUX_output_directory"
 accession_path <- "/my/accessionTaxa.sql"
 blastdb_path <- "/my/local/blast_database/nt"
 
@@ -59,10 +59,13 @@ get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
 
 
 # A .csv is automatically created at this path based on the arguments passed to get_blast_seeds
+# note that using default parameters only 1000 hits are returned from NCBI's primer blast
 
 csv_path <- "/my/directory/12S_V5F1/12S_V5F1_primerTree_output_with_taxonomy.csv"
 
 rcrux_blast(csv_path, "blast_test_save", db_path, accession_taxa_path)
+
+
 
 ```
 
