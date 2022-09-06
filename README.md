@@ -50,21 +50,27 @@ The following example shows a simple RCRUX pipeline from start to finish. Note t
 
 ```
 blast_seeds_parent <- "/my/rCRUX_output_directory"
-accession_path <- "/my/accessionTaxa.sql"
+accession_taxa_path <- "/my/accessionTaxa.sql"
 blastdb_path <- "/my/local/blast_database/nt"
+metabarcode <- "12S_V5F1"
 
 get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
-                 blast_seeds_parent, "12S_V5F1", accession_path,
+                 blast_seeds_parent, metabarcode, accession_taxa_path,
                  organism = c("7776", "7777"), return_table = FALSE)
 
 
 # A .csv is automatically created at this path based on the arguments passed to get_blast_seeds
 # Note that using default parameters only 1948 hits are returned from NCBI's primer blast.  Modifying defaults can increase the number of returns by orders of magnitude, see below.
 
-csv_path <- "/my/directory/12S_V5F1/12S_V5F1_primerTree_output_with_taxonomy.csv"
-blast_db_out <- "/my/directory/12S_V5F1_blast_out"
+seeds_path <- '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1/12S_V5F1_primerTree_output_with_taxonomy.csv'
+working_dir <- '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1/sample_size_10'
 
-rcrux_blast(csv_path, blastdb_path, accession_taxa_path, blast_db_out, "12S_V5F1", force_db = TRUE, sample_size = 10)
+rcrux_blast(seeds_path, db_dir, accession_taxa_path, working_dir,
+            metabarcode, sample_size = 10)
+
+# if BLAST+ is not in your path add ncbi_bin = "/my/local/blast+_folder" to the command:
+#rcrux_blast(seeds_path, db_dir, accession_taxa_path, working_dir,
+            metabarcode, sample_size = 10, ncbi_bin = "/my/local/blast+_folder")
 
 # the default is sample_size = 1000. The example was modified for speed and file size.
 
