@@ -61,7 +61,8 @@ get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
 
 
 # Output .csv files are automatically created at this path based on the arguments passed to get_blast_seeds
-# Note that using default parameters only 1948 hits are returned from NCBI's primer blast.  Modifying defaults can increase the number of returns by orders of magnitude, see below.
+# Note that using default parameters only 1047 hits are returned from NCBI's primer blast.  
+# Modifying defaults can* increase the number of returns by orders of magnitude, see below. *sequence availability for a given taxid is a limiting factor.
 ```
 
 **rcrux_blast**
