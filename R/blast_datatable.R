@@ -60,10 +60,10 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
                             ncbi_bin = NULL, force_db = FALSE,
                             sample_size = 1000, wildcards = "NNNN") {
 
-  #if (!(check_db(db) || force_db)) {
-  #  stop(db, " is probably not a blast database.
-  #       Use force_db = TRUE to try it anyway.")
-  #}
+  if (!(check_db(db) || force_db)) {
+    stop(db, " is probably not a blast database.
+         Use force_db = TRUE to try it anyway.")
+  }
 
   # Default values for tracker variables
   num_rounds <- 1
@@ -180,7 +180,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 # True if the db is a blast database, false if it's not
 
 
-check_db <- function(db) {
+check_db <- function(db, ncbi_bin) {
   if (is.null(ncbi_bin)) {
     try(system2("blastdbcmd", args = c("-db", db, "-info"), stdout = FALSE)) == 0
   } else {
