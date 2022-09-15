@@ -36,7 +36,7 @@ NCBI's [BLAST+](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/) suite must
 
 **Blast-formatted database**
 
-rCRUX requires a local blast-formatted nucleotide database. These can be user generated or download a pre-formatted database from [NCBI](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/).  NCBI provides a tool for downloading databases as part of the blast+ package. A brief help page can be found [here](https://www.ncbi.nlm.nih.gov/books/NBK569850/).
+rCRUX requires a local blast-formatted nucleotide database. These can be user generated or download a pre-formatted database from [NCBI](https://ftp.ncbi.nlm.nih.gov/blast/db/).  NCBI provides a tool (perl script) for downloading databases as part of the blast+ package. A brief help page can be found [here](https://www.ncbi.nlm.nih.gov/books/NBK569850/).
 
 **Taxonomizr**
 
@@ -59,16 +59,17 @@ get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
                  organism = c("7776", "7777"), return_table = FALSE)
 
 
-# A .csv is automatically created at this path based on the arguments passed to get_blast_seeds
+# Output .csv files are automatically created at this path based on the arguments passed to get_blast_seeds
 # Note that using default parameters only 1948 hits are returned from NCBI's primer blast.  Modifying defaults can increase the number of returns by orders of magnitude, see below.
 ```
+
 **rcrux_blast**
 ```
-seeds_path <- '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1/12S_V5F1_primerTree_output_with_taxonomy.csv'
+seeds_path <- '/my/rCRUX_output_directory/12S_V5F1_primerTree_output_with_taxonomy.csv'
 # this is output from get_blast_seeds
 db_dir <- "/my/local/blast_database/nt"
 metabarcode <- "12S_V5F1"
-working_dir <- '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1/sample_size_10'
+working_dir <- '/my/rCRUX_output_directory/12S_V5F1/sample_size_10'
 
 rcrux_blast(seeds_path, db_dir, accession_taxa_path, working_dir,
             metabarcode, sample_size = 10)
@@ -82,7 +83,9 @@ rcrux_blast(seeds_path, db_dir, accession_taxa_path, working_dir,
 
 
 ```
-Example output can be found [here](/examples/12S_V5F1_Example_Pipeline_output_generated_9-6-22). Note, there will be variability between runs due to primer blast return parameters and the sample size and random sampling that occurs during rcrux_blast.
+
+Example output can be found [here](/examples/12S_V5F1_Example_Pipeline_output_generated_9-6-22). Note, there will be variability between runs due to primer blast return parameters and the sample size and random sampling of the blast seeds table that occurs during rcrux_blast.
+
 
 # [get_blast_seeds](https://lunagal.github.io/get_blast_seeds)
 
