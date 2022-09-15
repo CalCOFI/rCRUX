@@ -50,7 +50,7 @@ rcrux_blast <- function(seeds_path, db_dir, accession_taxa_path, working_dir,
   dir.create(output_dir)
   blast_seeds <- read.csv(seeds_path)
   output_table <- blast_datatable(blast_seeds, save_dir, db_dir,
-                                  accession_taxa_path, ncbi_bin = NULL, ...)
+                                  accession_taxa_path, ...)
 
   # Write output_table to dir/rcrux_blast_output/summary.csv
   summary_csv_path <- paste(output_dir, "summary.csv", sep = "/")

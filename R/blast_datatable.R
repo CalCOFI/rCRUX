@@ -59,60 +59,60 @@
 blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
                             ncbi_bin = NULL, force_db = FALSE,
                             sample_size = 1000, wildcards = "NNNN") {
-  
+
   if (!(check_db(db) || force_db)) {
     stop(db, " is probably not a blast database.
          Use force_db = TRUE to try it anyway.")
   }
-  
+
   # Default values for tracker variables
   num_rounds <- 1
   too_many_ns <- NULL
   blastdbcmd_failed <- NULL
   output_table <- NULL
   unsampled_indices <- seq_along(blast_seeds$accession)
-  
+
   # Pick up where it left off
   # This could be improved in a bunch of ways tbh
   # Most simply, this does the "same thing" 5 times. function
   if (file.exists(paste(save_dir, "unsampled_indices.txt", sep = "/"))) {
     rounds_path <- paste(save_dir, "num_rounds.txt", sep = "/")
     num_rounds <- as.numeric(readLines(con = rounds_path))
-    
+
     ns_path <- paste(save_dir, "too_many_ns.txt", sep = "/")
     too_many_ns <- as.numeric(readLines(con = ns_path))
-    
+
     blastdbcmd_failed_path <- paste(save_dir, "blastdbcmd_failed.txt", sep = "/")
     blastdbcmd_failed <- as.numeric(readLines(con = blastdbcmd_failed_path))
-    
+
     unsampled_indices_path <-
       paste(save_dir, "unsampled_indices.txt", sep = "/")
     unsampled_indices <-
       as.numeric(readLines(con = unsampled_indices_path))
-    
+
     output_table_path <- paste(save_dir, "output_table.txt", sep = "/")
     output_table <- read.csv(output_table_path, colClasses = "character")
   }
-  
+
   while (length(unsampled_indices) > 0) {
     # information about state of blast
     message(paste("BLAST round", num_rounds))
     message(paste(length(unsampled_indices), "indices left to process."))
-    
+
     # sample some of them, removing them from the vector
     sample_indices <- smart_sample(unsampled_indices, sample_size)
     unsampled_indices <-
       unsampled_indices[!(unsampled_indices %in% sample_indices)]
-    
+
     # run blastdbcmd on each
     # sort results into appropriate buckets
     aggregate_fasta <- NULL
     message(paste("Running blastdbcmd on", length(sample_indices), "samples."))
     pb <- progress::progress_bar$new(total = length(sample_indices))
     for (index in sample_indices) {
-      fasta <- run_blastdbcmd(blast_seeds[index, ], db, ncbi_bin)
+      fasta <- run_blastdbcmd(blast_seeds[index, ], db, ncbi_bin=ncbi_bin)
       # Maybe in these cases we can just append directly to output?
-      
+
       # So this is somewhat atrocious. Why do we do it this way?
       # Well, in cases where the command has a non-0 exit status,
       # system2 sometimes (always?) returns a character vector of length 0
@@ -129,16 +129,16 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       }
       pb$tick()
     }
-    
+
     if (!is.character(aggregate_fasta)) {
       message("aggregate_fasta has value ", aggregate_fasta)
       message("It may have encountered no useable accession numbers. Proceeding to next round.")
     }
-    
+
     else {
       # run blastn and aggregate results
       blastn_output <- run_blastn(fasta=aggregate_fasta, db_dir=db, ncbi_bin=ncbi_bin)
-      
+
       # remove accesssion numbers found by blast
       # this is not the most elegant way to do it but it's not the worst...
       in_output <- blast_seeds$accession %in% blastn_output$accession
@@ -148,7 +148,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
               "indices were removed by the filtration step.")
       unsampled_indices <-
         unsampled_indices[!unsampled_indices %in% in_output_indices]
-      
+
       # Add output to existing output
       if (is.null(output_table)) {
         output_table <- blastn_output
@@ -156,7 +156,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       else {
         output_table <- tibble::add_row(output_table, blastn_output)
       }
-      
+
       # Remove duplicated accessions, keeping the longest sequence
       output_table <- output_table %>%
         dplyr::group_by(accession) %>%
@@ -164,13 +164,13 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
         dplyr::filter(!(duplicated(accession)))
       output_table <- dplyr::ungroup(output_table)
     }
-    
+
     # save the state of the blast
     num_rounds <- num_rounds + 1
     save_state(save_dir, output_table, unsampled_indices, too_many_ns,
                blastdbcmd_failed, num_rounds)
   }
-  
+
   # If we get a taxid from blastn can we just use that?
   output_table_taxonomy <-
     get_taxonomizr_from_accession(output_table, accession_taxa_path)
