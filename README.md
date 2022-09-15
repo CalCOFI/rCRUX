@@ -48,6 +48,7 @@ rCRUX uses the [taxonomizr](https://cran.r-project.org/web/packages/taxonomizr/v
 The following example shows a simple RCRUX pipeline from start to finish. Note that this example will require internet access and considerable database storage, run time (mainly for blastn), and system resources to execute.
 
 **get_blast_seeds**
+Searching all vertebrates (taxid: "7742") and jawed vertebrates (taxid: "7776")
 ```
 blast_seeds_parent <- "/my/rCRUX_output_directory"
 metabarcode <- "12S_V5F1"
@@ -56,7 +57,7 @@ accession_taxa_path <- "/my/accessionTaxa.sql"
 
 get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
                  blast_seeds_parent, metabarcode, accession_taxa_path,
-                 organism = c("7776", "7777"), return_table = FALSE)
+                 organism = c("7742", "7776"), return_table = FALSE)
 
 
 # Output .csv files are automatically created at this path based on the arguments passed to get_blast_seeds
@@ -68,8 +69,10 @@ get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
 seeds_path <- '/my/rCRUX_output_directory/12S_V5F1_primerTree_output_with_taxonomy.csv'
 # this is output from get_blast_seeds
 db_dir <- "/my/local/blast_database/nt"
-metabarcode <- "12S_V5F1"
+accession_taxa_path <- "/my/accessionTaxa.sql"
 working_dir <- '/my/rCRUX_output_directory/12S_V5F1/sample_size_10'
+metabarcode <- "12S_V5F1"
+
 
 rcrux_blast(seeds_path, db_dir, accession_taxa_path, working_dir,
             metabarcode, sample_size = 10)
@@ -84,7 +87,7 @@ rcrux_blast(seeds_path, db_dir, accession_taxa_path, working_dir,
 
 ```
 
-Example output can be found [here](/examples/12S_V5F1_Example_Pipeline_output_generated_9-6-22). Note, there will be variability between runs due to primer blast return parameters and the sample size and random sampling of the blast seeds table that occurs during rcrux_blast.
+Example output can be found [here](/examples/12S_V5F1_Example_Pipeline_output_generated_9-15-22). Note, there will be variability between runs due to primer blast return parameters and the sample size and random sampling of the blast seeds table that occurs during rcrux_blast.
 
 
 # [get_blast_seeds](https://lunagal.github.io/get_blast_seeds)
