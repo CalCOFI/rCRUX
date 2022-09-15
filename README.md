@@ -48,7 +48,7 @@ rCRUX uses the [taxonomizr](https://cran.r-project.org/web/packages/taxonomizr/v
 The following example shows a simple RCRUX pipeline from start to finish. Note that this example will require internet access and considerable database storage, run time (mainly for blastn), and system resources to execute.
 
 **get_blast_seeds**
-Searching all vertebrates (taxid: "7742") and jawed vertebrates (taxid: "7776")
+Searching jawless vertebrates (taxid: "1476529") and jawed vertebrates (taxid: "7776")
 ```
 blast_seeds_parent <- "/my/rCRUX_output_directory"
 metabarcode <- "12S_V5F1"
@@ -57,7 +57,7 @@ accession_taxa_path <- "/my/accessionTaxa.sql"
 
 get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
                  blast_seeds_parent, metabarcode, accession_taxa_path,
-                 organism = c("7742", "7776"), return_table = FALSE)
+                 organism = c(" 1476529", "7776"), return_table = FALSE)
 
 
 # Output .csv files are automatically created at this path based on the arguments passed to get_blast_seeds
