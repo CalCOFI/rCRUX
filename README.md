@@ -71,12 +71,12 @@ seeds_path <- '/my/rCRUX_output_directory/12S_V5F1_primerTree_output_with_taxono
 # this is output from get_blast_seeds
 db_dir <- "/my/local/blast_database/nt"
 accession_taxa_path <- "/my/accessionTaxa.sql"
-working_dir <- '/my/rCRUX_output_directory/12S_V5F1/sample_size_10'
+working_dir <- '/my/rCRUX_output_directory/12S_V5F1/sample_size_100'
 metabarcode <- "12S_V5F1"
 
 
 rcrux_blast(seeds_path, db_dir, accession_taxa_path, working_dir,
-            metabarcode, sample_size = 10)
+            metabarcode, sample_size = 100)
 
 # the default is sample_size = 1000. The example was modified for speed and file size.            
 ```
