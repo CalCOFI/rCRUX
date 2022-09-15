@@ -110,7 +110,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     message(paste("Running blastdbcmd on", length(sample_indices), "samples."))
     pb <- progress::progress_bar$new(total = length(sample_indices))
     for (index in sample_indices) {
-      fasta <- run_blastdbcmd(blast_seeds[index, ], db, ncbi_bin=ncbi_bin)
+      fasta <- run_blastdbcmd(blast_seeds[index, ], db, ncbi_bin)
       # Maybe in these cases we can just append directly to output?
 
       # So this is somewhat atrocious. Why do we do it this way?
