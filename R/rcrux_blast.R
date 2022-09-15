@@ -33,7 +33,7 @@
 #' @return NULL
 #' @export
 rcrux_blast <- function(seeds_path, db_dir, accession_taxa_path, working_dir,
-                        metabarcode, expand_vectors = TRUE, warnings = 0, ncbi_bin = NULL, ...) {
+                        metabarcode, expand_vectors = TRUE, warnings = 0, ...) {
   # So that run_blastdbcmd doesn't overwhelm the user with errors
   # Possibly we should discard the warnings from blastdb as it's entirely
   # expected to encounter so values that are not in the database.
@@ -50,7 +50,7 @@ rcrux_blast <- function(seeds_path, db_dir, accession_taxa_path, working_dir,
   dir.create(output_dir)
   blast_seeds <- read.csv(seeds_path)
   output_table <- blast_datatable(blast_seeds, save_dir, db_dir,
-                                  accession_taxa_path, ...)
+                                  accession_taxa_path, ncbi_bin = NULL, ...)
 
   # Write output_table to dir/rcrux_blast_output/summary.csv
   summary_csv_path <- paste(output_dir, "summary.csv", sep = "/")

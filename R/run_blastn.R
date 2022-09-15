@@ -23,16 +23,16 @@ run_blastn <- function(fasta, db_dir, temp = NULL, ncbi_bin = NULL,
   if (is.null(temp)) {
     temp <- tempfile()
   }
-  
+
   message("Generated a temporary fasta at ", temp)
-  
+
   writeLines(fasta, con = temp)
-  
+
   # Determine arguments
   cores <- parallel::detectCores()
-  
+
   message("Calling blastn. This may take a long time.")
-  
+
   # System call
   # Is there a way to add or remove the "/" based on need?
   # Maybe just look for a "/" on the end?
@@ -66,9 +66,9 @@ run_blastn <- function(fasta, db_dir, temp = NULL, ncbi_bin = NULL,
                              wait = TRUE,
                              stdout = TRUE)
   }
-  
+
   file.remove(temp)
-  
+
   # Format output
   column_names <-  c("accession",
                      "amplicon_length",
