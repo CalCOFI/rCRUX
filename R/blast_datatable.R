@@ -151,8 +151,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       in_output <- blast_seeds$accession %in% blastn_output$accession
       in_output_indices <- seq_along(blast_seeds$accession)[in_output]
       # this message is to verify that I am doing this right
-      #message(length(blastn_output),
-      #        " there are blast hits after this step.")
+      # message(length(blastn_output), " there are blast hits after this step.")
       unsampled_indices <-
         unsampled_indices[!unsampled_indices %in% in_output_indices]
 

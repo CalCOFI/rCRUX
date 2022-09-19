@@ -62,10 +62,11 @@ get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
 
 # Output .csv files are automatically created at this path based on the arguments passed to get_blast_seeds
 # Note that using default parameters only 1047 hits are returned from NCBI's primer blast.  
-# Modifying defaults can* increase the number of returns by orders of magnitude, see below. *sequence availability for a given taxid is a limiting factor.
+# Modifying defaults can* increase the number of returns by orders of magnitude, see below. *sequence availability in NCBI for a given taxid is a limiting factor.
 ```
 
 **rcrux_blast**
+Searches are based on randomly sampling unique taxonomic groups for a given rank present in the get_blast_seeds output table. For example, the default is to sample one read from each genus.  The user can select any taxonic rank present in the get_blast_seeds output table, and should choose a rank that can be feasably run in their environment (e.g. 20K + reads are too memory intensive for many laptops), and provide the user sufficient resolution.  
 ```
 seeds_path <- '/my/rCRUX_output_directory/12S_V5F1_primerTree_output_with_taxonomy.csv'
 # this is output from get_blast_seeds
@@ -76,14 +77,14 @@ metabarcode <- "12S_V5F1"
 
 
 rcrux_blast(seeds_path, db_dir, accession_taxa_path, working_dir,1
-            metabarcode, sample_size = 100)
+            metabarcode, rank = 'genus')
 
-# the default is sample_size = 1000. The example was modified for speed and file size.            
+# the default number of reads to blast per rank is 1. The script will error out if the user asks for more reads per rank than exist in the blast seeds output.         
 ```
 If BLAST+ is not in your path do the following
 ```
 rcrux_blast(seeds_path, db_dir, accession_taxa_path, working_dir,
-            metabarcode, sample_size = 10, ncbi_bin = "/my/local/blast+_folder")
+            metabarcode, rank = 'genus', ncbi_bin = "/my/local/blast+_folder")
 
 
 ```
