@@ -102,7 +102,6 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
     # sample some of them, removing them from the vector
     # consider only the unsampled_indices
-    blast_seeds <- dplyr::slice(blast_seeds, -output_table)
     # randomly select entries (default is n=1) for each rank then turn the accession numbers into a vector
     seeds_by_rank_indices <- dplyr::pull(dplyr::slice_sample(dplyr::group_by(blast_seeds,!!!rlang::syms(rank)), n=sample_size), accession)
     #search the original output blast_seeds for the indices (row numbers) to be used as blast seeds and make vector or sample indices
@@ -175,8 +174,9 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
     # save the state of the blast
     num_rounds <- num_rounds + 1
+    blast_seeds <- dplyr::slice(blast_seeds, unsampled_indices)
     save_state(save_dir, output_table, unsampled_indices, too_many_ns,
-               blastdbcmd_failed, num_rounds)
+               blastdbcmd_failed, num_rounds, blast_seeds)
   }
 
   # If we get a taxid from blastn can we just use that?
