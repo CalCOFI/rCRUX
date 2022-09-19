@@ -99,7 +99,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     # information about state of blast
     message(paste("BLAST round", num_rounds))
     message(paste(length(unsampled_indices), "indices left to process."))
-
+    blast_seeds <- dplyr::slice(blast_seeds, unsampled_indices)
     # sample some of them, removing them from the vector
     # consider only the unsampled_indices
     # randomly select entries (default is n=1) for each rank then turn the accession numbers into a vector
@@ -151,7 +151,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       in_output <- blast_seeds$accession %in% blastn_output$accession
       in_output_indices <- seq_along(blast_seeds$accession)[in_output]
       # this message is to verify that I am doing this right
-      message(length(blastn_output),
+      #message(length(blastn_output),
               " there are blast hits after this step.")
       unsampled_indices <-
         unsampled_indices[!unsampled_indices %in% in_output_indices]
@@ -174,7 +174,6 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
     # save the state of the blast
     num_rounds <- num_rounds + 1
-    blast_seeds <- dplyr::slice(blast_seeds, unsampled_indices)
     save_state(save_dir, output_table, unsampled_indices, too_many_ns,
                blastdbcmd_failed, num_rounds)
   }
