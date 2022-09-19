@@ -101,11 +101,12 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     message(paste(length(unsampled_indices), "indices left to process."))
 
     # sample some of them, removing them from the vector
+    # consider only the unsampled_indices
+    blast_seeds_ <- dplyr::slice(blast_seeds, unsampled_indices)
     # randomly select entries (default is n=1) for each rank then turn the accession numbers into a vector
     seeds_by_rank_indices <- dplyr::pull(dplyr::slice_sample(dplyr::group_by(blast_seeds,!!!rlang::syms(rank)), n=sample_size), accession)
-blast_seeds    #search the original output blast_seeds for the indices (row numbers) to be used as blast seeds and make vector or sample indices
+    #search the original output blast_seeds for the indices (row numbers) to be used as blast seeds and make vector or sample indices
     sample_indices <- which(blast_seeds$accession %in% seeds_by_rank_indices)
-
 
     #sample_indices <- smart_sample(unsampled_indices, sample_size)
     unsampled_indices <-
@@ -118,8 +119,8 @@ blast_seeds    #search the original output blast_seeds for the indices (row numb
     pb <- progress::progress_bar$new(total = length(sample_indices))
     for (index in sample_indices) {
       fasta <- run_blastdbcmd(blast_seeds[index, ], db, ncbi_bin)
-      # Maybe in these cases we can just append directly to output?
 
+      # Maybe in these cases we can just append directly to output?
       # So this is somewhat atrocious. Why do we do it this way?
       # Well, in cases where the command has a non-0 exit status,
       # system2 sometimes (always?) returns a character vector of length 0
