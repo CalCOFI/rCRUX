@@ -50,15 +50,16 @@
 #'        program will use your PATH environmental variable to locate them
 #' @param force_db if true, try to use blast databases that don't appear to
 #'        be blast databases
-#' @param sample_size the number of entries to accumulate into a fasta before
-#'        calling blastn
+#' @param sample_size the number of entries to accumulate into a fasta per rank
+#'        before calling blastn
 #' @param wildcards a character vector representing the number of wildcards to
 #'        discard
+#' @param rank the column representing the taxonomic rank to sample
 #' @return A data.frame representing the output of blastn
 #' @export
 blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
                             ncbi_bin = NULL, force_db = FALSE,
-                            sample_size = 1000, wildcards = "NNNN") {
+                            sample_size = 1, wildcards = "NNNN", rank = 'genus') {
 
   if (!(check_db(db) || force_db)) {
     stop(db, " is probably not a blast database.
@@ -100,7 +101,13 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     message(paste(length(unsampled_indices), "indices left to process."))
 
     # sample some of them, removing them from the vector
-    sample_indices <- smart_sample(unsampled_indices, sample_size)
+    # randomly select entries (default is n=1) for each rank then turn the accession numbers into a vector
+    seeds_by_rank_indices <- dplyr::pull(dplyr::slice_sample(dplyr::group_by(blast_seeds,!!!rlang::syms(rank)), n=sample_size), accession)
+blast_seeds    #search the original output blast_seeds for the indices (row numbers) to be used as blast seeds and make vector or sample indices
+    sample_indices <- which(blast_seeds$accession %in% seeds_by_rank_indices)
+
+
+    #sample_indices <- smart_sample(unsampled_indices, sample_size)
     unsampled_indices <-
       unsampled_indices[!(unsampled_indices %in% sample_indices)]
 
@@ -145,7 +152,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       in_output_indices <- seq_along(blast_seeds$accession)[in_output]
       # this message is to verify that I am doing this right
       message(length(in_output_indices),
-              "indices were removed by the filtration step.")
+              " indices were removed by the filtration step.")
       unsampled_indices <-
         unsampled_indices[!unsampled_indices %in% in_output_indices]
 

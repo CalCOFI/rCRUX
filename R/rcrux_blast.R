@@ -56,13 +56,13 @@ rcrux_blast <- function(seeds_path, db_dir, accession_taxa_path, working_dir,
   summary_csv_path <- paste(output_dir, "summary.csv", sep = "/")
   write.csv(output_table, file = summary_csv_path, row.names = FALSE)
 
-  # Write a fasta
-  get_fasta_no_hyp(output_table, output_dir, metabarcode)
-
   # filter step
   taxa_table <-  dplyr::filter_at(output_table,dplyr::vars(genus), dplyr::all_vars(!is.na(.)))
   taxa_table <-  dplyr::filter_at(taxa_table,dplyr::vars(genus,family), dplyr::all_vars(!is.na(.)))
   taxa_table <-dplyr::slice(taxa_table,-1)
+
+  # Write a fasta
+  get_fasta_no_hyp(output_table, output_dir, metabarcode)
 
   # Taxonomy file format (tidyr and dplyr)
   taxa_table <-  dplyr::select(taxa_table,accession, superkingdom, phylum, class, order, family, genus, species)
@@ -71,6 +71,14 @@ rcrux_blast <- function(seeds_path, db_dir, accession_taxa_path, working_dir,
   # Write the thing
   taxa_table_path <- paste0(output_dir, "/", metabarcode, "_taxonomy.txt")
   write.table(taxa_table, file = taxa_table_path, row.names = FALSE, col.names=FALSE)
+
+  # Count distinct taxonomic ranks - includes NA
+  tax_rank_sum <- dplyr::summarise_at(output_table,c('phylum','class','order','family','genus','species'),n_distinct)
+
+  # Write output to rcrux_blast_output
+  tax_rank_sum_table_path <- paste0(output_dir, "/", metabarcode, "_unique_taxonomic_rank_counts.txt")
+  write.table(tax_rank_sum, file = tax_rank_sum_table_path, row.names = FALSE, col.names=TRUE)
+
 
   # Read condensed vectors and expand them
   if (expand_vectors) {
@@ -86,6 +94,7 @@ rcrux_blast <- function(seeds_path, db_dir, accession_taxa_path, working_dir,
     blastdbcmd_failed_csv_path <- paste(output_dir, "blastdbcmd_failed.csv", sep = "/")
     write.csv(blastdbcmd_failed, file = blastdbcmd_failed_csv_path, row.names = FALSE)
   }
+  unlink(save_dir, recursive=TRUE)
   return(NULL)
 }
 
