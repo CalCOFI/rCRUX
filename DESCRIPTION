@@ -1,7 +1,7 @@
 Package: rCRUX
 Title: Generate CRUX metabarcoding reference libraries in R
 Version: 0.0.0.9000
-Authors@R: 
+Authors@R:
     person(given = "Luna",
            family = "Gal",
            role = c("aut"),
@@ -11,7 +11,7 @@ Authors@R:
            role = c("aut", "cre"),
            email = "eecurd@g.ucla.edu",
            comment = c(ORCID = "https://orcid.org/0000-0003-0336-6852"))
-Description: rCRUX is a Suite of Tools for Building environmental DNA (eDNA) Metabarcode Reference Libraries by Querying NCBI Databases and Filtering and Formatting the Resulting Data. 
+Description: rCRUX is a Suite of Tools for Building environmental DNA (eDNA) Metabarcode Reference Libraries by Querying NCBI Databases and Filtering and Formatting the Resulting Data.
 License: GPL-3
 Imports:
     tibble,
@@ -24,11 +24,11 @@ Imports:
     lubridate,
     primerTree,
     progress
-Encoding: UTF-8    
-LazyData: true
+Encoding: UTF-8
+#LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.0
-Suggests: 
+Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
