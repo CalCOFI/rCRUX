@@ -2,7 +2,6 @@
 #'
 #' @param save_dir the directory to save in
 #' @param output_table the outputs generated so far
-#' @param blast_seeds table modifications the outputs generated so far
 #' @param unsampled_indices a vector of indices not yet sampled
 #' @param too_many_ns a vector of indices that result
 #'        in a fasta with too many Ns
@@ -27,6 +26,4 @@ save_state <- function(save_dir, output_table, unsampled_indices, too_many_ns,
                 con = paste(save_dir, "blastdbcmd_failed.txt", sep = "/"))
     writeLines(as.character(num_rounds),
                 con = paste(save_dir, "num_rounds.txt", sep = "/"))
-    writeLines(as.character(blast_seeds),
-                con = paste(save_dir, "blast_seeds_table.txt", sep = "/"))
 }

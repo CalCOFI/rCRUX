@@ -71,9 +71,9 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
   too_many_ns <- NULL
   blastdbcmd_failed <- NULL
   output_table <- NULL
-  unsampled_indices <- seq_along(blast_seeds$accession)
   blast_seeds <- dplyr::filter(blast_seeds, !is.na(superkingdom) & !is.na(phylum) & !is.na(class) & !is.na(order))
   blast_seeds$blast_status <- "not_done"
+  unsampled_indices <- seq_along(blast_seeds$accession)
 
   # Pick up where it left off
   # This could be improved in a bunch of ways tbh
@@ -96,8 +96,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     output_table_path <- paste(save_dir, "output_table.txt", sep = "/")
     output_table <- read.csv(output_table_path, colClasses = "character")
 
-    blast_seeds_path <- paste(save_dir, "blast_seeds_table.txt", sep = "/")
-    blast_seeds <- read.csv(blast_seeds_path, colClasses = "character")
+
   }
 
   while (length(unsampled_indices) > 0) {
@@ -180,7 +179,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     # save the state of the blast
     num_rounds <- num_rounds + 1
     save_state(save_dir, output_table, unsampled_indices, too_many_ns,
-               blastdbcmd_failed, num_rounds, blast_seeds)
+               blastdbcmd_failed, num_rounds)
   }
 
   # If we get a taxid from blastn can we just use that?
