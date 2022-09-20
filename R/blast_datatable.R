@@ -71,7 +71,6 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
   too_many_ns <- NULL
   blastdbcmd_failed <- NULL
   output_table <- NULL
-  blast_seeds$blast_status <- "not_done"
   unsampled_indices <- seq_along(blast_seeds$accession)
 
   # Pick up where it left off
@@ -100,6 +99,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     # information about state of blast
     message(paste("BLAST round", num_rounds))
     message(paste(length(unsampled_indices), "indices left to process."))
+    blast_seeds$blast_status <- "not_done"
     blast_seeds$blast_status[-unsampled_indices] <- "done"
     # sample some of them, removing them from the vector
     # consider only the unsampled_indices
@@ -107,7 +107,6 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     seeds_by_rank_indices <- dplyr::pull(dplyr::filter(dplyr::slice_sample(dplyr::group_by(blast_seeds,!!!rlang::syms(rank)), n=sample_size), last_status == 'not_done'), accession)
     #search the original output blast_seeds for the indices (row numbers) to be used as blast seeds and make vector or sample indices
     sample_indices <- which(blast_seeds$accession %in% seeds_by_rank_indices)
-
     #sample_indices <- smart_sample(unsampled_indices, sample_size)
     unsampled_indices <-
       unsampled_indices[!(unsampled_indices %in% sample_indices)]
