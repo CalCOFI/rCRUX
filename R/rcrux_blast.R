@@ -73,7 +73,7 @@ rcrux_blast <- function(seeds_path, db_dir, accession_taxa_path, working_dir,
   write.table(taxa_table, file = taxa_table_path, row.names = FALSE, col.names=FALSE)
 
   # Count distinct taxonomic ranks - includes NA
-  tax_rank_sum <- dplyr::summarise_at(output_table,c('phylum','class','order','family','genus','species'),n_distinct)
+  tax_rank_sum <- dplyr::summarise_at(output_table,c('phylum','class','order','family','genus','species'),dplyr::n_distinct)
 
   # Write output to rcrux_blast_output
   tax_rank_sum_table_path <- paste0(output_dir, "/", metabarcode, "_unique_taxonomic_rank_counts.txt")

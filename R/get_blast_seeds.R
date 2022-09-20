@@ -119,6 +119,15 @@ get_blast_seeds <- function(forward_primer, reverse_primer,
     save_output_as_csv(raw_table, "_raw_primerTree_output", out,
                         Metabarcode_name)
 
+    # Count distinct taxonomic ranks - includes NA
+    tax_rank_sum <- dplyr::summarise_at(output_table,c('phylum','class','order','family','genus','species'),dplyr::n_distinct)
+
+    # Write output to rcrux_blast_output
+    tax_rank_sum_table_path <- paste0(output_dir, "/", metabarcode, "_unique_taxonomic_rank_counts.txt")
+    save_output_as_csv(tax_rank_sum, "_tax_rank_sum_table_path", out,
+                        Metabarcode_name)
+
+
     #return if you're supposed to
     if (return_table) {
       return(taxonomized_table)
