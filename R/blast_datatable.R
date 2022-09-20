@@ -154,6 +154,8 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       message(nrow(blastn_output), " there are blast hits after this step.")
       unsampled_indices <-
         unsampled_indices[!unsampled_indices %in% in_output_indices]
+      unsampled_indices <-
+          unsampled_indices[!unsampled_indices %in% sample_indices]
 
       # Add output to existing output
       if (is.null(output_table)) {
