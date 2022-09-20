@@ -99,13 +99,14 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     # information about state of blast
     message(paste("BLAST round", num_rounds))
     message(paste(length(unsampled_indices), "indices left to process."))
-    blast_seeds <- dplyr::slice(blast_seeds, unsampled_indices)
+    blast_seeds$blast_status <- "not_done"
+    blast_seeds$blast_status[-unsampled_indices] <- "done"
     # sample some of them, removing them from the vector
     # consider only the unsampled_indices
     # randomly select entries (default is n=1) for each rank then turn the accession numbers into a vector
-    seeds_by_rank_indices <- dplyr::pull(dplyr::slice_sample(dplyr::group_by(blast_seeds,!!!rlang::syms(rank)), n=sample_size), accession)
+    seeds_by_rank_indices <- dplyr::pull(dplyr::filter(dplyr::slice_sample(dplyr::group_by(blast_seeds,!!!rlang::syms(rank)), n=sample_size), blast_status == 'done'), accession)
     #search the original output blast_seeds for the indices (row numbers) to be used as blast seeds and make vector or sample indices
-    sample_indices <- which(blast_seeds$accession %in% seeds_by_rank_indices)
+    sample_indices <- which(dplyr::blast_seeds$accession %in% seeds_by_rank_indices)
 
     #sample_indices <- smart_sample(unsampled_indices, sample_size)
     unsampled_indices <-
@@ -151,7 +152,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       in_output <- blast_seeds$accession %in% blastn_output$accession
       in_output_indices <- seq_along(blast_seeds$accession)[in_output]
       # this message is to verify that I am doing this right
-      # message(length(blastn_output), " there are blast hits after this step.")
+      message(length(blastn_output), " there are blast hits after this step.")
       unsampled_indices <-
         unsampled_indices[!unsampled_indices %in% in_output_indices]
 
