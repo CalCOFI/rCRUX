@@ -89,7 +89,7 @@ rcrux_blast(seeds_path, db_dir, accession_taxa_path, working_dir,
 
 ```
 
-Example output can be found [here](/examples/12S_V5F1_Example_Pipeline_output_generated_9-15-22). Note, 1) the rcrux_blast output summary.csv file is omitted due to size.  It is included in the zenodo repository. There will be variability between runs due to primer blast return parameters and the sample size and random sampling of the blast seeds table that occurs during rcrux_blast.
+Example output can be found [here](/examples/12S_V5F1_generated_9-15-22). Note, 1) the rcrux_blast output summary.csv file is omitted due to size.  It is included in the zenodo repository. There will be variability between runs due to primer blast return parameters and the sample size and random sampling of the blast seeds table that occurs during rcrux_blast.
 
 
 # [get_blast_seeds](https://lunagal.github.io/get_blast_seeds)
