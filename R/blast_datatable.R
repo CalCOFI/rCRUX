@@ -104,7 +104,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     # sample some of them, removing them from the vector
     # consider only the unsampled_indices
     # randomly select entries (default is n=1) for each rank then turn the accession numbers into a vector
-    seeds_by_rank_indices <- dplyr::pull(dplyr::filter(dplyr::slice_sample(dplyr::group_by(blast_seeds,!!!rlang::syms(rank)), n=sample_size), blast_status == 'done'), accession)
+    seeds_by_rank_indices <- dplyr::pull(dplyr::filter(dplyr::slice_sample(dplyr::group_by(blast_seeds,!!!rlang::syms(rank)), n=sample_size), blast_status == 'not_done'), accession)
     #search the original output blast_seeds for the indices (row numbers) to be used as blast seeds and make vector or sample indices
     sample_indices <- which(blast_seeds$accession %in% seeds_by_rank_indices)
 
