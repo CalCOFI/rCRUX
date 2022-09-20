@@ -72,6 +72,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
   blastdbcmd_failed <- NULL
   output_table <- NULL
   unsampled_indices <- seq_along(blast_seeds$accession)
+  blast_seeds <- dplyr::filter(blast_seeds, !is.na(superkingdom) & !is.na(phylum) & !is.na(class) & !is.na(order))
   blast_seeds$blast_status <- "not_done"
 
   # Pick up where it left off
@@ -94,6 +95,9 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
     output_table_path <- paste(save_dir, "output_table.txt", sep = "/")
     output_table <- read.csv(output_table_path, colClasses = "character")
+
+    blast_seeds_path <- paste(save_dir, "blast_seeds_table.txt", sep = "/")
+    blast_seeds <- read.csv(blast_seeds_path, colClasses = "character")
   }
 
   while (length(unsampled_indices) > 0) {
@@ -138,8 +142,8 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     }
 
     if (!is.character(aggregate_fasta)) {
-      message("aggregate_fasta has value ", aggregate_fasta)
-      message("It may have encountered no useable accession numbers. Proceeding to next round.")
+      #message("aggregate_fasta has value ", aggregate_fasta)
+      message("No useable accession numbers. Proceeding to next round.")
     }
 
     else {
@@ -151,7 +155,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       in_output <- blast_seeds$accession %in% blastn_output$accession
       in_output_indices <- seq_along(blast_seeds$accession)[in_output]
       # this message is to verify that I am doing this right
-      message(nrow(blastn_output), " there are blast hits after this step.")
+      message(nrow(blastn_output), " blast hits returned.")
       unsampled_indices <-
         unsampled_indices[!unsampled_indices %in% in_output_indices]
       unsampled_indices <-
@@ -176,7 +180,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     # save the state of the blast
     num_rounds <- num_rounds + 1
     save_state(save_dir, output_table, unsampled_indices, too_many_ns,
-               blastdbcmd_failed, num_rounds)
+               blastdbcmd_failed, num_rounds, blast_seeds)
   }
 
   # If we get a taxid from blastn can we just use that?
