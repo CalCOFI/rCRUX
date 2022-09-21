@@ -50,8 +50,10 @@
 #'        program will use your PATH environmental variable to locate them
 #' @param force_db if true, try to use blast databases that don't appear to
 #'        be blast databases
-#' @param sample_size the number of entries to accumulate into a fasta per rank
-#'        before calling blastn
+#' @param sample_size the number of entries to sample per rank
+#'        before calling blastn - errors if not enough entries per rank
+#' @param max_to_blast is the maximum number of entries to accumulate into a
+#'        fasta before calling blastn
 #' @param wildcards a character vector representing the number of wildcards to
 #'        discard
 #' @param rank the column representing the taxonomic rank to sample
@@ -59,7 +61,7 @@
 #' @export
 blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
                             ncbi_bin = NULL, force_db = FALSE,
-                            sample_size = 1, wildcards = "NNNN", rank = 'genus') {
+                            sample_size = 1, wildcards = "NNNN", rank = 'genus', max_to_blast = 1000) {
 
   if (!(check_db(db) || force_db)) {
     stop(db, " is probably not a blast database.
@@ -108,14 +110,31 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     # information about state of blast
     message(paste("BLAST round", num_rounds))
     message(paste(length(unsampled_indices), "indices left to process."))
+
+    # update status of blast seeds by labeling all reads no in the upsampled
+    # indicies list as "done"
     blast_seeds_m$blast_status[-unsampled_indices] <- "done"
-    # sample some of them, removing them from the vector
-    # consider only the unsampled_indices
-    # randomly select entries (default is n=1) for each rank then turn the accession numbers into a vector
-    seeds_by_rank_indices <- dplyr::pull(dplyr::filter(dplyr::slice_sample(dplyr::group_by(blast_seeds_m,!!!rlang::syms(rank)), n=sample_size), blast_status == 'not_done'), accession)
-    #search the original output blast_seeds for the indices (row numbers) to be used as blast seeds and make vector or sample indices
-    sample_indices <- which(blast_seeds_m$accession %in% seeds_by_rank_indices)
-    #sample_indices <- smart_sample(unsampled_indices, sample_size)
+
+    # collect indices to blast
+    # if unsampled indices are greater than the max to blast (default n = 1000), the blast seed table will be randomly sampled by taxonomic ranks
+
+    if (length(unsampled_indices) <= max_to_blast {
+      sample_indices <- unsampled_indices
+    }
+    else  {
+
+      # if more indices than the max_to_blast are present
+      # randomly select entries (default is n=1) for each rank then turn the
+      # accession numbers into a vector
+      seeds_by_rank_indices <- dplyr::pull(dplyr::filter(dplyr::slice_sample(dplyr::group_by(blast_seeds_m,!!!rlang::syms(rank)), n=sample_size), blast_status == 'not_done'), accession)
+
+      # search the original output blast_seeds for the indices (row numbers) to
+      # be used as blast seeds and make vector or sample indices
+      sample_indices <- which(blast_seeds_m$accession %in% seeds_by_rank_indices)
+    }
+
+    
+    # update unsampled_indices by removing the sample_indices from the list
     unsampled_indices <-
       unsampled_indices[!(unsampled_indices %in% sample_indices)]
 
@@ -124,11 +143,12 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     aggregate_fasta <- NULL
     message(paste("Running blastdbcmd on", length(sample_indices), "samples."))
     pb <- progress::progress_bar$new(total = length(sample_indices))
+
     for (index in sample_indices) {
       fasta <- run_blastdbcmd(blast_seeds_m[index, ], db, ncbi_bin)
 
       # Maybe in these cases we can just append directly to output?
-      # So this is somewhat atrocious. Why do we do it this way?
+      # room for improvement here...
       # Well, in cases where the command has a non-0 exit status,
       # system2 sometimes (always?) returns a character vector of length 0
       # This causes an error because there are no characters to check, so
@@ -148,13 +168,14 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     if (!is.character(aggregate_fasta)) {
       #message("aggregate_fasta has value ", aggregate_fasta)
       message("No useable accession numbers. Proceeding to next round.")
+
     }
 
     else {
       # run blastn and aggregate results
       blastn_output <- run_blastn(fasta=aggregate_fasta, db_dir=db, ncbi_bin=ncbi_bin)
 
-      # remove accesssion numbers found by blast
+      # remove accession numbers found by blast
       # this is not the most elegant way to do it but it's not the worst...
       in_output <- blast_seeds_m$accession %in% blastn_output$accession
       in_output_indices <- seq_along(blast_seeds_m$accession)[in_output]
@@ -162,8 +183,6 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       message(nrow(blastn_output), " blast hits returned.")
       unsampled_indices <-
         unsampled_indices[!unsampled_indices %in% in_output_indices]
-      unsampled_indices <-
-          unsampled_indices[!unsampled_indices %in% sample_indices]
 
       # Add output to existing output
       if (is.null(output_table)) {
@@ -180,6 +199,8 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
         dplyr::filter(!(duplicated(accession)))
       output_table <- dplyr::ungroup(output_table)
     }
+    # report number of total unique blast hits
+    message(nrow(output_table), " unique blast hits after this round.")
 
     # save the state of the blast
     num_rounds <- num_rounds + 1
