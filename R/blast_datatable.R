@@ -118,7 +118,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     # collect indices to blast
     # if unsampled indices are greater than the max to blast (default n = 1000), the blast seed table will be randomly sampled by taxonomic ranks
 
-    if (length(unsampled_indices) <= max_to_blast {
+    if (length(unsampled_indices) <= max_to_blast) {
       sample_indices <- unsampled_indices
     }
     else  {
@@ -133,7 +133,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       sample_indices <- which(blast_seeds_m$accession %in% seeds_by_rank_indices)
     }
 
-    
+
     # update unsampled_indices by removing the sample_indices from the list
     unsampled_indices <-
       unsampled_indices[!(unsampled_indices %in% sample_indices)]
