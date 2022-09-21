@@ -71,9 +71,9 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
   too_many_ns <- NULL
   blastdbcmd_failed <- NULL
   output_table <- NULL
-  blast_seeds <- dplyr::filter(blast_seeds, !is.na(superkingdom) & !is.na(phylum) & !is.na(class) & !is.na(order))
-  blast_seeds$blast_status <- "not_done"
-  unsampled_indices <- seq_along(blast_seeds$accession)
+  blast_seeds_m <- dplyr::filter(blast_seeds, !is.na(superkingdom) & !is.na(phylum) & !is.na(class) & !is.na(order))
+  blast_seeds_m$blast_status <- "not_done"
+  unsampled_indices <- seq_along(blast_seeds_m$accession)
 
   # Pick up where it left off
   # This could be improved in a bunch of ways tbh
@@ -96,6 +96,11 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     output_table_path <- paste(save_dir, "output_table.txt", sep = "/")
     output_table <- read.csv(output_table_path, colClasses = "character")
 
+    output_table_path <- paste(save_dir, "output_table.txt", sep = "/")
+    output_table <- read.csv(output_table_path, colClasses = "character")
+
+    blast_seeds_m_path <- paste(save_dir, "blast_seeds_passed_filter.txt", sep = "/")
+    blast_seeds_m <- read.csv(blast_seeds_m_path, colClasses = "character")
 
   }
 
@@ -103,13 +108,13 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     # information about state of blast
     message(paste("BLAST round", num_rounds))
     message(paste(length(unsampled_indices), "indices left to process."))
-    blast_seeds$blast_status[-unsampled_indices] <- "done"
+    blast_seeds_m$blast_status[-unsampled_indices] <- "done"
     # sample some of them, removing them from the vector
     # consider only the unsampled_indices
     # randomly select entries (default is n=1) for each rank then turn the accession numbers into a vector
-    seeds_by_rank_indices <- dplyr::pull(dplyr::filter(dplyr::slice_sample(dplyr::group_by(blast_seeds,!!!rlang::syms(rank)), n=sample_size), blast_status == 'not_done'), accession)
+    seeds_by_rank_indices <- dplyr::pull(dplyr::filter(dplyr::slice_sample(dplyr::group_by(blast_seeds_m,!!!rlang::syms(rank)), n=sample_size), blast_status == 'not_done'), accession)
     #search the original output blast_seeds for the indices (row numbers) to be used as blast seeds and make vector or sample indices
-    sample_indices <- which(blast_seeds$accession %in% seeds_by_rank_indices)
+    sample_indices <- which(blast_seeds_m$accession %in% seeds_by_rank_indices)
     #sample_indices <- smart_sample(unsampled_indices, sample_size)
     unsampled_indices <-
       unsampled_indices[!(unsampled_indices %in% sample_indices)]
@@ -120,7 +125,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     message(paste("Running blastdbcmd on", length(sample_indices), "samples."))
     pb <- progress::progress_bar$new(total = length(sample_indices))
     for (index in sample_indices) {
-      fasta <- run_blastdbcmd(blast_seeds[index, ], db, ncbi_bin)
+      fasta <- run_blastdbcmd(blast_seeds_m[index, ], db, ncbi_bin)
 
       # Maybe in these cases we can just append directly to output?
       # So this is somewhat atrocious. Why do we do it this way?
@@ -151,8 +156,8 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
       # remove accesssion numbers found by blast
       # this is not the most elegant way to do it but it's not the worst...
-      in_output <- blast_seeds$accession %in% blastn_output$accession
-      in_output_indices <- seq_along(blast_seeds$accession)[in_output]
+      in_output <- blast_seeds_m$accession %in% blastn_output$accession
+      in_output_indices <- seq_along(blast_seeds_m$accession)[in_output]
       # this message is to verify that I am doing this right
       message(nrow(blastn_output), " blast hits returned.")
       unsampled_indices <-
@@ -179,7 +184,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     # save the state of the blast
     num_rounds <- num_rounds + 1
     save_state(save_dir, output_table, unsampled_indices, too_many_ns,
-               blastdbcmd_failed, num_rounds)
+               blastdbcmd_failed, num_rounds, blast_seeds_m)
   }
 
   # If we get a taxid from blastn can we just use that?
