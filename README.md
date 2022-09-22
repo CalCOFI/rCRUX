@@ -116,7 +116,7 @@ get_blast_seeds passes many parameters to NCBI's primer blast tool. You can matc
 
 As of 2022-08-16, the primer blast GUI contains some options that are not implemented by primer_search. The [table below](#Table-of-available-options) documents available options.
 
-### [Modifying primer blast search options]
+### Modifying primer blast search options
 I want to generate a large hitsize. I open the source of the primer designing tool and look for that string. I find the following:
 
 '<label for="HITSIZE" class="m ">Max number of sequences returned by Blast</label>'
@@ -140,7 +140,7 @@ get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
 ```
 Example output can be found [here](/examples/12S_V5F1_generated_9-21-22).
 
-### [Table of available options]
+### Table of available options
 
 **Need to Modify**
 
