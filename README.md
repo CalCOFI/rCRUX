@@ -118,7 +118,9 @@ As of 2022-08-16, the primer blast GUI contains some options that are not implem
 
 **You can checking [primerblast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) for more information on how to modify search options.  For example, if you to generate a larger hitsize, open the source of the primer designing tool and look for that string. You find the following:
 
-```<label for="HITSIZE" class="m ">Max number of sequences returned by Blast</label>
+```
+
+<label for="HITSIZE" class="m ">Max number of sequences returned by Blast</label>
          <div class="input ">
                       <span class="sel si">
                       <select name="HITSIZE" id="HITSIZE" class= "opts checkDef" defVal="50000" >
