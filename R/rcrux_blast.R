@@ -56,17 +56,13 @@ rcrux_blast <- function(seeds_path, db_dir, accession_taxa_path, working_dir,
   summary_csv_path <- paste(output_dir, "summary.csv", sep = "/")
   write.csv(output_table, file = summary_csv_path, row.names = FALSE)
 
-  # filter step
-  taxa_table <-  dplyr::filter_at(output_table,dplyr::vars(genus), dplyr::all_vars(!is.na(.)))
-  taxa_table <-  dplyr::filter_at(taxa_table,dplyr::vars(genus,family), dplyr::all_vars(!is.na(.)))
-  taxa_table <-dplyr::slice(taxa_table,-1)
-
   # Write a fasta
   get_fasta_no_hyp(output_table, output_dir, metabarcode)
 
   # Taxonomy file format (tidyr and dplyr)
-  taxa_table <-  dplyr::select(taxa_table,accession, superkingdom, phylum, class, order, family, genus, species)
+  taxa_table <-  dplyr::select(output_table,accession, superkingdom, phylum, class, order, family, genus, species)
   taxa_table <-tidyr::unite(taxa_table,taxonomic_path, superkingdom:species, sep = ";", remove = TRUE, na.rm = FALSE)
+  taxa_table <-dplyr::slice(taxa_table,-1)
 
   # Write the thing
   taxa_table_path <- paste0(output_dir, "/", metabarcode, "_taxonomy.txt")
