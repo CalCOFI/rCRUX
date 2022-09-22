@@ -69,7 +69,7 @@ get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
 # Note that using default parameters only 1047 hits are returned from NCBI's primer blast.  
 # Sequence availability in NCBI for a given taxid is a limiting factor.
 ```
-[Modifying defaults can increase the number of returns by orders of magnitude.](###Modifying-primer-blast-search-options)
+[Modifying defaults can increase the number of returns by orders of magnitude.](#Modifying-primer-blast-search-options)
 
 **rcrux_blast**
 Searches are based on randomly sampling unique taxonomic groups for a given rank from the get_blast_seeds output table. For example, the default is to randomly sample one read from each genus.  The user can select any taxonomic rank present in the get_blast_seeds output table, and should choose a rank that can be feasibly run in their environment (e.g. 20K + reads are too memory intensive for many laptops), and provide the user sufficient resolution. If there are 1,000 (or user defined max_to_blast) or fewer blast seeds to process, for a given round of blasting, the entire blast seeds table will be blasted.
@@ -114,12 +114,12 @@ primer BLAST defaults to homo sapiens, so it is important that you supply a spec
 
 get_blast_seeds passes many parameters to NCBI's primer blast tool. You can match the parameters to the fields available in the GUI here. First, use your browser to view the page source. Search for the field you are interested in by searching for the title of the field. It should be enclosed in a tag. Inside the label tag, it says for = "<name_of_parameter>". Copy the string after for = and add it to get_blast_seeds as the name of a parameter, setting it equal to whatever you like.
 
-As of 2022-08-16, the primer blast GUI contains some options that are not implemented by primer_search. The [table below](###Table-of-available-options) documents available options.
+As of 2022-08-16, the primer blast GUI contains some options that are not implemented by primer_search. The [table below](#Table-of-available-options) documents available options.
 
-### Modifying primer blast search options
+### [Modifying primer blast search options]
 I want to generate a large hitsize. I open the source of the primer designing tool and look for that string. I find the following:
 
-''<label for="HITSIZE" class="m ">Max number of sequences returned by Blast</label>''
+'<label for="HITSIZE" class="m ">Max number of sequences returned by Blast</label>'
 
 I copy HITSIZE and add it to get_blast_seeds, along with a few other options that generate larger output:
 
@@ -140,7 +140,7 @@ get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
 ```
 Example output can be found [here](/examples/12S_V5F1_generated_9-21-22).
 
-### Table of available options
+### [Table of available options]
 
 **Need to Modify**
 
