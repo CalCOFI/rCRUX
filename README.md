@@ -42,6 +42,16 @@ rCRUX requires a local blast-formatted nucleotide database. These can be user ge
 
 rCRUX uses the [taxonomizr](https://cran.r-project.org/web/packages/taxonomizr/vignettes/usage.html) package for taxonomic assignment based on NCBI [Taxonomy id's \(taxids\)](https://www.ncbi.nlm.nih.gov/). Many rCRUX functions require a path to a local taxonomizr readable sqlite database. This database can be built using taxonomizr's [prepareDatabase](https://www.rdocumentation.org/packages/taxonomizr/versions/0.8.0/topics/prepareDatabase) function. This database is ~72 GB (as of 8/31/22).
 
+The following code can be used to build this database:
+
+```
+library(taxonomizr)
+
+accession_taxa_path <- "/my/accessionTaxa.sql"
+prepareDatabase(accession_taxa_path)
+
+```
+
 
 # Example pipeline
 
