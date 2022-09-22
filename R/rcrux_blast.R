@@ -70,14 +70,14 @@ rcrux_blast <- function(seeds_path, db_dir, accession_taxa_path, working_dir,
 
   # Write the thing
   taxa_table_path <- paste0(output_dir, "/", metabarcode, "_taxonomy.txt")
-  write.table(taxa_table, file = taxa_table_path, row.names = FALSE, col.names=FALSE)
+  write.table(taxa_table, file = taxa_table_path, row.names = FALSE, col.names=FALSE, sep = "\t")
 
   # Count distinct taxonomic ranks - includes NA
   tax_rank_sum <- dplyr::summarise_at(output_table,c('phylum','class','order','family','genus','species'),dplyr::n_distinct)
 
   # Write output to rcrux_blast_output
   tax_rank_sum_table_path <- paste0(output_dir, "/", metabarcode, "_unique_taxonomic_rank_counts.txt")
-  write.table(tax_rank_sum, file = tax_rank_sum_table_path, row.names = FALSE, col.names=TRUE)
+  write.table(tax_rank_sum, file = tax_rank_sum_table_path, row.names = FALSE, col.names=TRUE, sep = "\t")
 
 
   # Read condensed vectors and expand them
