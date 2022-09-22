@@ -69,7 +69,7 @@ get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
 # Note that using default parameters only 1047 hits are returned from NCBI's primer blast.  
 # Sequence availability in NCBI for a given taxid is a limiting factor.
 ```
-[Modifying defaults can increase the number of returns by orders of magnitude.](#Modifying-primer-blast-search-options)
+[Modifying defaults can increase the number of returns by orders of magnitude.](#Search-options)
 
 **rcrux_blast**
 Searches are based on randomly sampling unique taxonomic groups for a given rank from the get_blast_seeds output table. For example, the default is to randomly sample one read from each genus.  The user can select any taxonomic rank present in the get_blast_seeds output table, and should choose a rank that can be feasibly run in their environment (e.g. 20K + reads are too memory intensive for many laptops), and provide the user sufficient resolution. If there are 1,000 (or user defined max_to_blast) or fewer blast seeds to process, for a given round of blasting, the entire blast seeds table will be blasted.
@@ -116,12 +116,30 @@ get_blast_seeds passes many parameters to NCBI's primer blast tool. You can matc
 
 As of 2022-08-16, the primer blast GUI contains some options that are not implemented by primer_search. The [table below](#Table-of-available-options) documents available options.
 
-### Modifying primer blast search options
-I want to generate a large hitsize. I open the source of the primer designing tool and look for that string. I find the following:
+**You can checking [primerblast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) for more information on how to modify search options.  For example, if you to generate a larger hitsize, open the source of the primer designing tool and look for that string. You find the following:
 
-'<label for="HITSIZE" class="m ">Max number of sequences returned by Blast</label>'
+```<label for="HITSIZE" class="m ">Max number of sequences returned by Blast</label>
+         <div class="input ">
+                      <span class="sel si">
+                      <select name="HITSIZE" id="HITSIZE" class= "opts checkDef" defVal="50000" >
+                        <option  value="10">10</option>
+                        <option  value="50">50</option>
+                        <option  value="100">100</option>
+                        <option  value ="250">250</option>
+                        <option  value="500">500</option>
+                        <option  value="1000">1000</option>
+                        <option  value="10000">10000</option>
+                        <option selected="selected"  value="50000">50000</option>
+                        <option  value="100000">100000</option>
+                      </select>                       
+                    </span>
+                    <a class="helplink hiding" title="help" id="hitsizeHelp" href="#"><i class="fas fa-question-circle"></i> <span class="usa-sr-only">Help</span></a>
+                    <p toggle="hitsizeHelp" class="helpbox hidden">
+                      Maximum number of database sequences (with unique sequence identifier) Blast finds for primer-blast to screen for primer pair specificities. Note that the actual number of similarity regions (or the number of hits) may be much larger than this (for example, there may be a large number of hits on a single target sequence such as a chromosome).   Choose a higher value if you need to perform more stringent search.
+                    </p>      
 
-I copy HITSIZE and add it to get_blast_seeds, along with a few other options that generate larger output:
+```
+You can find the description and suggested values for this search option. HITSIZE ='1000000' is added to the search below along with several options that increase the number of entries returened from primersearch.
 
 ```
 blast_seeds_parent <- "/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_modified_params"
@@ -142,23 +160,22 @@ Example output can be found [here](/examples/12S_V5F1_generated_9-21-22).
 
 ### Table of available options
 
-**Need to Modify**
+**Need to check for accuracy and completeness**
 
-| Name                                   | Default      | Description |
-|----------------------------------------|--------------|-------------|
-| PRIMER_SPECIFICITY_DATABASE            | refseq_mrna  |             |   ||             |
-| EXCLUDE_ENV                            | unchecked      |             |
-| ORGANISM                               | Homo sapiens |             |
-| TOTAL_PRIMER_SPECIFICITY_MISMATCH      | 1            |             |
-| PRIMER_3END_SPECIFICITY_MISMATCH       | 1            |             |
-| MISMATCH_REGION_LENGTH                 | 5            |             |
-| TOTAL_MISMATCH_IGNORE                  | 6            |             |
-| MAX_TARGET_SIZE                        | 4000         |             |
-| HITSIZE                                | 50000        |             |
-| EVALUE                                 | 30000        |             |
-| WORD_SIZE                              | 7            |             |
-| NUM_TARGETS_WITH_PRIMERS               | 1000         |             |
-| MAX_TARGET_PER_TEMPLATE                | 100          |             |
+| Name                                   | rCrux Default  |
+|----------------------------------------|----------------|
+| PRIMER_SPECIFICITY_DATABASE            | nt             |
+| EXCLUDE_ENV                            | unchecked      |
+| ORGANISM                               | Homo sapiens   |
+| TOTAL_PRIMER_SPECIFICITY_MISMATCH      | 1              |
+| PRIMER_3END_SPECIFICITY_MISMATCH       | 1              |
+| TOTAL_MISMATCH_IGNORE                  | 6              |
+| MAX_TARGET_SIZE                        | 4000           |
+| HITSIZE                                | 50000          |
+| EVALUE                                 | 30000          |
+| WORD_SIZE                              | 7              |
+| NUM_TARGETS_WITH_PRIMERS               | 1000           |
+| MAX_TARGET_PER_TEMPLATE                | 100            |
 
 
 
