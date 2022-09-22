@@ -176,7 +176,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       # run blastn and aggregate results
       blastn_output <- run_blastn(fasta=aggregate_fasta, db_dir=db, ncbi_bin=ncbi_bin)
 
-      if(nrow(blastn_output) == 0 & nrow(unsampled_indices) > 0 {
+      if(nrow(blastn_output) == 0 & nrow(unsampled_indices) > 0) {
         message(nrow(blastn_output), " blast hits returned. \n Blastn having trouble blasting the number of seeds selected.  Try using a taxonomic rank with fewer unique groups, and reduce the value for max_to_blast")
         exit()
       }
