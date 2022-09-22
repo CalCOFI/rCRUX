@@ -1,0 +1,59 @@
+> library(rCRUX)
+>
+>
+>
+> blast_seeds_parent <- "/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_default_params"
+> metabarcode <- "12S_V5F1"
+> accession_taxa_path <- "/Users/limeybean/Dropbox/CRUX_2.0/accession2taxid/accessionTaxa.sql"
+>
+>
+>
+> get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
++                 blast_seeds_parent, metabarcode, accession_taxa_path,
++                 organism = c("1476529", "7776"), return_table = FALSE)
+BLASTing 1 primer combinations
+Submitting Primer-BLAST query
+BLAST alignment processing, refreshing in 20 seconds...
+BLAST alignment completed in 30 seconds
+BLASTing 1 primer combinations
+Submitting Primer-BLAST query
+BLAST alignment processing, refreshing in 20 seconds...
+BLAST alignment processing, refreshing in 20 seconds...
+BLAST alignment completed in 51 seconds
+NULL
+Warning messages:
+1: In dir.create(file_out_dir) :
+  '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_default_params' already exists
+2: In dir.create(out) :
+  '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_default_params/12S_V5F1' already exists
+>
+>
+>
+>
+> seeds_path <- '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_default_params/12S_V5F1/12S_V5F1_primerTree_output_with_taxonomy.csv'
+> db_dir <- "/Users/limeybean/Dropbox/CRUX_2.0/ncbi_nt/nt"
+> accession_taxa_path <- "/Users/limeybean/Dropbox/CRUX_2.0/accession2taxid/accessionTaxa.sql"
+> working_dir <- '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_default_params/12S_V5F1/'
+> metabarcode <- "12S_V5F1"
+>
+>
+>
+> rcrux_blast(seeds_path, db_dir, accession_taxa_path, working_dir,
++             metabarcode)
+BLAST round 1
+1046 indices left to process.
+Running blastdbcmd on 118 samples.
+Calling blastn. This may take a long time.
+1092338 blast hits returned.
+109153 unique blast hits after this round.
+BLAST round 2
+527 indices left to process.
+Running blastdbcmd on 527 samples.
+No useable accession numbers. Proceeding to next round.
+109153 unique blast hits after this round.
+NULL
+There were 50 or more warnings (use warnings() to see the first 50)
+>
+>
+>
+>

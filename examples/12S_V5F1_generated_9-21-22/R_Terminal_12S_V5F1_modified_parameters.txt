@@ -1,0 +1,55 @@
+> library(rCRUX)
+>
+>
+>
+> blast_seeds_parent <- "/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_modified_params"
+> metabarcode <- "12S_V5F1"
+> accession_taxa_path <- "/Users/limeybean/Dropbox/CRUX_2.0/accession2taxid/accessionTaxa.sql"
+>
+>
+>
+> get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
++                 blast_seeds_parent, metabarcode, accession_taxa_path, HITSIZE ='1000000', evalue='100000',
++                 word_size='6', MAX_TARGET_PER_TEMPLATE = '5',
++                 NUM_TARGETS_WITH_PRIMERS ='500000', minimum_length = 50,
++                 MAX_TARGET_SIZE = 200,
++                 organism = c("1476529", "7776"), return_table = FALSE)
+BLASTing 1 primer combinations
+Submitting Primer-BLAST query
+BLAST alignment processing, refreshing in 20 seconds...
+BLAST alignment completed in 30 seconds
+BLASTing 1 primer combinations
+Submitting Primer-BLAST query
+BLAST alignment processing, refreshing in 20 seconds...
+BLAST alignment processing, refreshing in 20 seconds...
+BLAST alignment processing, refreshing in 20 seconds...
+BLAST alignment processing, refreshing in 20 seconds...
+BLAST alignment processing, refreshing in 20 seconds...
+BLAST alignment processing, refreshing in 20 seconds...
+BLAST alignment processing, refreshing in 20 seconds...
+BLAST alignment processing, refreshing in 20 seconds...
+BLAST alignment processing, refreshing in 20 seconds...
+BLAST alignment completed in 204 seconds
+NULL>
+>
+>
+>
+> seeds_path <- '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_modified_params/12S_V5F1/12S_V5F1_primerTree_output_with_taxonomy.csv'
+> db_dir <- "/Users/limeybean/Dropbox/CRUX_2.0/ncbi_nt/nt"
+> accession_taxa_path <- "/Users/limeybean/Dropbox/CRUX_2.0/accession2taxid/accessionTaxa.sql"
+> working_dir <- '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_modified_params/12S_V5F1/'
+> metabarcode <- "12S_V5F1"
+>
+> rcrux_blast(seeds_path, db_dir, accession_taxa_path, working_dir,
++             metabarcode)
+BLAST round 1
+111489 indices left to process.
+Running blastdbcmd on 5566 samples.
+Calling blastn. This may take a long time.
+
+
+
+
+>
+>
+>
