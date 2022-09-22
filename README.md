@@ -50,14 +50,14 @@ The following example shows a simple RCRUX pipeline from start to finish. Note t
 **get_blast_seeds**
 Searching jawless vertebrates (taxid: "1476529") and jawed vertebrates (taxid: "7776")
 ```
-blast_seeds_parent <- "/my/rCRUX_output_directory"
+blast_seeds_parent <- "/my/rCRUX_output_directory/12S_V5F1_default_params"
 metabarcode <- "12S_V5F1"
 accession_taxa_path <- "/my/accessionTaxa.sql"
 
 
 get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
                  blast_seeds_parent, metabarcode, accession_taxa_path,
-                 organism = c(" 1476529", "7776"), return_table = FALSE)
+                 organism = c("1476529", "7776"), return_table = FALSE)
 
 
 # Output .csv files are automatically created at this path based on the arguments passed to get_blast_seeds
@@ -72,12 +72,12 @@ seeds_path <- '/my/rCRUX_output_directory/12S_V5F1_primerTree_output_with_taxono
 # this is output from get_blast_seeds
 db_dir <- "/my/local/blast_database/nt"
 accession_taxa_path <- "/my/accessionTaxa.sql"
-working_dir <- '/my/rCRUX_output_directory/12S_V5F1/sample_size_100'
+working_dir <- '/my/rCRUX_output_directory/12S_V5F1_default_params/'
 metabarcode <- "12S_V5F1"
 
 
-rcrux_blast(seeds_path, db_dir, accession_taxa_path, working_dir,1
-            metabarcode, rank = 'genus')
+rcrux_blast(seeds_path, db_dir, accession_taxa_path, working_dir,
+            metabarcode)
 
 # the default number of reads to blast per rank is 1. The script will error out if the user asks for more reads per rank than exist in the blast seeds output.         
 ```
