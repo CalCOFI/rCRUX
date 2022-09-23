@@ -20,7 +20,7 @@ save_state <- function(save_dir, output_table, unsampled_indices, too_many_ns,
             file = paste(save_dir, "output_table.txt", sep = "/"),
             row.names = FALSE)
     write.csv(blast_seeds_m,
-            file = paste(save_dir, "blast_seeds_passed_filter.txt", sep = "/"),
+            file = paste(save_dir, "blast_seeds_passed_filter.txt", sep = "/t"),
             row.names = FALSE)
     writeLines(as.character(unsampled_indices),
                 con = paste(save_dir, "unsampled_indices.txt", sep = "/"))
