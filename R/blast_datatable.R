@@ -63,7 +63,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
                             ncbi_bin = NULL, force_db = FALSE,
                             sample_size = 1, wildcards = "NNNN", rank = 'genus', max_to_blast = 1000) {
 
-  message(paste("Max to blast", max_to_blast))
+
 
   if (!(check_db(db) || force_db)) {
     stop(db, " is probably not a blast database.
