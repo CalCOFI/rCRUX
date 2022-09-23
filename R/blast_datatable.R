@@ -73,8 +73,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
   too_many_ns <- NULL
   blastdbcmd_failed <- NULL
   output_table <- NULL
-  blast_seeds_m <- blast_seeds
-  blast_seeds_m$blast_status <- "not_done"
+  blast_seeds_m <- NULL
   unsampled_indices <- seq_along(blast_seeds_m$accession)
 
   # Pick up where it left off
@@ -108,6 +107,9 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
   while (length(unsampled_indices) > 0) {
     #blast_seeds_m <- dplyr::filter(blast_seeds, !is.na(superkingdom) & !is.na(phylum) & !is.na(class) & !is.na(order))
+
+    blast_seeds_m <- blast_seeds
+    blast_seeds_m$blast_status <- "not_done"
 
     # information about state of blast
     message(paste("BLAST round", num_rounds))
