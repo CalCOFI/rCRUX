@@ -2,7 +2,7 @@
 #'
 #' @param save_dir the directory to save in
 #' @param output_table the outputs generated so far
-#' @param blast_seeds_m blast seeds table but with NA taxonomic ranks removed
+#' @param blast_seeds_m blast seeds table but with blast status update
 #' @param unsampled_indices a vector of indices not yet sampled
 #' @param too_many_ns a vector of indices that result
 #'        in a fasta with too many Ns
