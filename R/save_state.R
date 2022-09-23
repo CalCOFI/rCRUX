@@ -2,7 +2,6 @@
 #'
 #' @param save_dir the directory to save in
 #' @param output_table the outputs generated so far
-#' @param blast_seeds_m blast seeds table but with NA taxonomic ranks removed
 #' @param unsampled_indices a vector of indices not yet sampled
 #' @param too_many_ns a vector of indices that result
 #'        in a fasta with too many Ns
@@ -12,16 +11,14 @@
 #' @return NULL
 #' @export
 save_state <- function(save_dir, output_table, unsampled_indices, too_many_ns,
-                        blastdbcmd_failed, num_rounds, blast_seeds_m) {
+                        blastdbcmd_failed, num_rounds) {
     if (!dir.exists(save_dir)) {
         dir.create(save_dir)
     }
     write.csv(output_table,
             file = paste(save_dir, "output_table.txt", sep = "/"),
             row.names = FALSE)
-    write.csv(blast_seeds_m,
-            file = paste(save_dir, "blast_seeds_passed_filter.txt", sep = "/"),
-            row.names = FALSE)
+
     writeLines(as.character(unsampled_indices),
                 con = paste(save_dir, "unsampled_indices.txt", sep = "/"))
     writeLines(as.character(too_many_ns),

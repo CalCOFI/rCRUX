@@ -82,7 +82,7 @@ get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
 [Modifying defaults can increase the number of returns by orders of magnitude.](#Search-options)
 
 **rcrux_blast**
-Searches are based on randomly sampling unique taxonomic groups for a given rank from the get_blast_seeds output table. For example, the default is to randomly sample one read from each genus.  The user can select any taxonomic rank present in the get_blast_seeds output table, and should choose a rank that can be feasibly run in their environment (e.g. 20K + reads are too memory intensive for many laptops), and provide the user sufficient resolution. If there are 1,000 (or user defined max_to_blast) or fewer blast seeds to process, for a given round of blasting, the entire blast seeds table will be blasted.
+Searches are based on randomly sampling unique taxonomic groups for a given rank from the get_blast_seeds output table. For example, the default is to randomly sample one read from each genus.  The user can select any taxonomic rank present in the get_blast_seeds output table, and should choose a rank that can be feasibly run in their environment (e.g. 20K + reads are too memory intensive for many laptops, and some targets return large numbers of hits that can max out RAM), and provide the user sufficient resolution. If there are 1,000 (or user defined max_to_blast) or fewer blast seeds to process, for a given round of blasting, the entire blast seeds table will be blasted.
 ```
 seeds_path <- '/my/rCRUX_output_directory/12S_V5F1_primerTree_output_with_taxonomy.csv'
 # this is output from get_blast_seeds
@@ -219,6 +219,9 @@ RCRUX.dev::rcrux_blast("short_test/12S_V5F1/12S_V5F1_primerTree_output_with_taxo
                       "blast_test_save", db_path, accession_taxa_path)
 ```
 
+## Funding
+
+The [CalCOFI](https://calcofi.org/) program provided funding support for this project.
 
 ## References
 

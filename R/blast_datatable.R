@@ -214,7 +214,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     # save the state of the blast
     num_rounds <- num_rounds + 1
     save_state(save_dir, output_table, unsampled_indices, too_many_ns,
-               blastdbcmd_failed, num_rounds, blast_seeds_m)
+               blastdbcmd_failed, num_rounds)
   }
 
   # If we get a taxid from blastn can we just use that?
