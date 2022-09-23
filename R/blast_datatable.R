@@ -152,7 +152,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     pb <- progress::progress_bar$new(total = length(sample_indices))
 
     for (index in sample_indices) {
-      fasta <- suppress_warnings(run_blastdbcmd(blast_seeds_m[index, ], db, ncbi_bin))
+      fasta <- suppressWarnings(run_blastdbcmd(blast_seeds_m[index, ], db, ncbi_bin))
 
       # Maybe in these cases we can just append directly to output?
       # room for improvement here...
