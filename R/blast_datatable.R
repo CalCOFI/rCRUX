@@ -74,7 +74,6 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
   blastdbcmd_failed <- NULL
   output_table <- NULL
   blast_seeds_m <- blast_seeds
-  #blast_seeds_m <- dplyr::filter(blast_seeds, !is.na(superkingdom) & !is.na(phylum) & !is.na(class) & !is.na(order))
   blast_seeds_m$blast_status <- "not_done"
   unsampled_indices <- seq_along(blast_seeds_m$accession)
 
@@ -108,6 +107,8 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
   }
 
   while (length(unsampled_indices) > 0) {
+    #blast_seeds_m <- dplyr::filter(blast_seeds, !is.na(superkingdom) & !is.na(phylum) & !is.na(class) & !is.na(order))
+
     # information about state of blast
     message(paste("BLAST round", num_rounds))
     message(paste(length(unsampled_indices), "indices left to process."))
@@ -214,7 +215,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     # save the state of the blast
     num_rounds <- num_rounds + 1
     save_state(save_dir, output_table, unsampled_indices, too_many_ns,
-               blastdbcmd_failed, num_rounds)
+               blastdbcmd_failed, num_rounds, blast_seeds_m)
   }
 
   # If we get a taxid from blastn can we just use that?
