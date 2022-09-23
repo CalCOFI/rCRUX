@@ -11,8 +11,8 @@
 run_blastdbcmd <- function(query_row, db, ncbi_bin = NULL) {
     # Extract arguments
     accession <- query_row$accession
-    forward <- query_row$forward_stop
-    reverse <- query_row$reverse_stop
+    forward <- as.numeric(query_row$forward_stop)
+    reverse <- as.numeric(query_row$reverse_stop)
 
     # Massage forward and reverse
     if (forward < reverse) {

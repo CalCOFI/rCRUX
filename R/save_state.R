@@ -19,11 +19,11 @@ save_state <- function(save_dir, output_table, unsampled_indices, too_many_ns,
     write.csv(output_table,
             file = paste(save_dir, "output_table.txt", sep = "/"),
             row.names = FALSE)
-    write.txt(blast_seeds_m,
+    write.csv(blast_seeds_m,
             file = paste(save_dir, "blast_seeds_passed_filter.txt", sep = "/"),
             row.names = FALSE)
     writeLines(as.character(unsampled_indices),
-                con = paste(save_dir, "unsampled_indices.txt", sep = "/"), sep = "\t",)
+                con = paste(save_dir, "unsampled_indices.txt", sep = "/"))
     writeLines(as.character(too_many_ns),
                 con = paste(save_dir, "too_many_ns.txt", sep = "/"))
     writeLines(as.character(blastdbcmd_failed),
