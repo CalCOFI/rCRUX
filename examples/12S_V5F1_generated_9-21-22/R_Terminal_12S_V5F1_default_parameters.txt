@@ -21,11 +21,6 @@ BLAST alignment processing, refreshing in 20 seconds...
 BLAST alignment processing, refreshing in 20 seconds...
 BLAST alignment completed in 51 seconds
 NULL
-Warning messages:
-1: In dir.create(file_out_dir) :
-  '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_default_params' already exists
-2: In dir.create(out) :
-  '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_default_params/12S_V5F1' already exists
 >
 >
 >
@@ -52,7 +47,6 @@ Running blastdbcmd on 527 samples.
 No useable accession numbers. Proceeding to next round.
 109153 unique blast hits after this round.
 NULL
-There were 50 or more warnings (use warnings() to see the first 50)
 >
 >
 >

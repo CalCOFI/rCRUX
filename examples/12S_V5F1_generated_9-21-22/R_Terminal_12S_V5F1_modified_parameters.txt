@@ -53,6 +53,18 @@ In addition: Warning messages:
 1: In dir.create(working_dir) :
   '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_modified_params/12S_V5F1' already exists
 >
+
+### This marker returns more hits when I randomly search genus, than the RAM on
+### my computer can store.  I choose to go up one taxonomic rank, to family, and
+### was able to complete the run.
+###
+### I increased the max_to_blast = 2000 from the default of 1000.  After the
+### first round of blast at the rank of family, there were few families left to
+### sample, and it took about 200 rounds of blast to get to 1000 accessions
+### left to blast.
+### This script saves the status from the most recently completed round of blast
+### so you can stop the script if it appears to be running slowly and modify the
+### parameters to speed up the database build.
 >
 >
 >
