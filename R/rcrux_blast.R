@@ -73,7 +73,7 @@ rcrux_blast <- function(seeds_path, db_dir, accession_taxa_path, working_dir,
 
   # Write output to rcrux_blast_output
   tax_rank_sum_table_path <- paste0(output_dir, "/", metabarcode, "_unique_taxonomic_rank_counts.txt")
-  write.table(tax_rank_sum, file = tax_rank_sum_table_path, row.names = FALSE, col.names=TRUE, sep = "\t")
+  write.table(tax_rank_sum, file = tax_rank_sum_table_path, row.names = FALSE, col.names=TRUE, sep = ",")
 
 
   # Read condensed vectors and expand them

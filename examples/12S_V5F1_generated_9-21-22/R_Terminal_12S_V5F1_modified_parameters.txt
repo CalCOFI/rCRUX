@@ -1,17 +1,14 @@
 > library(rCRUX)
 >
 >
->
-> blast_seeds_parent <- "/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_modified_params"
+> blast_seeds_parent <- "/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_modified_params/"
 > metabarcode <- "12S_V5F1"
 > accession_taxa_path <- "/Users/limeybean/Dropbox/CRUX_2.0/accession2taxid/accessionTaxa.sql"
->
->
 >
 > get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
 +                 blast_seeds_parent, metabarcode, accession_taxa_path, HITSIZE ='1000000', evalue='100000',
 +                 word_size='6', MAX_TARGET_PER_TEMPLATE = '5',
-+                 NUM_TARGETS_WITH_PRIMERS ='500000', minimum_length = 50,
++                 NUM_TARGETS_WITH_PRIMERS ='500000', minimum_length = 60,
 +                 MAX_TARGET_SIZE = 200,
 +                 organism = c("1476529", "7776"), return_table = FALSE)
 BLASTing 1 primer combinations
@@ -28,9 +25,36 @@ BLAST alignment processing, refreshing in 20 seconds...
 BLAST alignment processing, refreshing in 20 seconds...
 BLAST alignment processing, refreshing in 20 seconds...
 BLAST alignment processing, refreshing in 20 seconds...
-BLAST alignment processing, refreshing in 20 seconds...
-BLAST alignment completed in 204 seconds
-NULL>
+BLAST alignment completed in 228 seconds
+NULL
+>
+>
+>
+>
+> seeds_path <- '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_modified_params/12S_V5F1/12S_V5F1_primerTree_output_with_taxonomy.csv'
+> db_dir <- "/Users/limeybean/Dropbox/CRUX_2.0/ncbi_nt/nt"
+> accession_taxa_path <- "/Users/limeybean/Dropbox/CRUX_2.0/accession2taxid/accessionTaxa.sql"
+> working_dir <- '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_modified_params/12S_V5F1/'
+> metabarcode <- "12S_V5F1"
+>
+>
+>
+> rcrux_blast(seeds_path, db_dir, accession_taxa_path, working_dir,
++             metabarcode, max_to_blast = 2000)
+Max to blast 2000
+BLAST round 1
+111489 indices left to process.
+Running blastdbcmd on 5568 samples.
+Calling blastn. This may take a long time.
+0 blast hits returned.
+Error in blast_datatable(blast_seeds, save_dir, db_dir, accession_taxa_path,  :
+  Blastn having trouble blasting the number of seeds selected.  Try using a taxonomic rank with fewer unique groups, and reduce the value for max_to_blast
+In addition: Warning messages:
+1: In dir.create(working_dir) :
+  '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_modified_params/12S_V5F1' already exists
+>
+>
+>
 >
 >
 >
@@ -41,15 +65,46 @@ NULL>
 > metabarcode <- "12S_V5F1"
 >
 > rcrux_blast(seeds_path, db_dir, accession_taxa_path, working_dir,
-+             metabarcode)
++             metabarcode, max_to_blast = 2000, rank = 'family')
 BLAST round 1
 111489 indices left to process.
-Running blastdbcmd on 5566 samples.
+Running blastdbcmd on 952 samples.
 Calling blastn. This may take a long time.
-
-
-
-
+8840024 blast hits returned.
+139158 unique blast hits after this round.
+BLAST round 2
+2705 indices left to process.
+Running blastdbcmd on 13 samples.
+Calling blastn. This may take a long time.
+1273 blast hits returned.
+139391 unique blast hits after this round.
+BLAST round 3
+2592 indices left to process.
+Running blastdbcmd on 15 samples.
+Calling blastn. This may take a long time.
+3020 blast hits returned.
+140056 unique blast hits after this round.
+BLAST round 4
+2136 indices left to process.
+Running blastdbcmd on 10 samples.
+Calling blastn. This may take a long time.
+1133 blast hits returned.
+140187 unique blast hits after this round.
+BLAST round 5
+2038 indices left to process.
+Running blastdbcmd on 4 samples.
+Calling blastn. This may take a long time.
+276 blast hits returned.
+140319 unique blast hits after this round.
+BLAST round 6
+1935 indices left to process.
+Running blastdbcmd on 1935 samples.
+Calling blastn. This may take a long time.
+6508731 blast hits returned.
+143355 unique blast hits after this round.
+NULL
+>
+>
 >
 >
 >
