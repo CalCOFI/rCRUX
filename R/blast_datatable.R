@@ -138,7 +138,8 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       sample_indices <- which(blast_seeds_m$accession %in% seeds_by_rank_indices)
     }
 
-    message(paste(length(sample_indices), " indices to blast for ", rank, "during this round in subsets of ", max_to_blast, " or fewer" ))
+    message(paste(rank, "has", length(sample_indices), "unique occurrences in the blast seeds data table."))
+    message(paste("These will be subsets into chunks of ", max_to_blast, " indices or fewer" ))
 
     # update unsampled_indices by removing the sample_indices from the list
     unsampled_indices <-
@@ -149,8 +150,6 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     # max_to_blast.  If there are fewer indices for a rank than the max_to_blast
     # it will run.  If not the number of indices to be blasted for a rank will be
     # broken into the max_to_blast value.
-
-
 
     while (length(sample_indices) > 0 ){
       if (length(sample_indices) <= max_to_blast) {
@@ -183,7 +182,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     #          blastdbcmd_failed, unsampled_indices, output_table, wildcards)
 
     # report number of total unique blast hits
-    message(nrow(output_table), " unique blast hits after this round.")
+    #message(nrow(output_table), " unique blast hits after this round.")
 
     # save the state of the blast
     num_rounds <- num_rounds + 1
