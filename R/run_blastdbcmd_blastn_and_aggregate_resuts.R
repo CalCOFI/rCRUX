@@ -14,7 +14,7 @@
 #' @return NULL
 #' @export
 
-run_blastdbcmd_blastn_and_aggregate_resuts <- function(sample_indices,
+run_blastdbcmd_blastn_and_aggregate_resuts <- function(sample_indices = sample_indices,
           blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
           blastdbcmd_failed, unsampled_indices, output_table) {
 
