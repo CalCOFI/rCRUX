@@ -142,7 +142,8 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     }
 
     message(paste(length(sample_indices), " indices to blast for ", rank, "during this round in subsets of ", max_to_blast, " or fewer" ))
-
+    message("broken?")
+    
     # update unsampled_indices by removing the sample_indices from the list
     unsampled_indices <-
       unsampled_indices[!(unsampled_indices %in% sample_indices)]
