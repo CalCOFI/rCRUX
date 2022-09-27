@@ -141,7 +141,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       sample_indices <- which(blast_seeds_m$accession %in% seeds_by_rank_indices)
     }
 
-    message(paste(length(sample_indices), " indices to blast for ", rank, "during this round in subsets of ", max_to_blast, " or fewer" ))
+    message(length(sample_indices), " indices to blast for ", rank, "during this round in subsets of ", max_to_blast, " or fewer" )
 
     # update unsampled_indices by removing the sample_indices from the list
     unsampled_indices <-
@@ -157,7 +157,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
     if (length(sample_indices <= max_to_blast)) {
       #testing
-      message(paste("max to blast or fewer"))
+      message("max to blast or fewer")
       run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices,
                         blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
                         blastdbcmd_failed, unsampled_indices, output_table)
@@ -166,7 +166,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     }
     else  {
       #testing
-      message(paste("more than max to blast"))
+      message("more than max to blast")
       # take chunks of the sample indices that are equivalent to max_to_blast
       subset <- head(sample_indices,n=-max_to_blast)
 
