@@ -145,15 +145,35 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     unsampled_indices <-
       unsampled_indices[!(unsampled_indices %in% sample_indices)]
 
-    # run blastdbcmd on each
-    # sort results into appropriate buckets
-    aggregate_fasta <- NULL
-    message(paste("Running blastdbcmd on", length(sample_indices), "samples."))
-    pb <- progress::progress_bar$new(total = length(sample_indices))
 
-    run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices,
-              blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
-              blastdbcmd_failed, unsampled_indices, output_table)
+    # run blast command, blastn, and aggregate the results based on the the value
+    # max_to_blast.  If there are fewer indices for a rank than the max_to_blast
+    # it will run.  If not the number of indices to be blasted for a rank will be
+    # broken into the max_to_blast value.
+
+    if (length(sample_indices <= max_to_blast) {
+
+      run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices,
+                        blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
+                        blastdbcmd_failed, unsampled_indices, output_table)
+
+    }
+    else  {
+
+      # take chunks of the sample indices that are equivalent to max_to_blast
+      subset <- head(sample_indices,n=-max_to_blast)
+      run_blastdbcmd_blastn_and_aggregate_resuts(subset,
+                        blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
+                        blastdbcmd_failed, unsampled_indices, output_table)
+
+      # update sample indices
+      sample_indices <- sample_indices[!(sample_indices %in% subset)]
+    }
+
+
+    #run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices,
+    #          blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
+    #          blastdbcmd_failed, unsampled_indices, output_table)
 
     # report number of total unique blast hits
     message(nrow(output_table), " unique blast hits after this round.")
