@@ -139,9 +139,6 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     }
 
     message(paste(length(sample_indices), " indices to blast for ", rank, "during this round in subsets of ", max_to_blast, " or fewer" ))
-    message(paste("BLAST round", num_rounds))
-    message(paste("broken?"))
-
 
     # update unsampled_indices by removing the sample_indices from the list
     unsampled_indices <-
@@ -161,7 +158,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       message("max to blast or fewer")
       run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices,
                                                blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
-                                               blastdbcmd_failed, unsampled_indices, output_table)
+                                               blastdbcmd_failed, unsampled_indices, output_table, wildcards)
       break
 
       }else{
@@ -172,7 +169,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
         run_blastdbcmd_blastn_and_aggregate_resuts(subset,
                                                blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
-                                               blastdbcmd_failed, unsampled_indices, output_table)
+                                               blastdbcmd_failed, unsampled_indices, output_table, wildcards)
 
         # update sample indices
         sample_indices <- sample_indices[!(sample_indices %in% subset)]
@@ -183,7 +180,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
     #run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices,
     #          blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
-    #          blastdbcmd_failed, unsampled_indices, output_table)
+    #          blastdbcmd_failed, unsampled_indices, output_table, wildcards)
 
     # report number of total unique blast hits
     message(nrow(output_table), " unique blast hits after this round.")
