@@ -110,9 +110,6 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
 
   while (length(unsampled_indices) > 0) {
-    #blast_seeds_m <- dplyr::filter(blast_seeds, !is.na(superkingdom) & !is.na(phylum) & !is.na(class) & !is.na(order))
-
-
 
     # information about state of blast
     message(paste("BLAST round", num_rounds))
@@ -142,8 +139,9 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     }
 
     message(paste(length(sample_indices), " indices to blast for ", rank, "during this round in subsets of ", max_to_blast, " or fewer" ))
-    message("broken?")
-    
+    message(paste("BLAST round", num_rounds))
+    message(paste("broken?"))
+
     # update unsampled_indices by removing the sample_indices from the list
     unsampled_indices <-
       unsampled_indices[!(unsampled_indices %in% sample_indices)]
@@ -169,7 +167,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       #testing
       message("more than max to blast")
       # take chunks of the sample indices that are equivalent to max_to_blast
-      subset <- head(sample_indices,n=-max_to_blast)
+      subset <- head(sample_indices,n=max_to_blast)
 
       run_blastdbcmd_blastn_and_aggregate_resuts(subset,
                         blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
