@@ -1,6 +1,8 @@
 #' runs blastdbcmd, blastn and aggregates the results
 #'
 #' @param sample_indices the indices to sample
+#' @param save_dir a directory in which to create files representing the
+#'        current state
 #' @param blast_seeds_m blast seeds table but with blast status update
 #' @param ncbi_bin path to blast+ tools if not in path
 #' @param too_many_ns a vector of indices that result
@@ -13,12 +15,16 @@
 #' @param output_table the table of results
 #' @param wildcards a character vector representing the number of wildcards to
 #'        discard
+#' @param num_rounds number of rounds of blast
+#' @param blastdbcmd_failed the indicies not found in your blast db
 #' @return NULL
 #' @export
 
-run_blastdbcmd_blastn_and_aggregate_resuts <- function(sample_indices = sample_indices,
+
+
+run_blastdbcmd_blastn_and_aggregate_resuts <- function(sample_indices = sample_indices, save_dir
           blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
-          blastdbcmd_failed, unsampled_indices, output_table, wildcards) {
+          blastdbcmd_failed, unsampled_indices, output_table, wildcards, blastdbcmd_failed, num_rounds) {
 
   # run blastdbcmd on each
   # sort results into appropriate buckets
@@ -92,7 +98,7 @@ run_blastdbcmd_blastn_and_aggregate_resuts <- function(sample_indices = sample_i
    message(nrow(output_table), " unique blast hits after this round.")
 
    # save the state of the blast
-   num_rounds <- num_rounds + 1
+   #num_rounds <- num_rounds + 1
    save_state(save_dir, output_table, unsampled_indices, too_many_ns,
               blastdbcmd_failed, num_rounds, blast_seeds_m)
 
