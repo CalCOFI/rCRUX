@@ -158,7 +158,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices, save_dir,
             blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
             blastdbcmd_failed, unsampled_indices, output_table, wildcards,
-            blastdbcmd_failed, num_rounds)
+            num_rounds)
 
       break
 
@@ -169,9 +169,9 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
         subset <- head(sample_indices, max_to_blast)
 
         run_blastdbcmd_blastn_and_aggregate_resuts(subset, save_dir,
-              blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir, 
+              blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
               blastdbcmd_failed, unsampled_indices, output_table, wildcards,
-              blastdbcmd_failed, num_rounds)
+              num_rounds)
         # update sample indices
         sample_indices <- sample_indices[!(sample_indices %in% subset)]
       }
