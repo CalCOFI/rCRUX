@@ -179,17 +179,8 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     }
 
 
-    #run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices,
-    #          blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
-    #          blastdbcmd_failed, unsampled_indices, output_table, wildcards)
-
-    # report number of total unique blast hits
-    #message(nrow(output_table), " unique blast hits after this round.")
-
-    # save the state of the blast
     num_rounds <- num_rounds + 1
-    save_state(save_dir, output_table, unsampled_indices, too_many_ns,
-               blastdbcmd_failed, num_rounds, blast_seeds_m)
+
   }
 
   # If we get a taxid from blastn can we just use that?
