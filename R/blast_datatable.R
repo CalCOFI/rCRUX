@@ -155,9 +155,11 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       if (length(sample_indices) <= max_to_blast) {
       #testing
       message("max to blast or fewer")
-      run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices,
-                                               blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
-                                               blastdbcmd_failed, unsampled_indices, output_table, wildcards)
+      run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices, save_dir,
+            blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
+            blastdbcmd_failed, unsampled_indices, output_table, wildcards,
+            blastdbcmd_failed, num_rounds)
+
       break
 
       }else{
@@ -166,10 +168,10 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
         # take chunks of the sample indices that are equivalent to max_to_blast
         subset <- head(sample_indices, max_to_blast)
 
-        run_blastdbcmd_blastn_and_aggregate_resuts(subset,
-                                               blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
-                                               blastdbcmd_failed, unsampled_indices, output_table, wildcards)
-
+        run_blastdbcmd_blastn_and_aggregate_resuts(subset, save_dir,
+              blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir, 
+              blastdbcmd_failed, unsampled_indices, output_table, wildcards,
+              blastdbcmd_failed, num_rounds)
         # update sample indices
         sample_indices <- sample_indices[!(sample_indices %in% subset)]
       }
