@@ -118,6 +118,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     message(paste("BLAST round", num_rounds))
     message(paste(length(unsampled_indices), "indices left to process."))
 
+
     # update status of blast seeds by labeling all reads no in the upsampled
     # indicies list as "done"
     blast_seeds_m$blast_status[-unsampled_indices] <- "done"
@@ -140,6 +141,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       sample_indices <- which(blast_seeds_m$accession %in% seeds_by_rank_indices)
     }
 
+    message(paste(length(sample_indices), " indices to blast for ", rank, "during this round in subsets of ", max_to_blast, " or fewer" ))
 
     # update unsampled_indices by removing the sample_indices from the list
     unsampled_indices <-
@@ -151,8 +153,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     # it will run.  If not the number of indices to be blasted for a rank will be
     # broken into the max_to_blast value.
 
-    message(paste(length(sample_indices), " indices to blast for ", rank, "
-          during this round in subsets of ", max_to_blast, " or fewer" ))
+
 
     if (length(sample_indices <= max_to_blast)) {
 
