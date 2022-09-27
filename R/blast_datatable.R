@@ -142,6 +142,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     message(paste("BLAST round", num_rounds))
     message(paste("broken?"))
 
+
     # update unsampled_indices by removing the sample_indices from the list
     unsampled_indices <-
       unsampled_indices[!(unsampled_indices %in% sample_indices)]
@@ -154,27 +155,29 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
 
 
-    if (length(sample_indices <= max_to_blast)) {
+    while (length(sample_indices) > 0 ){
+      if (length(sample_indices) <= max_to_blast) {
       #testing
       message("max to blast or fewer")
       run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices,
-                        blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
-                        blastdbcmd_failed, unsampled_indices, output_table)
+                                               blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
+                                               blastdbcmd_failed, unsampled_indices, output_table)
+      break
 
+      }else{
+        #testing
+        message("more than max to blast")
+        # take chunks of the sample indices that are equivalent to max_to_blast
+        subset <- head(sample_indices, max_to_blast)
 
-    }
-    else  {
-      #testing
-      message("more than max to blast")
-      # take chunks of the sample indices that are equivalent to max_to_blast
-      subset <- head(sample_indices,n=max_to_blast)
+        run_blastdbcmd_blastn_and_aggregate_resuts(subset,
+                                               blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
+                                               blastdbcmd_failed, unsampled_indices, output_table)
 
-      run_blastdbcmd_blastn_and_aggregate_resuts(subset,
-                        blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
-                        blastdbcmd_failed, unsampled_indices, output_table)
+        # update sample indices
+        sample_indices <- sample_indices[!(sample_indices %in% subset)]
+      }
 
-      # update sample indices
-      sample_indices <- sample_indices[!(sample_indices %in% subset)]
     }
 
 
