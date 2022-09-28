@@ -129,7 +129,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       # randomly select entries (default is n=1) for each rank then turn the
       # accession numbers into a vector
 
-      #blast_seeds_m_path <- paste(save_dir, "blast_seeds_passed_filter.txt", sep = "/")
+      blast_seeds_m_path <- paste(save_dir, "blast_seeds_passed_filter.txt", sep = "/")
       blast_seeds_m <- read.csv(blast_seeds_m_path, colClasses = "character")
 
       seeds_by_rank_indices <- dplyr::pull(dplyr::filter(dplyr::slice_sample(dplyr::group_by(blast_seeds_m,!!!rlang::syms(rank)), n=sample_size), blast_status == 'not_done'), accession)
