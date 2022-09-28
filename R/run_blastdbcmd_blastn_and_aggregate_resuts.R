@@ -113,6 +113,6 @@ run_blastdbcmd_blastn_and_aggregate_resuts <- function(sample_indices = sample_i
    rm(too_many_ns)
    rm(blastdbcmd_failed)
    rm(num_rounds)
-   return(blast_seeds_m)
+   rm(blast_seeds_m)
 
 }
