@@ -184,7 +184,8 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       #testing
       message("max to blast or fewer")
 
-      run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices, save_dir,
+      c(save_dir, output_table, unsampled_indices, too_many_ns,
+                  blastdbcmd_failed, num_rounds, blast_seeds_m) %<-% run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices, save_dir,
             blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
             blastdbcmd_failed, unsampled_indices, output_table, wildcards,
             num_rounds)
@@ -198,7 +199,8 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
         subset <- head(sample_indices, max_to_blast)
 
 
-        run_blastdbcmd_blastn_and_aggregate_resuts(subset, save_dir,
+        c(save_dir, output_table, unsampled_indices, too_many_ns,
+                    blastdbcmd_failed, num_rounds, blast_seeds_m) %<-% run_blastdbcmd_blastn_and_aggregate_resuts(subset, save_dir,
               blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
               blastdbcmd_failed, unsampled_indices, output_table, wildcards,
               num_rounds)
@@ -211,11 +213,6 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
     num_rounds <- num_rounds + 1
 
-
-
-
-c(save_dir, output_table, unsampled_indices, too_many_ns,
-            blastdbcmd_failed, num_rounds, blast_seeds_m) %<-% run_blastdbcmd_blastn_and_aggregate_resuts()
 
   }
 
