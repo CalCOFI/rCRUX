@@ -98,11 +98,13 @@ run_blastdbcmd_blastn_and_aggregate_resuts <- function(sample_indices = sample_i
       dplyr::filter(!(duplicated(accession)))
       output_table <- dplyr::ungroup(output_table)
 
-      # save the state of the blast
-      save_state(save_dir, output_table, unsampled_indices, too_many_ns,
-                 blastdbcmd_failed, num_rounds, blast_seeds_m)
+
    }
-   
+
+   # save the state of the blast
+   save_state(save_dir, output_table, unsampled_indices, too_many_ns,
+              blastdbcmd_failed, num_rounds, blast_seeds_m)
+
    # report number of total unique blast hits
 
    message(nrow(output_table), " unique blast hits after this round.")
