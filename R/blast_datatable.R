@@ -151,6 +151,31 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     # broken into the max_to_blast value.
 
     while (length(sample_indices) > 0 ){
+      if (file.exists(paste(save_dir, "unsampled_indices.txt", sep = "/"))) {
+
+        rounds_path <- paste(save_dir, "num_rounds.txt", sep = "/")
+        num_rounds <- as.numeric(readLines(con = rounds_path))
+
+        ns_path <- paste(save_dir, "too_many_ns.txt", sep = "/")
+        too_many_ns <- as.numeric(readLines(con = ns_path))
+
+        blastdbcmd_failed_path <- paste(save_dir, "blastdbcmd_failed.txt", sep = "/")
+        blastdbcmd_failed <- as.numeric(readLines(con = blastdbcmd_failed_path))
+
+        unsampled_indices_path <-
+          paste(save_dir, "unsampled_indices.txt", sep = "/")
+        unsampled_indices <-
+          as.numeric(readLines(con = unsampled_indices_path))
+
+        output_table_path <- paste(save_dir, "output_table.txt", sep = "/")
+        output_table <- read.csv(output_table_path, colClasses = "character")
+
+
+        blast_seeds_m_path <- paste(save_dir, "blast_seeds_passed_filter.txt", sep = "/")
+        blast_seeds_m <- read.csv(blast_seeds_m_path, colClasses = "character")
+
+      }
+
       if (length(sample_indices) <= max_to_blast) {
       #testing
       message("max to blast or fewer")
@@ -179,7 +204,6 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       }
 
     }
-
 
     num_rounds <- num_rounds + 1
 
