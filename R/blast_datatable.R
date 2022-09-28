@@ -237,6 +237,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
             sample_indices <- 0
             message(paste("if", sample_indices))
 
+            break
 
       ######### testing
       #message("6.5")
