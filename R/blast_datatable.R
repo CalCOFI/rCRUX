@@ -251,6 +251,11 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
             blastdbcmd_failed, unsampled_indices, output_table, wildcards,
             num_rounds)
 
+      ######### testing
+      message("6.5")
+      save_state(save_dir, output_table, unsampled_indices, too_many_ns,
+                          blastdbcmd_failed, num_rounds, blast_seeds_m)
+
       break
 
       }else{
