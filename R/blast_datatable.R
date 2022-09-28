@@ -280,7 +280,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
         message("4.7")
 
         rm(output_table)
-        rm(unsampled_indices)
+        #rm(unsampled_indices)
         rm(too_many_ns)
         rm(blastdbcmd_failed)
         rm(blast_seeds_m)
