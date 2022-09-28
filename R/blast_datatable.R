@@ -129,7 +129,6 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       # randomly select entries (default is n=1) for each rank then turn the
       # accession numbers into a vector
 
-
       seeds_by_rank_indices <- dplyr::pull(dplyr::filter(dplyr::slice_sample(dplyr::group_by(blast_seeds_m,!!!rlang::syms(rank)), n=sample_size), blast_status == 'not_done'), accession)
 
       # search the original output blast_seeds for the indices (row numbers) to
@@ -184,9 +183,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       #testing
       message("max to blast or fewer")
 
-      # run the function and return the data frames
-      c(save_dir, output_table, unsampled_indices, too_many_ns,
-                  blastdbcmd_failed, num_rounds, blast_seeds_m) %<-% run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices, save_dir,
+      run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices, save_dir,
             blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
             blastdbcmd_failed, unsampled_indices, output_table, wildcards,
             num_rounds)
@@ -199,9 +196,8 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
         # take chunks of the sample indices that are equivalent to max_to_blast
         subset <- head(sample_indices, max_to_blast)
 
-        # run the function and return the data frames
-        c(save_dir, output_table, unsampled_indices, too_many_ns,
-                    blastdbcmd_failed, num_rounds, blast_seeds_m) %<-% run_blastdbcmd_blastn_and_aggregate_resuts(subset, save_dir,
+
+        run_blastdbcmd_blastn_and_aggregate_resuts(subset, save_dir,
               blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
               blastdbcmd_failed, unsampled_indices, output_table, wildcards,
               num_rounds)
@@ -214,6 +210,12 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
     num_rounds <- num_rounds + 1
 
+    rm(output_table)
+    rm(too_many_ns)
+    rm(blastdbcmd_failed)
+    rm(num_rounds)
+    rm(blast_seeds_m)
+    return(unsampled_indices)
 
   }
 
