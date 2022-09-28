@@ -79,6 +79,9 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
   blast_seeds_m$blast_status <- "not_done"
   unsampled_indices <- seq_along(blast_seeds_m$accession)
 
+######### testing
+  message("1")
+
   # Pick up where it left off
   if (file.exists(paste(save_dir, "unsampled_indices.txt", sep = "/"))) {
 
@@ -108,6 +111,10 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
   while (length(unsampled_indices) > 0) {
 
+
+  ######### testing
+    message("2")
+
     # information about state of blast
     message(paste("BLAST round", num_rounds))
     message(paste(length(unsampled_indices), "indices left to process."))
@@ -120,10 +127,17 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     # collect indices to blast
     # if unsampled indices are greater than the max to blast (default n = 1000), the blast seed table will be randomly sampled by taxonomic ranks
 
+    ######### testing
+      message("3")
+
     if (length(unsampled_indices) <= max_to_blast) {
       sample_indices <- unsampled_indices
     }
     else  {
+
+    ######### testing
+      message("4")
+
 
       # if more indices than the max_to_blast are present
       # randomly select entries (default is n=1) for each rank then turn the
@@ -154,6 +168,9 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
     while (length(sample_indices) > 0 ){
 
+    ######### testing
+      message("5")
+
       if (file.exists(paste(save_dir, "unsampled_indices.txt", sep = "/"))) {
 
         rounds_path <- paste(save_dir, "num_rounds.txt", sep = "/")
@@ -180,8 +197,9 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       }
 
       if (length(sample_indices) <= max_to_blast) {
-      #testing
-      message("max to blast or fewer")
+
+      ######### testing
+        message("6")
 
       run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices, save_dir,
             blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
@@ -191,8 +209,10 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       break
 
       }else{
-        #testing
-        message("more than max to blast")
+
+      ######### testing
+        message("7")
+
         # take chunks of the sample indices that are equivalent to max_to_blast
         subset <- head(sample_indices, max_to_blast)
 
@@ -208,6 +228,9 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
     }
 
+  ######### testing
+    message("8")
+
     num_rounds <- num_rounds + 1
 
     rm(output_table)
@@ -220,6 +243,10 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
   }
 
   # If we get a taxid from blastn can we just use that?
+
+  ######### testing
+    message("9")
+
   output_table_taxonomy <-
     get_taxonomizr_from_accession(output_table, accession_taxa_path)
   return(output_table_taxonomy)
@@ -227,6 +254,8 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
 # True if the db is a blast database, false if it's not
 
+######### testing
+  message("10")
 
 check_db <- function(db, ncbi_bin = NULL) {
   if (is.null(ncbi_bin)) {
