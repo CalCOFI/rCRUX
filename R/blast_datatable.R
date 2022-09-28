@@ -184,7 +184,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       unsampled_indices[!(unsampled_indices %in% sample_indices)]
 
     #save_state(save_dir, output_table, unsampled_indices, too_many_ns,
-                  blastdbcmd_failed, num_rounds, blast_seeds_m)
+    #              blastdbcmd_failed, num_rounds, blast_seeds_m)
 
 
     # run blast command, blastn, and aggregate the results based on the the value
