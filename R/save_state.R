@@ -11,6 +11,8 @@
 #' @param num_rounds the number of rounds so far
 #' @return NULL
 #' @export
+
+
 save_state <- function(save_dir, output_table, unsampled_indices, too_many_ns,
                         blastdbcmd_failed, num_rounds, blast_seeds_m) {
     if (!dir.exists(save_dir)) {
