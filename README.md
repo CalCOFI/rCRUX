@@ -3,6 +3,8 @@
 
 
 **Authors:** [Luna Gal](<https://github.com/LunaGal>), [Zachary Gold](<https://github.com/zjgold>), [Ramon Gallego](https://github.com/ramongallego), [Emily Curd](<https://github.com/limey-bean>)<br/>
+**Inspiration:**
+The late, great [Jesse Gomer](<https://github.com/jessegomer?tab=repositories>). Coding extraordinaire and dear friend.<br/>
 **License:**
 [GPL-3](https://opensource.org/licenses/GPL-3.0)
 
