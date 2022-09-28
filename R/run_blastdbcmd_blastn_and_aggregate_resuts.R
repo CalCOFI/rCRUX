@@ -112,6 +112,5 @@ run_blastdbcmd_blastn_and_aggregate_resuts <- function(sample_indices = sample_i
 
    return(list(save_dir, output_table, unsampled_indices, too_many_ns,
                blastdbcmd_failed, num_rounds, blast_seeds_m))
-    }
 
-}
+  }
