@@ -181,7 +181,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       rm(too_many_ns)
       rm(blastdbcmd_failed)
       rm(num_rounds)
-      return(blast_seeds_m)
+      rm(blast_seeds_m)
 
     ######### testing
       message("5")
