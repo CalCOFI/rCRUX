@@ -238,14 +238,17 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     rm(blastdbcmd_failed)
     rm(num_rounds)
     rm(blast_seeds_m)
-    return(unsampled_indices)
+    rm(unsampled_indices)
+
+  ######### testing
+    message("9")
 
   }
 
   # If we get a taxid from blastn can we just use that?
 
   ######### testing
-    message("9")
+    message("10")
 
   output_table_taxonomy <-
     get_taxonomizr_from_accession(output_table, accession_taxa_path)
@@ -255,7 +258,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 # True if the db is a blast database, false if it's not
 
 ######### testing
-  message("10")
+  message("11")
 
 check_db <- function(db, ncbi_bin = NULL) {
   if (is.null(ncbi_bin)) {
