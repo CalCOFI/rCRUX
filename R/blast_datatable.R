@@ -234,6 +234,8 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
             blastdbcmd_failed, unsampled_indices, output_table, wildcards,
             num_rounds)
 
+      break
+
       ######### testing
       #message("6.5")
       #save_state(save_dir, output_table, unsampled_indices, too_many_ns,
@@ -259,15 +261,13 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
         sample_indices <- sample_indices[!(sample_indices %in% subset)]
       }
 
+
     }
 
   ######### testing
     message("8")
 
     num_rounds <- num_rounds + 1
-
-  ######### testing
-    message("9")
 
 
 
