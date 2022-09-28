@@ -235,7 +235,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
             num_rounds)
 
             sample_indices <- 0
-            message("if", sample_indices)
+            message(paste("if", sample_indices))
 
 
       ######### testing
@@ -254,10 +254,10 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
             blastdbcmd_failed, unsampled_indices, output_table, wildcards,
             num_rounds)
 
-      message("else if", sample_indices)
+      message(paste("else if", sample_indices))
 
 
-      }else{
+      } else {
 
       ######### testing
         message("7")
@@ -273,7 +273,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
         # update sample indices
         sample_indices <- sample_indices[!(sample_indices %in% subset)]
-        message("else", sample_indices)
+        message(paste("else", sample_indices))
       }
 
 
