@@ -169,6 +169,21 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     while (length(sample_indices) > 0 ){
 
     ######### testing
+      message("4.5")
+    save_state(save_dir, output_table, unsampled_indices, too_many_ns,
+                  blastdbcmd_failed, num_rounds, blast_seeds_m)
+
+    ######### testing
+      message("4.7")
+
+      rm(output_table)
+      rm(unsampled_indices)
+      rm(too_many_ns)
+      rm(blastdbcmd_failed)
+      rm(num_rounds)
+      return(blast_seeds_m)
+
+    ######### testing
       message("5")
 
       if (file.exists(paste(save_dir, "unsampled_indices.txt", sep = "/"))) {
@@ -232,13 +247,6 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     message("8")
 
     num_rounds <- num_rounds + 1
-
-    rm(output_table)
-    rm(too_many_ns)
-    rm(blastdbcmd_failed)
-    rm(num_rounds)
-    rm(blast_seeds_m)
-    rm(unsampled_indices)
 
   ######### testing
     message("9")
