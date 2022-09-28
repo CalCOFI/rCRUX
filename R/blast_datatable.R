@@ -273,7 +273,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
   ######### testing
         message("4.5")
-      save_state(save_dir, output_table, unsampled_indices, too_many_ns,
+      #save_state(save_dir, output_table, unsampled_indices, too_many_ns,
                     blastdbcmd_failed, num_rounds, blast_seeds_m)
 
   ######### testing
