@@ -234,7 +234,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
             blastdbcmd_failed, unsampled_indices, output_table, wildcards,
             num_rounds)
 
-            unsampled_indices <- 0
+            unsampled_indices <- NULL
             message(paste("if", sample_indices, unsampled_indices))
 
             break
