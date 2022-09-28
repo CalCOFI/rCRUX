@@ -127,7 +127,6 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       rm(unsampled_indices)
       rm(too_many_ns)
       rm(blastdbcmd_failed)
-      rm(num_rounds)
       rm(blast_seeds_m)
 
     ######### testing
@@ -296,8 +295,6 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
 # True if the db is a blast database, false if it's not
 
-######### testing
-  message("11")
 
 check_db <- function(db, ncbi_bin = NULL) {
   if (is.null(ncbi_bin)) {

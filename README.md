@@ -2,7 +2,7 @@
 
 
 
-**Authors:** [Luna Gal](<https://github.com/LunaGal>), [Zachary Gold](<https://github.com/zjgold>), [Emily Curd](<https://github.com/limey-bean>)<br/>
+**Authors:** [Luna Gal](<https://github.com/LunaGal>), [Zachary Gold](<https://github.com/zjgold>), [Ramon Gallego](https://github.com/ramongallego), [Emily Curd](<https://github.com/limey-bean>)<br/>
 **License:**
 [GPL-3](https://opensource.org/licenses/GPL-3.0)
 
