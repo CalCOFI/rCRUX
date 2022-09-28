@@ -206,6 +206,12 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     }
 
     num_rounds <- num_rounds + 1
+    rm(output_table)
+    rm(unsampled_indices)
+    rm(too_many_ns)
+    rm(blastdbcmd_failed)
+    rm(num_rounds)
+    rm(blast_seeds_m)
 
   }
 
