@@ -224,7 +224,27 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
       }
 
-      if (length(sample_indices) <= max_to_blast) {
+      if (length(unsampled_indices) <= max_to_blast) {
+
+      ######### testing
+        message("6")
+
+      run_blastdbcmd_blastn_and_aggregate_resuts(unsampled_indices, save_dir,
+            blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
+            blastdbcmd_failed, unsampled_indices, output_table, wildcards,
+            num_rounds)
+
+            sample_indices <- 0
+            message("if", sample_indices)
+
+
+      ######### testing
+      #message("6.5")
+      #save_state(save_dir, output_table, unsampled_indices, too_many_ns,
+      #                    blastdbcmd_failed, num_rounds, blast_seeds_m)
+
+
+      } else if (length(sample_indices) <= max_to_blast) {
 
       ######### testing
         message("6")
@@ -234,16 +254,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
             blastdbcmd_failed, unsampled_indices, output_table, wildcards,
             num_rounds)
 
-      sample_indices <- 0
-
-      break
-
-      ######### testing
-      #message("6.5")
-      #save_state(save_dir, output_table, unsampled_indices, too_many_ns,
-      #                    blastdbcmd_failed, num_rounds, blast_seeds_m)
-
-
+      message("else if", sample_indices)
 
 
       }else{
@@ -262,6 +273,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
         # update sample indices
         sample_indices <- sample_indices[!(sample_indices %in% subset)]
+        message("else", sample_indices)
       }
 
 
@@ -272,6 +284,8 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
     num_rounds <- num_rounds + 1
 
+    message(sample_indices)
+    message(num_rounds)
 
 
   ######### testing
