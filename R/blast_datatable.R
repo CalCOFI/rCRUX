@@ -132,10 +132,6 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       #testing
       message("max to blast or fewer")
 
-      pickup_output_for_blasting(save_dir, output_table,
-                    unsampled_indices, too_many_ns, blastdbcmd_failed, num_rounds,
-                    blast_seeds_m)
-
       run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices, save_dir,
             blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
             blastdbcmd_failed, unsampled_indices, output_table, wildcards,
@@ -149,9 +145,6 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
         # take chunks of the sample indices that are equivalent to max_to_blast
         subset <- head(sample_indices, max_to_blast)
 
-        pickup_output_for_blasting(save_dir, output_table,
-                      unsampled_indices, too_many_ns, blastdbcmd_failed, num_rounds,
-                      blast_seeds_m)
 
         run_blastdbcmd_blastn_and_aggregate_resuts(subset, save_dir,
               blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
