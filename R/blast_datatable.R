@@ -129,7 +129,6 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       # randomly select entries (default is n=1) for each rank then turn the
       # accession numbers into a vector
 
-      blast_seeds_m <- as.data.frame(blast_seeds_m)
 
       seeds_by_rank_indices <- dplyr::pull(dplyr::filter(dplyr::slice_sample(dplyr::group_by(blast_seeds_m,!!!rlang::syms(rank)), n=sample_size), blast_status == 'not_done'), accession)
 
@@ -212,12 +211,11 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
     num_rounds <- num_rounds + 1
 
-    rm(output_table)
-    rm(too_many_ns)
-    rm(blastdbcmd_failed)
-    rm(num_rounds)
-    rm(blast_seeds_m)
-    return(unsampled_indices)
+
+
+
+c(save_dir, output_table, unsampled_indices, too_many_ns,
+            blastdbcmd_failed, num_rounds, blast_seeds_m) %<-% run_blastdbcmd_blastn_and_aggregate_resuts()
 
   }
 

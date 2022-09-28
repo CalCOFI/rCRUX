@@ -108,11 +108,10 @@ run_blastdbcmd_blastn_and_aggregate_resuts <- function(sample_indices = sample_i
 
    message(nrow(output_table), " unique blast hits after this round.")
 
-   rm(output_table)
-   rm(unsampled_indices)
-   rm(too_many_ns)
-   rm(blastdbcmd_failed)
-   rm(num_rounds)
-   rm(blast_seeds_m)
+
+
+   return(list(save_dir, output_table, unsampled_indices, too_many_ns,
+               blastdbcmd_failed, num_rounds, blast_seeds_m))
+    }
 
 }
