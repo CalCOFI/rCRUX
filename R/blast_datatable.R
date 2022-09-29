@@ -312,6 +312,9 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
   ######### testing
     message("10")
 
+    output_table_path <- paste(save_dir, "output_table.txt", sep = "/")
+    output_table <- read.csv(output_table_path, colClasses = "character")
+
   output_table_taxonomy <-
     get_taxonomizr_from_accession(output_table, accession_taxa_path)
   return(output_table_taxonomy)
