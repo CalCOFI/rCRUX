@@ -227,17 +227,17 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       if (length(unsampled_indices) <= max_to_blast) {
 
       ######### testing
-        message("6")
+        message("6 unsp")
 
       run_blastdbcmd_blastn_and_aggregate_resuts(unsampled_indices, save_dir,
             blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
             blastdbcmd_failed, unsampled_indices, output_table, wildcards,
             num_rounds)
 
-            unsampled_indices <- unsampled_indices[0]
+            unsampled_indices <- unsampled_indices[!unsampled_indices %in% unsampled_indices]
+            sample_indices <- sample_indices[!sample_indices %in% unsampled_indices]
 
-
-            message(paste("if", sample_indices, unsampled_indices))
+            message(paste("if", sample_indices, length(unsampled_indices)))
 
 
       ######### testing
@@ -284,9 +284,9 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
   ######### testing
     message("8")
 
-    num_rounds <- num_rounds + 1
 
-    message(sample_indices)
+
+    message(length(unsampled_indices)
     message(num_rounds)
 
 

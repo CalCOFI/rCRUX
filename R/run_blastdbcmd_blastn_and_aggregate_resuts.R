@@ -83,6 +83,9 @@ run_blastdbcmd_blastn_and_aggregate_resuts <- function(sample_indices = sample_i
       unsampled_indices <-
       unsampled_indices[!unsampled_indices %in% in_output_indices]
 
+      unsampled_indices <-
+      unsampled_indices[!unsampled_indices %in% sample_indices]
+
       # Add output to existing output
       if (is.null(output_table)) {
         output_table <- blastn_output
@@ -108,6 +111,7 @@ run_blastdbcmd_blastn_and_aggregate_resuts <- function(sample_indices = sample_i
 
    ######### testing
      message("24.5")
+   num_rounds <- num_rounds + 1
    save_state(save_dir, output_table, unsampled_indices, too_many_ns,
                  blastdbcmd_failed, num_rounds, blast_seeds_m)
 
