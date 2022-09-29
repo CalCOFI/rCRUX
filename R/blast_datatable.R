@@ -286,7 +286,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
 
 
-    message(length(unsampled_indices)
+    message(paste(nrow(unsampled_indices)))
     message(num_rounds)
 
 
