@@ -33,6 +33,8 @@ run_blastdbcmd_blastn_and_aggregate_resuts <- function(sample_indices = sample_i
   message(paste("Running blastdbcmd on", length(sample_indices), "samples."))
   pb <- progress::progress_bar$new(total = length(sample_indices))
 
+
+
   for (index in sample_indices) {
     fasta <- suppressWarnings(run_blastdbcmd(blast_seeds_m[index, ], db, ncbi_bin))
 
@@ -55,8 +57,12 @@ run_blastdbcmd_blastn_and_aggregate_resuts <- function(sample_indices = sample_i
       pb$tick()
     }
 
+
+
     save_state(save_dir, output_table, unsampled_indices, too_many_ns,
                blastdbcmd_failed, num_rounds, blast_seeds_m)
+
+
 
     if (!is.character(aggregate_fasta)) {
       #message("aggregate_fasta has value ", aggregate_fasta)
@@ -64,15 +70,20 @@ run_blastdbcmd_blastn_and_aggregate_resuts <- function(sample_indices = sample_i
 
     }
     else {
+
       # run blastn and aggregate results
       blastn_output <- run_blastn(fasta=aggregate_fasta, db_dir=db, ncbi_bin=ncbi_bin)
 
       if(nrow(blastn_output) == 0 && length(unsampled_indices) > 0) {
         message(nrow(blastn_output), " blast hits returned.")
         stop("Blastn having trouble blasting the number of seeds selected.  Try using a taxonomic rank with fewer unique groups, and reduce the value for max_to_blast")
+
+
       }
       else {
+
         message(nrow(blastn_output), " blast hits returned.")
+
       }
 
       # remove accession numbers found by blast
@@ -86,13 +97,19 @@ run_blastdbcmd_blastn_and_aggregate_resuts <- function(sample_indices = sample_i
       unsampled_indices <-
       unsampled_indices[!unsampled_indices %in% sample_indices]
 
-      # Add output to existing output
-      if (is.null(output_table)) {
-        output_table <- blastn_output
-      }
-      else {
-        output_table <- tibble::add_row(output_table, blastn_output)
-      }
+
+        # Add output to existing output
+        if (is.null(output_table)) {
+
+          output_table <- blastn_output
+
+          }
+        else {
+
+          output_table <- tibble::add_row(output_table, blastn_output)
+
+        }
+
 
       # Remove duplicated accessions, keeping the longest sequence
       output_table <- output_table %>%
@@ -101,17 +118,16 @@ run_blastdbcmd_blastn_and_aggregate_resuts <- function(sample_indices = sample_i
       dplyr::filter(!(duplicated(accession)))
       output_table <- dplyr::ungroup(output_table)
 
-      # save the state of the blast does not work here...
 
    }
 
    # report number of total unique blast hits
-
    message(nrow(output_table), " unique blast hits after this round.")
 
-   ######### testing
-     message("24.5")
+   # add new blast round
    num_rounds <- num_rounds + 1
+
+   # update files
    save_state(save_dir, output_table, unsampled_indices, too_many_ns,
                  blastdbcmd_failed, num_rounds, blast_seeds_m)
 
