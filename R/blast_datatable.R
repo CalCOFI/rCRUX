@@ -192,7 +192,9 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     # it will run.  If not the number of indices to be blasted for a rank will be
     # broken into the max_to_blast value.
 
-    while (length(sample_indices) > 0 ){
+    end <- FALSE
+
+    while (length(sample_indices) > 0 || end == FALSE){
 
     ######### testing
       message("1.6.7")
@@ -234,11 +236,10 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
             blastdbcmd_failed, unsampled_indices, output_table, wildcards,
             num_rounds)
 
-            unsampled_indices <- unsampled_indices[!unsampled_indices %in% unsampled_indices]
-            sample_indices <- sample_indices[!sample_indices %in% unsampled_indices]
+            end <- TRUE
 
-            message(paste("if", sample_indices, length(unsampled_indices)))
-
+            message(paste("end", end))
+            break
 
       ######### testing
       #message("6.5")
@@ -256,8 +257,8 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
             blastdbcmd_failed, unsampled_indices, output_table, wildcards,
             num_rounds)
 
-      message(paste("else if", sample_indices))
-
+      message(paste("else if end", end))
+      break
 
       } else {
 
@@ -275,7 +276,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
         # update sample indices
         sample_indices <- sample_indices[!(sample_indices %in% subset)]
-        message(paste("else", sample_indices))
+        message(paste("else end", end))
       }
 
 
