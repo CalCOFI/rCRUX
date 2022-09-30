@@ -84,9 +84,6 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
   while (length(unsampled_indices) > 0) {
 
 
-    ######### testing
-      message("5")
-
       if (file.exists(paste(save_dir, "unsampled_indices.txt", sep = "/"))) {
 
         rounds_path <- paste(save_dir, "num_rounds.txt", sep = "/")
