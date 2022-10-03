@@ -169,7 +169,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     # broken into the max_to_blast value.
 
     end <- FALSE
-
+    move <- FALSE
 
     while (length(sample_indices) > 0 || end == FALSE){
 
