@@ -144,8 +144,9 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
 
     # clean up messages
-    if (nrow(sample_indices) > max_to_blast) {
+    if (length(sample_indices) > max_to_blast) {
      message(" ")
+     message(length(sample_indices))
      message(paste(rank, "has", length(sample_indices), "unique occurrences in the blast seeds data table."))
      message(paste("These may be subset..." ))
 
