@@ -169,8 +169,9 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     # broken into the max_to_blast value.
 
     end <- FALSE
+    move <- FLASE
 
-    while (length(sample_indices) > 0 || end == FALSE){
+    while (length(sample_indices) > 0 || end == FALSE && move == FALSE){
 
 
       # Pick up where it left off
@@ -221,6 +222,8 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
             blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
             blastdbcmd_failed, unsampled_indices, output_table, wildcards,
             num_rounds)
+
+        move <- TRUE
 
         break
 
