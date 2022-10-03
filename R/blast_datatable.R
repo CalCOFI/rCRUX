@@ -215,10 +215,8 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
           move <- TRUE
           message(paste("2move", move))
           message(paste("2end", end))
-
+          unsampled_indices <- unsampled_indices[!(unsampled_indices %in% unsampled_indices)]
           break
-
-
 
 
       } else if (length(sample_indices) <= max_to_blast) {
@@ -232,6 +230,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
         move <- TRUE
         message(paste("3move", move))
         message(paste("3end", end))
+        sample_indices <- sample_indices[!(sample_indices %in% subset)]
 
         break
 
