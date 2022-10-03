@@ -201,8 +201,8 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
       }
 
-      message(paste("move", move))
-      message(paste("end", end))
+      message(paste("1move", move))
+      message(paste("1end", end))
 
       if (length(sample_indices) <= max_to_blast || move == TRUE) {
 
@@ -212,6 +212,9 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
           num_rounds)
 
           end <- TRUE
+
+          message(paste("2move", move))
+          message(paste("2end", end))
 
           break
 
@@ -227,6 +230,8 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
             num_rounds)
 
         move <- TRUE
+        message(paste("3move", move))
+        message(paste("3end", end))
 
         break
 
@@ -245,10 +250,13 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
         # update sample indices
         sample_indices <- sample_indices[!(sample_indices %in% subset)]
       }
-
+      message(paste("4move", move))
+      message(paste("4end", end))
 
     }
 
+    message(paste("5move", move))
+    message(paste("5end", end))
 
         rm(output_table)
         rm(too_many_ns)
