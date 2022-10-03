@@ -171,7 +171,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     end <- FALSE
     move <- FALSE
 
-    while (length(sample_indices) > 0 || end == FALSE && move == FALSE){
+    while (length(sample_indices) > 0 || end == FALSE){
 
 
       # Pick up where it left off
@@ -201,7 +201,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
       }
 
-      if (length(sample_indices) <= max_to_blast && (length(unsampled_indices) + length(sample_indices)) <= max_to_blast) {
+      if (length(sample_indices) <= max_to_blast && (length(unsampled_indices) + length(sample_indices)) <= max_to_blast ||  move == TRUE) {
 
         run_blastdbcmd_blastn_and_aggregate_resuts(c(unsampled_indices, sample_indices), save_dir,
           blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
@@ -215,7 +215,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
 
 
-      } else if (length(sample_indices) <= max_to_blast) {
+      } else if (length(sample_indices) <= max_to_blast || move == FALSE) {
 
 
         run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices, save_dir,
