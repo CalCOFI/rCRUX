@@ -111,6 +111,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
 
     # information about state of blast
+    message(" ")
     message(paste("BLAST round", num_rounds))
     message(paste(length(unsampled_indices), "indices left to process."))
 
@@ -130,8 +131,6 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     else  {
 
 
-
-
       # if more indices than the max_to_blast are present
       # randomly select entries (default is n=1) for each rank then turn the
       # accession numbers into a vector
@@ -143,8 +142,21 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       sample_indices <- which(blast_seeds_m$accession %in% seeds_by_rank_indices)
     }
 
-    message(paste(rank, "has", length(sample_indices), "unique occurrences in the blast seeds data table."))
-    message(paste("These will be subsets into chunks of ", max_to_blast, " indices or fewer" ))
+
+    # clean up messages
+    if (length(sample_indices) <= max_to_blast) {
+
+     message(" ")
+     message("The number of un sampled indices is less than or equal to the maximum number to be blasted")
+
+    } else {
+
+     message(" ")
+     message(paste(rank, "has", length(sample_indices), "unique occurrences in the blast seeds data table."))
+     message(paste("These may be subset..." ))
+
+    }
+
 
     # update unsampled_indices by removing the sample_indices from the list
     unsampled_indices <-

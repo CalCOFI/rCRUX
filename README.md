@@ -238,12 +238,16 @@ rcrux_blast(seeds_path, db_dir, accession_taxa_path, working_dir,
 
 # Using the get_blast_seeds output that used modified blast search settings (output with 111500 blast seed returns), rcrux_blast results in 146221 returns.  
 
-     
+
 ```
 
 ## Funding
 
 The [CalCOFI](https://calcofi.org/) program provided funding support for this project.
+
+## Acknowledgments
+
+This work benefited from the amazing input of many including Lenore Pipes, Sarah Stinson, Gaurav Kandlikar, and Maura Palacios Mejia. 
 
 ## References
 
