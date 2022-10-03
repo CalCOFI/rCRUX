@@ -201,8 +201,8 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
       }
 
-      message(paste("1move", move))
-      message(paste("1end", end))
+      message(paste("1un", length(unsampled_indices)))
+      message(paste("1sam", length(sample_indices)))
 
 
 
@@ -215,9 +215,11 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
           end <- TRUE
           move <- TRUE
-          message(paste("2move", move))
-          message(paste("2end", end))
+          message(paste("2un", length(unsampled_indices)))
+          message(paste("2sam", length(sample_indices)))
+
           unsampled_indices <- unsampled_indices[!(unsampled_indices)]
+
           break
 
 
@@ -230,8 +232,9 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
             num_rounds)
 
         move <- TRUE
-        message(paste("3move", move))
-        message(paste("3end", end))
+        message(paste("3un", length(unsampled_indices)))
+        message(paste("3sam", length(sample_indices)))
+
 
         sample_indices <- sample_indices[!(sample_indices)]
 
@@ -252,13 +255,15 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
         # update sample indices
         sample_indices <- sample_indices[!(sample_indices %in% subset)]
       }
-      message(paste("4move", move))
-      message(paste("4end", end))
+      message(paste("4un", length(unsampled_indices)))
+      message(paste("4sam", length(sample_indices)))
+
 
     }
 
-    message(paste("5move", move))
-    message(paste("5end", end))
+    message(paste("5un", length(unsampled_indices)))
+    message(paste("5sam", length(sample_indices)))
+
 
         rm(output_table)
         rm(too_many_ns)
