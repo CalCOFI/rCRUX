@@ -206,7 +206,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
 
 
-      if (length(sample_indices) > 0) {
+      if (length(sample_indices) == 0) {
 
         run_blastdbcmd_blastn_and_aggregate_resuts(unsampled_indices, save_dir,
           blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
