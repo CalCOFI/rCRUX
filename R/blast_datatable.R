@@ -212,7 +212,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
           num_rounds)
 
           end <- TRUE
-
+          move <- TRUE
           message(paste("2move", move))
           message(paste("2end", end))
 
