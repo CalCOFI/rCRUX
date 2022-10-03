@@ -30,7 +30,7 @@ devtools::install_github("LunaGal/rCRUX")
 library(rCRUX)
 ```
 
-## Dependencies
+## Dependencies - only need to be downloaded once or as NCBI updates databases.
 
 **BLAST+**
 
@@ -46,7 +46,7 @@ The nt database is **~242 GB** (as of 8/31/22) and can take several hours (overn
 
 rCRUX uses the [taxonomizr](https://cran.r-project.org/web/packages/taxonomizr/vignettes/usage.html) package for taxonomic assignment based on NCBI [Taxonomy id's \(taxids\)](https://www.ncbi.nlm.nih.gov/). Many rCRUX functions require a path to a local taxonomizr readable sqlite database. This database can be built using taxonomizr's [prepareDatabase](https://www.rdocumentation.org/packages/taxonomizr/versions/0.8.0/topics/prepareDatabase) function.
 
-This database is **~72 GB** (as of 8/31/22) aand can take several hours (overnight) to build. Loss of internet connection can lead to partially downloaded files and taxonomizr run errors. rCRUX can access and successfully build metabarcode references using databases stored on external drives.
+This database is **~72 GB** (as of 8/31/22) and can take several hours (overnight) to build. Loss of internet connection can lead to partially downloaded files and taxonomizr run errors. rCRUX can access and successfully build metabarcode references using databases stored on external drives.
 
 The following code can be used to build this database:
 
@@ -61,9 +61,9 @@ prepareDatabase(accession_taxa_path)
 
 # Example pipeline
 
-The following example shows a simple rCRUX pipeline from start to finish. Note that this example will require internet access and considerable database storage (see section above), run time (mainly for blastn), and system resources to execute.
+The following example shows a simple rCRUX pipeline from start to finish. Note that this example will require internet access and considerable database storage (~314 GB, see section above), run time (mainly for blastn), and system resources to execute.
 
-* Note that local blast and taxonomic assignment can be run on databases stored on an external hard drive. It increases run time, but is a good option if computer storage capacity is limited.
+* Note that local blast and taxonomic assignment databases can be stored on an external hard drive. It increases run time, but is a good option if computer storage capacity is limited.
 
 **get_blast_seeds**
 Searching jawless vertebrates (taxid: "1476529") and jawed vertebrates (taxid: "7776").
@@ -80,15 +80,17 @@ get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
                  organism = c("1476529", "7776"), return_table = FALSE)
 
 
-# Output .csv files are automatically created at this path based on the arguments passed to get_blast_seeds
-# A unique taxonomic rank summary file is also generated. If a taxonomic rank catergory contains NA's, they will be counted as a single unique rank.
-# Note that using default parameters only 1047 hits are returned from NCBI's primer blast.  
+# Two output .csv files are automatically created at this path based on the arguments passed to get_blast_seeds.  One includes taxonomy the other does not.
+# A unique taxonomic rank summary file is also generated (e.g. the number of unique phyla, class, etc in the blast hits). If a taxonomic rank category contains NA's, they will be counted as a single unique rank.
+# Note that using default parameters only 1047 hits are returned from NCBI's primer blast.
 # Sequence availability in NCBI for a given taxid is a limiting factor.
 ```
 [Modifying defaults can increase the number of returns by orders of magnitude.](#Search-options)
 
 **rcrux_blast**
-Searches are based on randomly sampling unique taxonomic groups for a given rank from the get_blast_seeds output table. For example, the default is to randomly sample one read from each genus.  The user can select any taxonomic rank present in the get_blast_seeds output table, and should choose a rank that can be feasibly run in their environment (e.g. 20K + reads are too memory intensive for many laptops, and some targets return large numbers of hits that can max out RAM), and provide the user sufficient resolution. If there are 1,000 (or user defined max_to_blast) or fewer blast seeds to process, for a given round of blasting, the entire blast seeds table will be blasted.
+Iterative searches are based on randomly sampling unique taxonomic groups for a given rank from the get_blast_seeds output table to create a set of blast seeds. For example, the default is to randomly sample one read from each genus.  The user can select any taxonomic rank present in the get_blast_seeds output table. The number of seeds selected may exceed the users available RAM, and for that reason the user can choose the maximum number of reads to blast at one time (max_to_blast, default = 1000). rcrux_blast will subsample each set of seeds based on max_to_blast and process all seeds before starting a new search for seeds to blast.
+
+
 ```
 seeds_path <- '/my/rCRUX_output_directory/12S_V5F1_primerTree_output_with_taxonomy.csv'
 # this is output from get_blast_seeds
@@ -101,7 +103,9 @@ metabarcode <- "12S_V5F1"
 rcrux_blast(seeds_path, db_dir, accession_taxa_path, working_dir,
             metabarcode)
 
-# the default number of reads to blast per rank is 1. The script will error out if the user asks for more reads per rank than exist in the blast seeds table.         
+# After each round of blast, the system state is saved. If the script is terminated after a round of blast, the user can pick up where they left off. The user can also change parameters at this point (e.g. change the max_to_blast or rank)
+# The output includes a summary table of unique blast hits, a multi fasta file, a taxonomy file, a unique taxonomic rank summary file, a list of all of the accessions not present in your blast database, and a list of accessions with 4 or more Ns in a row (default for that parameter is wildcards = "NNNN")
+# the default number of reads to blast per rank is 1 (default for that parameter is sample_size = 1). The script will error out if the user asks for more reads per rank than exist in the blast seeds table.         
 ```
 **If BLAST+ is not in your path do the following**
 ```
@@ -115,13 +119,13 @@ Example output can be found [here](/examples/12S_V5F1_generated_9-21-22).
 
 **Note**, there will be variability between runs due to primer blast return parameters and random sampling of the blast seeds table that occurs during rcrux_blast.
 
-# Detailed Explaination of The Major Functions
+# Detailed Explanation of The Major Functions
 
 # [get_blast_seeds](https://lunagal.github.io/get_blast_seeds)
 
 This script takes a set of forward and reverse primer sequences and generates csv summaries of data returned from [NCBI's primer blast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) about full length barcode sequence containing primer matches. It also generates a count of unique instances of taxonomic ranks (Phylum, Class, Order, Family, Genus, and Species)
 
-get_blast_seeds uses modified versions of functions from the [primerTree](https://CRAN.R-project.org/package=primerTree) package to submit queries to NCBI's primer BLAST tool, then aggregates results into a single data.frame. primer_search expands degenerate primers into each possible non-degenerate primer and submits a query for each. get_blast_seeds further multiplies the number of queries by allowing the user to query the primers for each organism in a vector. get_blast_seeds collects all these results from primer_search, filters them based on product length, and adds taxonomic data using the taxonomizr package.
+get_blast_seeds uses modified versions of functions from the [primerTree](https://CRAN.R-project.org/package=primerTree) package to submit queries to NCBI's primer BLAST tool, then aggregates results into a single data.frame. primer_search (Modified from [primerTree](https://CRAN.R-project.org/package=primerTree)) expands degenerate primers into each possible non-degenerate primer and submits a query for each. get_blast_seeds further multiplies the number of queries by allowing the user to query the primers for each organism in a vector. get_blast_seeds collects all these results from primer_search, filters them based on product length, and adds taxonomic data using the taxonomizr package.
 
 ### Organism(s)
 primer BLAST defaults to homo sapiens, so it is important that you supply a specific organism or organisms. NCBI's taxids can be found [here](https://www.ncbi.nlm.nih.gov/taxonomy). You can specify multiple organism by passing a character vector containing each of the options, like in the example below.
@@ -157,7 +161,7 @@ As of 2022-08-16, the primer blast GUI contains some options that are not implem
                     </p>      
 
 ```
-You can find the description and suggested values for this search option. HITSIZE ='1000000' is added to the search below along with several options that increase the number of entries returened from primersearch.
+You can find the description and suggested values for this search option. HITSIZE ='1000000' is added to the search below along with several options that increase the number of entries returned from primer_search.
 
 ```
 blast_seeds_parent <- "/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_modified_params"
@@ -201,13 +205,19 @@ Example output can be found [here](/examples/12S_V5F1_generated_9-21-22).
 
 # [rcrux_blast](https://lunagal.github.io/rcrux_blast)
 
-rcrux_blast uses the entries generated by get_blast_seeds and the nucleotide-nucleotide matching of blastn to generate a .csv of ncbi database entries that match a sequence found in the get_blast_seeds step.
+rcrux_blast uses the entries generated by get_blast_seeds and the nucleotide-nucleotide matching of blastn to generate a .csv of NCBI database entries that match a sequence found in the get_blast_seeds step.
 
 ## Internal data pipeline
 
-rcrux_blast is a wrapper function that passes data to blast_datatable. rcrux_blast handles the creation of a hidden save directory and an output directory and writes a .csv summarizing the results of blast_datatable to the output directory. Optionally, it also writes .csvs detailing entries rejected by blast_datatable.
+rcrux_blast is a wrapper function that passes data to blast_datatable. rcrux_blast handles the creation of a hidden save directory and an output directory and writes a .csv summarizing the results of blast_datatable.  It also generates a multi fasta file and corresponding a taxonomy file for all recovered hits. A unique taxonomic rank summary file (same format as the get blast seeds output file), a list of all of the accessions not present in your blast database, and a list of accessions with 4 or more Ns in a row.
 
-Internally, blast_datatable repeatedly samples rows from the table of seeds, calls blastdbcmd on each accession number, and uses blastn to build a table of nucleotide matches. It samples by drawing random indices from a list of unsampled indices and examining the rows at those indices. It passes those rows to run_blastdbcmd, which extracts the accession number, forward stop, and reverse stop, then uses them as arguments for blastdbcmd. blastdbcmd outputs a fasta, which blast_datatable aggregates into a multi-fasta character vector. blast_datatable purges any entry that has more than a specified number of Ns or did not return a result, recording those indices. When it has finished building the mutli-fasta vector, it passes it to blastn, which returns every nucleotide sequence that matches a sequence in the file. run_blastn parses the blastn output into a data.frame, and blast_datatable adds that data.frame to its output. It repeats this process until it has sampled every row. Then, it uses taxonomizr to add taxonomic data to the data.frame based on the accession numbers. The final output is the aggregate of all blastn calls with the taxonomic data added.
+Internally, blast_datatable iteratively samples rows from the table of blast seeds, calls blastdbcmd on each accession number, and uses blastn to build a table of nucleotide matches. It samples by drawing random indices from a list of unsampled indices and examining the rows at those indices. Specifically, it randomly samples single indices from unique instances of a taxonomic rank (e.g. one accession number per genus). Depending on the number of seeds to be processed in each iteration, the next step may be run on subsamples of the seed set.
+
+blast_datatable passes those seeds to run_blastdbcmd, which extracts the accession number, forward stop, and reverse stop, then uses them as arguments for blastdbcmd. blastdbcmd outputs a fasta, which blast_datatable aggregates into a multi-fasta character vector. blast_datatable purges any entry that has more than a specified number of Ns or did not return a result, recording those indices. When it has finished building the mutli-fasta vector, it passes it to blastn, which returns every nucleotide sequence that matches a sequence in the file. run_blastn parses the blastn output into a data.frame, and blast_datatable adds that data.frame to its output. All output is deduplicated by accession retaining the duplicate with the longest sequence.
+
+After each iteration, the accessions recovered through blastn are removed from the table of blast seeds. Then the process is repeated until every row is sampled. However, once the number of seeds in the table reaches the max_to_blast parameter, all remaining seeds will be treated as a set of blast seeds.  
+
+After all blast seeds are processed, taxonomizr is used to add taxonomic data to the data.frame based on the accession numbers. The final output is the aggregate of all blastn calls with the taxonomic data added.
 
 ## Example
 
@@ -215,14 +225,20 @@ In this example, rcrux_blast is called on the .csv generated by the get_blast_se
 
 ```
 # These file directories need to be changed to locations on your device
-blast_seeds_parent <- "D:/blast_seeds_test"
-accession_taxa_path <- "D:/taxonomizr_data/accessionTaxa.sql"
 
-# This path is indepedent of device; it only depends on get_blast_seeds
-# having been run with Metabarcode_name = "12S_V5F1"
-seeds_csv_path <- paste0(blast_seeds_parent, "/12S_V5F1/12S_V5F1_raw_primerTree_output.csv")
-RCRUX.dev::rcrux_blast("short_test/12S_V5F1/12S_V5F1_primerTree_output_with_taxonomy.csv",
-                      "blast_test_save", db_path, accession_taxa_path)
+seeds_path <- '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_modified_params/12S_V5F1/12S_V5F1_primerTree_output_with_taxonomy.csv'
+db_dir <- "/Users/limeybean/Dropbox/CRUX_2.0/ncbi_nt/nt"
+accession_taxa_path <- "/Users/limeybean/Dropbox/CRUX_2.0/accession2taxid/accessionTaxa.sql"
+working_dir <- '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_modified_params/12S_V5F1/'
+metabarcode <- "12S_V5F1"
+
+rcrux_blast(seeds_path, db_dir, accession_taxa_path, working_dir,
+             metabarcode)
+
+
+# Using the get_blast_seeds output that used modified blast search settings (output with 111500 blast seed returns), rcrux_blast results in 146221 returns.  
+
+     
 ```
 
 ## Funding
