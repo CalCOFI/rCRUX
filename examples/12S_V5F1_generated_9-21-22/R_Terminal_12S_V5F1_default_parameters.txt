@@ -33,16 +33,22 @@ NULL
 >
 >
 >
-> rcrux_blast(seeds_path, db_dir, accession_taxa_path, working_dir,
-+             metabarcode)
+> rcrux_blast(seeds_path, db_dir, accession_taxa_path, working_dir, metabarcode)
+
 BLAST round 1
 1046 indices left to process.
+
+genus has 118 unique occurrences in the blast seeds data table.
+These may be subset...
 Running blastdbcmd on 118 samples.
 Calling blastn. This may take a long time.
-1092338 blast hits returned.
-109153 unique blast hits after this round.
+1111629 blast hits returned.
+109712 unique blast hits after this round.
+
 BLAST round 2
 527 indices left to process.
+
+The number of unsampled indices is less than or equal to the maximum number to be blasted
 Running blastdbcmd on 527 samples.
 No useable accession numbers. Proceeding to next round.
 109153 unique blast hits after this round.
