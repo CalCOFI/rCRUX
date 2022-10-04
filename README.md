@@ -236,8 +236,9 @@ rcrux_blast(seeds_path, db_dir, accession_taxa_path, working_dir,
              metabarcode)
 
 
-# Using the get_blast_seeds output that used modified blast search settings (output with 111500 blast seed returns), rcrux_blast results in 146221 returns.  
+# Using the get_blast_seeds output that used modified blast search settings (output with 111500 blast seed returns), rcrux_blast resulted in 147479 returns.  
 
+# Using the get_blast_seeds output that used default blast search settings (output with 1049 blast seed returns), rcrux_blast resulted in  109712 returns.
 
 ```
 
@@ -247,7 +248,7 @@ The [CalCOFI](https://calcofi.org/) program provided funding support for this pr
 
 ## Acknowledgments
 
-This work benefited from the amazing input of many including Lenore Pipes, Sarah Stinson, Gaurav Kandlikar, and Maura Palacios Mejia. 
+This work benefited from the amazing input of many including Lenore Pipes, Sarah Stinson, Gaurav Kandlikar, and Maura Palacios Mejia.
 
 ## References
 
