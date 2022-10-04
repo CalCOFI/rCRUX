@@ -168,10 +168,9 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     # it will run.  If not the number of indices to be blasted for a rank will be
     # broken into the max_to_blast value.
 
-    end <- FALSE
-    move <- FALSE
 
-    while (length(sample_indices) > 0 || end == FALSE){
+
+    while (length(sample_indices) > 0 ){
 
 
       # Pick up where it left off
@@ -201,10 +200,6 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
       }
 
-      message(paste("1un", length(unsampled_indices)))
-      message(paste("1sam", length(sample_indices)))
-
-
 
       if (length(sample_indices) == length(unsampled_indices)) {
 
@@ -213,10 +208,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
           blastdbcmd_failed, unsampled_indices, output_table, wildcards,
           num_rounds)
 
-          end <- TRUE
-          move <- TRUE
-          message(paste("2un", length(unsampled_indices)))
-          message(paste("2sam", length(sample_indices)))
+
 
           unsampled_indices <- unsampled_indices[!(unsampled_indices)]
 
@@ -231,9 +223,6 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
             blastdbcmd_failed, unsampled_indices, output_table, wildcards,
             num_rounds)
 
-        move <- TRUE
-        message(paste("3un", length(unsampled_indices)))
-        message(paste("3sam", length(sample_indices)))
 
 
         sample_indices <- sample_indices[!(sample_indices)]
@@ -255,14 +244,11 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
         # update sample indices
         sample_indices <- sample_indices[!(sample_indices %in% subset)]
       }
-      message(paste("4un", length(unsampled_indices)))
-      message(paste("4sam", length(sample_indices)))
+
 
 
     }
 
-    message(paste("5un", length(unsampled_indices)))
-    message(paste("5sam", length(sample_indices)))
 
 
         rm(output_table)

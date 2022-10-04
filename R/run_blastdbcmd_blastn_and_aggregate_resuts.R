@@ -75,9 +75,16 @@ run_blastdbcmd_blastn_and_aggregate_resuts <- function(sample_indices = sample_i
       blastn_output <- run_blastn(fasta=aggregate_fasta, db_dir=db, ncbi_bin=ncbi_bin)
 
       if(nrow(blastn_output) == 0 && length(unsampled_indices) > 0) {
-        message(nrow(blastn_output), " blast hits returned.")
-        stop("Blastn having trouble blasting the number of seeds selected.  Try using a taxonomic rank with fewer unique groups, and reduce the value for max_to_blast")
 
+      message(nrow(blastn_output), " blast hits returned.")
+
+      stop(paste(" ", " ", "Either", " ",
+      "1. blastn is having trouble blasting the number of seeds selected
+              - reduce the value for max_to_blast", " ", "or", " ",
+      "2. There were no hits returned for your blastn search because there were
+    no valid matches in the database
+             - try running the function again, and perhaps increase the
+               max_to_blast."," ", sep="\n"))
 
       }
       else {
