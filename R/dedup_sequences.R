@@ -21,6 +21,8 @@ dedup <- function(output_dir, summary_path, rank = c("phylum", "class", "order",
   #remove hyphens from sequence
   summary <-  dplyr::mutate(summary, sequence = gsub("-", "", sequence))
 
+return(summary)
+
   # merge accessions and ranks for identical sequence
   phy_sum <- summary %>% group_by(sequence) %>% summarize(accession = paste0(accession, collapse = ", "), amplicon_length = paste0(unique(amplicon_length), collapse = ", "), phylum = paste0(unique(phylum), collapse = ", "), class = paste0(unique(class), collapse = ", "), order = paste0(unique(order), collapse = ", "), family = paste0(unique(family), collapse = ", "), genus = paste0(unique(genus), collapse = ", "),   species = paste0(unique(species), collapse = ", "))
 
