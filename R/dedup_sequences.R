@@ -16,7 +16,7 @@ dedup <- function(output_dir, summary_path, rank = c("phylum", "class", "order",
   summary <- read.csv(summary_path)
 
   # get relevant df to work with
-  summary <- dplyr::select(summary, accession, amplicon_length, sequence, phylum, class, order, family, genus, species)
+  summary <- dplyr::select(summary, accession, amplicon_length, sequence, taxid, phylum, class, order, family, genus, species)
 
   #remove hyphens from sequence
   summary <-  dplyr::mutate(summary, sequence = gsub("-", "", sequence))
@@ -24,8 +24,8 @@ dedup <- function(output_dir, summary_path, rank = c("phylum", "class", "order",
 
 
   # merge accessions and ranks for identical sequence
-  phy_sum <- dplyr::summarize(group_by(summary, sequence), accession = paste0(accession, collapse = ", "), amplicon_length = paste0(unique(amplicon_length), collapse = ", "), phylum = paste0(unique(phylum), collapse = ", "), class = paste0(unique(class), collapse = ", "), order = paste0(unique(order), collapse = ", "), family = paste0(unique(family), collapse = ", "), genus = paste0(unique(genus), collapse = ", "),   species = paste0(unique(species), collapse = ", "))
-
+  phy_sum <- dplyr::summarize(dplyr::group_by(summary, sequence), accession = paste0(accession, collapse = ", "), amplicon_length = paste0(unique(amplicon_length), collapse = ", "), taxid = paste0(unique(taxid), collapse = ", "), phylum = paste0(unique(phylum), collapse = ", "), class = paste0(unique(class), collapse = ", "), order = paste0(unique(order), collapse = ", "), family = paste0(unique(family), collapse = ", "), genus = paste0(unique(genus), collapse = ", "),   species = paste0(unique(species), collapse = ", "))
+  
 
   #count number of accessions make new column
   phy_sum <- dplyr::mutate(phy_sum, num_of_accessions = (stringr::str_count(accession, ",") + 1 ))
