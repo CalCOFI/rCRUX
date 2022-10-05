@@ -24,9 +24,10 @@ dedup <- function(output_dir, summary_path, rank = c("phylum", "class", "order",
 #ok to here
 
   # merge accessions and ranks for identical sequence
-  phy_sum <- summary %>% group_by(sequence) %>% summarize(accession = paste0(accession, collapse = ", "), amplicon_length = paste0(unique(amplicon_length), collapse = ", "), phylum = paste0(unique(phylum), collapse = ", "), class = paste0(unique(class), collapse = ", "), order = paste0(unique(order), collapse = ", "), family = paste0(unique(family), collapse = ", "), genus = paste0(unique(genus), collapse = ", "),   species = paste0(unique(species), collapse = ", "))
+  #phy_sum <- summary %>% group_by(sequence) %>% summarize(accession = paste0(accession, collapse = ", "), amplicon_length = paste0(unique(amplicon_length), collapse = ", "), phylum = paste0(unique(phylum), collapse = ", "), class = paste0(unique(class), collapse = ", "), order = paste0(unique(order), collapse = ", "), family = paste0(unique(family), collapse = ", "), genus = paste0(unique(genus), collapse = ", "),   species = paste0(unique(species), collapse = ", "))
 
-return(phy_sum)
+  phy_sum <- summarize(group_by(summary, sequence), accession = paste0(accession, collapse = ", "), amplicon_length = paste0(unique(amplicon_length), collapse = ", "), phylum = paste0(unique(phylum), collapse = ", "), class = paste0(unique(class), collapse = ", "), order = paste0(unique(order), collapse = ", "), family = paste0(unique(family), collapse = ", "), genus = paste0(unique(genus), collapse = ", "),   species = paste0(unique(species), collapse = ", "))
+
 
   #count number of accessions make new column
   phy_sum <- dplyr::mutate(phy_sum, num_of_accessions = (stringr::str_count(accession, ",") + 1 ))
