@@ -25,18 +25,21 @@ dedup <- function(output_dir, summary_path, rank = c("phylum", "class", "order",
 
   # merge accessions and ranks for identical sequence
   phy_sum <- dplyr::summarize(dplyr::group_by(summary, sequence), accession = paste0(accession, collapse = ", "), amplicon_length = paste0(unique(amplicon_length), collapse = ", "), taxid = paste0(unique(taxid), collapse = ", "), phylum = paste0(unique(phylum), collapse = ", "), class = paste0(unique(class), collapse = ", "), order = paste0(unique(order), collapse = ", "), family = paste0(unique(family), collapse = ", "), genus = paste0(unique(genus), collapse = ", "),   species = paste0(unique(species), collapse = ", "))
-  
+
 
   #count number of accessions make new column
   phy_sum <- dplyr::mutate(phy_sum, num_of_accessions = (stringr::str_count(accession, ",") + 1 ))
 
   # remove , NA from ranks - they are most likely due to env seq or issues with sequence submission
+  # - updates broke my loop ;()
 
   if (remove_NA == TRUE){
-    for (r in rank){
-      phy_sum <- dplyr::mutate(phy_sum, !! r := sub(", NA", "", !! sym(r)))
-    }
-
+    phy_sum <-  dplyr::mutate(phy_sum, phylum = gsub(", NA", "", phylum))
+    phy_sum <- dplyr::mutate(phy_sum, class = gsub(", NA", "", class))
+    phy_sum <- dplyr::mutate(phy_sum, order = gsub(", NA", "", order))
+    phy_sum <- dplyr::mutate(phy_sum, family = gsub(", NA", "", family))
+    phy_sum <- dplyr::mutate(phy_sum, genus = gsub(", NA", "", genus))
+    phy_sum <- dplyr::mutate(phy_sum, species = gsub(", NA", "", species))
   }
 
 
@@ -49,15 +52,22 @@ dedup <- function(output_dir, summary_path, rank = c("phylum", "class", "order",
   clean_tax <- dplyr::setdiff(phy_sum, sub_dups)
 
 
-  # change rank to NA if multiple names
+  # change rank to NA if multiple names - updates broke my loop ;()
   sub_dup_to_NA <- sub_dups
 
-  for (r in rank){
-    sub_dup_to_NA <- dplyr::mutate(sub_dup_to_NA, !! r := sub(".*, .*", "NA", !! sym(r)))
-  }
+    sub_dup_to_NA <- dplyr::mutate(sub_dup_to_NA, phylum = gsub(".*, .*", "NA", phylum))
+    sub_dup_to_NA <- dplyr::mutate(sub_dup_to_NA, class = gsub(".*, .*", "NA", class))
+    sub_dup_to_NA <- dplyr::mutate(sub_dup_to_NA, order = gsub(".*, .*", "NA", order))
+    sub_dup_to_NA <- dplyr::mutate(sub_dup_to_NA, family = gsub(".*, .*", "NA", family))
+    sub_dup_to_NA <- dplyr::mutate(sub_dup_to_NA, genus = gsub(".*, .*", "NA", genus))
+    sub_dup_to_NA <- dplyr::mutate(sub_dup_to_NA, species = gsub(".*, .*", "NA", species))
+
 
 
   # write output
+  #c <- c("clean_tax", )
+  #for (o in output){
+  #}
 
   write.csv(sub_dups,
             file = paste(output_dir, "References_with_multiple_taxonomic_ranks.csv", sep = "/"),
