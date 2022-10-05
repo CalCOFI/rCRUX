@@ -10,7 +10,7 @@
 # "We ain't too pretty, we ain't too proud" - Billy Joel, "Only the good die young"
 
 
-dedup <- function(output_dir, summary_path, rank = c("phylum", "class", "order", "family", "genus", "species"), remove_NA = TRUE ) {
+dedup <- function(output_dir, summary_path, rank = c("phylum", "class", "order", "family", "genus", "species")) {
 
   # read rcrux blast summary.csv
   summary <- read.csv(summary_path)
@@ -21,6 +21,7 @@ dedup <- function(output_dir, summary_path, rank = c("phylum", "class", "order",
   #remove hyphens from sequence
   summary <-  dplyr::mutate(summary, sequence = gsub("-", "", sequence))
 
+  summary <- dplyr::filter(summary, !is.na(phylum) & !is.na(class) & !is.na(family) & !is.na(genus))
 
 
   # merge accessions and ranks for identical sequence
@@ -31,16 +32,14 @@ dedup <- function(output_dir, summary_path, rank = c("phylum", "class", "order",
   phy_sum <- dplyr::mutate(phy_sum, num_of_accessions = (stringr::str_count(accession, ",") + 1 ))
 
   # remove , NA from ranks - they are most likely due to env seq or issues with sequence submission
-  # - updates broke my loop ;()
 
-  if (remove_NA == TRUE){
     phy_sum <-  dplyr::mutate(phy_sum, phylum = gsub(", NA", "", phylum))
     phy_sum <- dplyr::mutate(phy_sum, class = gsub(", NA", "", class))
     phy_sum <- dplyr::mutate(phy_sum, order = gsub(", NA", "", order))
     phy_sum <- dplyr::mutate(phy_sum, family = gsub(", NA", "", family))
     phy_sum <- dplyr::mutate(phy_sum, genus = gsub(", NA", "", genus))
     phy_sum <- dplyr::mutate(phy_sum, species = gsub(", NA", "", species))
-  }
+
 
 
   #Identify rows with multiple ids
@@ -52,7 +51,7 @@ dedup <- function(output_dir, summary_path, rank = c("phylum", "class", "order",
   clean_tax <- dplyr::setdiff(phy_sum, sub_dups)
 
 
-  # change rank to NA if multiple names - updates broke my loop ;()
+  # change rank to NA if multiple names
   sub_dup_to_NA <- sub_dups
 
     sub_dup_to_NA <- dplyr::mutate(sub_dup_to_NA, phylum = gsub(".*, .*", "NA", phylum))
