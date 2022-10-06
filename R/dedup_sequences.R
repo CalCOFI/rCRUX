@@ -21,6 +21,10 @@ dedup <- function(output_dir, summary_path, rank = c("phylum", "class", "order",
   #remove hyphens from sequence
   summary <-  dplyr::mutate(summary, sequence = gsub("-", "", sequence))
 
+  # save hits with no tax path
+  no_path_summary <- dplyr::filter(summary, is.na(phylum) & is.na(class) & is.na(family) & is.na(genus))
+
+  # remove hits with no tax path
   summary <- dplyr::filter(summary, !is.na(phylum) & !is.na(class) & !is.na(family) & !is.na(genus))
 
 
@@ -80,5 +84,10 @@ dedup <- function(output_dir, summary_path, rank = c("phylum", "class", "order",
   write.csv(clean_tax,
             file = paste(output_dir, "References_with_unique_taxonomic_ranks.csv", sep = "/"),
             row.names = FALSE)
+
+  write.csv(no_path_summary,
+            file = paste(output_dir, "References_with_NA_for_taxonomic_ranks.csv", sep = "/"),
+            row.names = FALSE)
+
 
 }
