@@ -25,8 +25,10 @@ iterative_primer_search <- function(forward, reverse, organisms,
             primer_search(forward, reverse, organism = org,
                 primer_specificity_database = db, ...),
             silent = TRUE
-            message(paste("primer blast details can be found here: ", response))
         )
+
+        message(paste("primer blast details can be found here: ", response))
+
         if (class(response) == "try-error") {
             # To do: include useful metadata and messages
             msg <- conditionMessage(attr(response, "condition"))
