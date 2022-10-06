@@ -28,7 +28,8 @@ iterative_primer_search <- function(forward, reverse, organisms,
         )
 
         message(paste("primer blast details can be found here: "))
-        print(response)
+        url <- grepl(\[.+ \]$ , response)
+        print(url)
 
         if (class(response) == "try-error") {
             # To do: include useful metadata and messages
