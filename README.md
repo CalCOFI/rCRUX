@@ -7,7 +7,8 @@
 The late, great [Jesse Gomer](<https://github.com/jessegomer?tab=repositories>). Coding extraordinaire and dear friend.<br/>
 **License:**
 [GPL-3](https://opensource.org/licenses/GPL-3.0)
-
+**Support:**
+Support for the development of this tool was provided by [CalCOFI](<https://calcofi.org/>) and NOAA.
 
 eDNA metabarcoding is increasingly used to survey biological communities using common universal and novel genetic loci. There is a need for an easy to implement computational tool that can generate metabarcoding reference libraries for any locus, and are specific, and comprehensive. We have reimagined CRUX [Curd et al. 2019](https://doi.org/10.1111/2041-210X.13214) and developed the rCRUX package to fit this need by generating taxonomy and miltifasta files for any user defined locus.  The typical workflow involves using get_blast_seeds() to download and wrangle results from NCBI’s primer BLAST tool, then using rcrux_blast() to search a local NCBI database for matches.
 
