@@ -73,7 +73,7 @@ rcrux_primer_blast <- function(forward_primer, reverse_primer,
 
 
     #Run run_primer on primer_fasta file
-    run_primer_blastn(primer_fasta_path, db, ...)
+    output_table <- run_primer_blastn(primer_fasta_path, db, ...)
 
 
     # parse amplicons from hits to forward and reverse hits
