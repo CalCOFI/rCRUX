@@ -86,8 +86,8 @@ rcrux_primer_blast <- function(forward_primer, reverse_primer,
     f_and_r <- dplyr::mutate(f_and_r, product_length=0)
 
     # calculate product length if F and R primer pairs are in correct orientation to make amplicon
-    f_and_r <- dplyr::mutate(f_and_r, product_length = dplyr::case_when((forward_start < reverse_start & forward_start < forward_end & reverse_end < reverse_start ) ~ (reverse_start - forward_start),
-                                                                    (forward_start > reverse_start & forward_start > forward_end & reverse_end > reverse_start) ~ (forward_start -reverse_start),))
+    f_and_r <- dplyr::mutate(f_and_r, product_length = dplyr::case_when((forward_start < reverse_start & forward_start < forward_end & reverse_end < reverse_start ) ~ (as.numeric(reverse_start) - as.numeric(forward_start)),
+                                                                    (forward_start > reverse_start & forward_start > forward_end & reverse_end > reverse_start) ~ (as.numeric(forward_start) - as.numeric(reverse_start)),))
 
     # remove all F and R primer pairs that would not make an amplicon
     f_and_r <- dplyr::filter(f_and_r, !is.na(product_length))
