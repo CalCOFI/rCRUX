@@ -48,7 +48,7 @@
 #' @export
 
 
-rCRUX_primer_blast <- function(forward_primer, reverse_primer,
+rcrux_primer_blast <- function(forward_primer, reverse_primer,
                             file_out_dir, Metabarcode_name,
                             accessionTaxa,
                             organism, mismatch = 3,
