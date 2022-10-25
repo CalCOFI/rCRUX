@@ -113,7 +113,7 @@ rcrux_primer_blast <- function(forward_primer, reverse_primer,
     tax_rank_sum <- dplyr::summarise_at(taxonomized_table,c('phylum','class','order','family','genus','species'),dplyr::n_distinct)
 
     # Write output to rcrux_blast_output
-    tax_rank_sum_table_path <- paste0(file_out_dir, "/", metabarcode, "_unique_taxonomic_rank_counts.txt")
+    tax_rank_sum_table_path <- paste0(file_out_dir, "/", Metabarcode_name, "_unique_taxonomic_rank_counts.txt")
     save_output_as_csv(tax_rank_sum, "_tax_rank_sum_table_path", out,
                         Metabarcode_name)
 
