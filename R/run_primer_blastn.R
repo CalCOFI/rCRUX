@@ -26,7 +26,7 @@
 #might have to hardcode align...  see if the package works diff than terminal
 
 run_primer_blastn <- function(primer_fasta, db, ncbi_bin = NULL, task = "blastn-short", word_size = 7,
-                       evalue = '3e+07', align = 10000000, coverage = 90, perID = 50, reward = 2) {
+                       evalue = '3e+07', align = '1e+07', coverage = 90, perID = 50, reward = 2) {
 
 
   # Determine arguments
