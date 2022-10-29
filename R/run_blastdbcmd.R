@@ -3,7 +3,7 @@
 #' Given a row from a blast_seed formatted data.frame, extracts arguments
 #' for blastdbcmd, then returns the output of the blastdbcmd call.
 #'
-#' @param query_row a row from get_blast_seeds
+#' @param query_row a row from get_seeds_local or get_seeds_remote
 #' @param db a directory with a blast-formatted database
 #' @param ncbi_bin if not null use it as the parent directory for blastn
 #' @return a fasta-formatted character vector

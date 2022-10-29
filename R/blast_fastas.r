@@ -4,6 +4,6 @@
 #' @return a data.frame representing the output of blastn
 blast_fastas <- function(x, sample_size = 1000) {
     # okay I actually need to work out the sampling on paper
-    
+
     run_blastn()
 }

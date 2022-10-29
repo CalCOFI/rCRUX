@@ -5,10 +5,10 @@
 #'        mismatch_forward and mismatch_reverse columns
 #' @return a data.table with problematic rows removed
 #' @export
-filter_primer_hits <- function(hits_table, forward_primer, reverse_primer,
+filter_primer_hits <- function(hits_table, forward_primer_seq, reverse_primer_seq,
                                 mismatch = 3, minimum_length = 5,
                                 maximum_length = 500) {
-    # filter like get_blast_seeds used to
+    # filter like get_seeds_local or get_seeds_remote used to
     output <- dplyr::filter(hits_table, !(accession == " "))
     output <- output %>%
         dplyr::filter(mismatch_forward <= mismatch) %>%
@@ -22,7 +22,7 @@ filter_primer_hits <- function(hits_table, forward_primer, reverse_primer,
     # to this function or we need to pass their lengths here
     # Or maybe that is supposed to happen in another function?
     output <- dplyr::mutate(output, amplicon_length = product_length -
-                            nchar(forward_primer) - nchar(reverse_primer))
+                            nchar(forward_primer_seq) - nchar(reverse_primer_seq))
 }
 
 `%>%` <- magrittr::`%>%`

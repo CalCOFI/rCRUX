@@ -2,7 +2,7 @@
 #'
 #' @description
 #' Given a datatable with the column names of the datatable returned by
-#' [RCRUX.dev::get_blast_seeds()], use blastdbcmd to convert entries into
+#' [rCRUX::get_seeds_remote(), or rCRUX::get_seeds_local()], use blastdbcmd to convert entries into
 #' fasta files, then uses blastn to query ncbi databases for those
 #' sequences. It compiles the results of blastn into a data.frame that it
 #' returns. Additionally, it saves its state as text files in a specified
@@ -10,7 +10,7 @@
 #'
 #' @details
 #' blast_datatable uses blastdbcmd and blastn to find sequences. It samples rows
-#' from `blast_seeds` and uses blastdbcmd to find a seqence that corresponds to
+#' from `blast_seeds` and uses blastdbcmd to find a sequence that corresponds to
 #' the accession number and forward and reverse stops recorded in the table.
 #' blastdbcmd outputs sequences as .fasta-formatted strings, which
 #' blast_datatable concatenates into a multi-line fasta, then passes to blastn
@@ -40,11 +40,11 @@
 #' be used to make blast_datatable save more frequently.
 #'
 #' @param blast_seeds a data.frame formatted like the output from
-#'        get_blast_seeds
+#'        get_seeds_remote or get_seeds_local
 #' @param save_dir a directory in which to create files representing the
 #'        current state
-#' @param db a directory with a blast-formatted database
-#' @param accession_taxa_path a path to an sql created by
+#' @param blast_db_path a directory with a blast-formatted database
+#' @param accession_taxa_sql_path a path to an sql created by
 #'        [taxonomizr::prepareDatabase()]
 #' @param ncbi_bin the directory that the blast+ suite is in. If NULL, the
 #'        program will use your PATH environmental variable to locate them
@@ -59,14 +59,14 @@
 #' @param rank the column representing the taxonomic rank to sample
 #' @return A data.frame representing the output of blastn
 #' @export
-blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
+blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa_sql_path,
                             ncbi_bin = NULL, force_db = FALSE,
                             sample_size = 1, wildcards = "NNNN", rank = 'genus', max_to_blast = 1000) {
 
 
 
-  if (!(check_db(db) || force_db)) {
-    stop(db, " is probably not a blast database.
+  if (!(check_db(blast_db_path) || force_db)) {
+    stop(blast_db_path, " is probably not a blast database.
          Use force_db = TRUE to try it anyway.")
   }
 
@@ -204,7 +204,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
       if (length(sample_indices) == length(unsampled_indices)) {
 
         run_blastdbcmd_blastn_and_aggregate_resuts(unsampled_indices, save_dir,
-          blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
+          blast_seeds_m, blast_db_path, ncbi_bin = NULL, too_many_ns, db_dir,
           blastdbcmd_failed, unsampled_indices, output_table, wildcards,
           num_rounds)
 
@@ -219,7 +219,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
 
         run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices, save_dir,
-            blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
+            blast_seeds_m, blast_db_path, ncbi_bin = NULL, too_many_ns, db_dir,
             blastdbcmd_failed, unsampled_indices, output_table, wildcards,
             num_rounds)
 
@@ -237,7 +237,7 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
 
 
         run_blastdbcmd_blastn_and_aggregate_resuts(subset, save_dir,
-              blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir,
+              blast_seeds_m, blast_db_path, ncbi_bin = NULL, too_many_ns, db_dir,
               blastdbcmd_failed, unsampled_indices, output_table, wildcards,
               num_rounds)
 
@@ -264,19 +264,19 @@ blast_datatable <- function(blast_seeds, save_dir, db, accession_taxa_path,
     output_table <- read.csv(output_table_path, colClasses = "character")
 
     output_table_taxonomy <-
-      get_taxonomizr_from_accession(output_table, accession_taxa_path)
+      get_taxonomizr_from_accession(output_table, accession_taxa_sql_path)
 
     return(output_table_taxonomy)
 }
 
-# True if the db is a blast database, false if it's not
+# True if the blast_db_path is a blast database, false if it's not
 
 
-check_db <- function(db, ncbi_bin = NULL) {
+check_db <- function(blast_db_path, ncbi_bin = NULL) {
   if (is.null(ncbi_bin)) {
-    try(system2("blastdbcmd", args = c("-db", db, "-info"), stdout = FALSE)) == 0
+    try(system2("blastdbcmd", args = c("-db", blast_db_path, "-info"), stdout = FALSE)) == 0
   } else {
     blastdbcmd <- paste0(ncbi_bin, "blastdbcmd")
-    try(system2(blastdbcmd, args = c("-db", db, "-info"), stdout = FALSE)) == 0
+    try(system2(blastdbcmd, args = c("-db", blast_db_path, "-info"), stdout = FALSE)) == 0
   }
 }

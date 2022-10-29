@@ -1,13 +1,13 @@
-#' Local blastn interpretation of querying primer_blast to and generate a .csv to use for rcrux_blast
+#' Local blastn interpretation of querying primer_blast to and generate a .csv to use for blast_seeds
 #'
 #' @description
-#' rCRUX_primer_blast is a local interpretation of get_blast_seeds that avoids
+#' get_seeds_local is a local interpretation of get_seeds_remote that avoids
 #' querying NCBI's [primer BLAST](https://www.ncbi.nlm.nih.gov/tools/primer-blast/)
 #' tool. Although it is slower than remotly genertating blast seeds, it is not
 #' subject to the arbitrary throttling of jobs that require significant memory.
-#' It creates a directory at `file_out_dir` if one doesn't yet
-#' exist, then creates a subdirectory inside `file_out_dir` named after
-#' `Metabarcode_name`. It creates two files inside that directory, one
+#' It creates a directory at `output_directory_path` if one doesn't yet
+#' exist, then creates a subdirectory inside `output_directory_path` named after
+#' `metabarcode_name`. It creates two files inside that directory, one
 #' representing the output and the other representing the output without added
 #' taxonomy.
 #'
@@ -15,24 +15,24 @@
 #' by accessing blastn -help.  Default parameters were optimized to provide
 #' results similar or expanded results that through remote blast via primer-blast.
 #'
-#' @param forward_primer passed to primer_to_fasta, which turns it into fasta
-#'        file to be past to rCRUX_primer_blast
-#' @param reverse_primer passed to primer_to_fasta, which turns it into fasta
-#'        file to be past to rCRUX_primer_blast
-#' @param file_out_dir the parent directory to place the data in.
-#' @param Metabarcode_name used to name the subdirectory and the files. If a
-#'        directory named Metabarcode_name does not exist in file_out_dir, a
-#'        new directory will be created. get_blast_seeds appends
-#'        Metabarcode_name to the beginning of each of the two files it
+#' @param forward_primer_seq passed to primer_to_fasta, which turns it into fasta
+#'        file to be past to get_seeds_local
+#' @param reverse_primer_seq passed to primer_to_fasta, which turns it into fasta
+#'        file to be past to get_seeds_local
+#' @param output_directory_path the parent directory to place the data in.
+#' @param metabarcode_name used to name the subdirectory and the files. If a
+#'        directory named metabarcode_name does not exist in output_directory_path, a
+#'        new directory will be created. get_seeds_remote appends
+#'        metabarcode_name to the beginning of each of the two files it
 #'        generates.
-#' @param accessionTaxa the path to sql created by taxonomizr
-#' @param mismatch the highest acceptable mismatch value per hit. rCRUX_primer_blast removes each
+#' @param accession_taxa_sql_path the path to sql created by taxonomizr
+#' @param mismatch the highest acceptable mismatch value per hit. get_seeds_local removes each
 #'        row with a mismatch greater than the specified value.
-#' @param minimum_length rCRUX_primer_blast removes each row that has a value less than
+#' @param minimum_length get_seeds_local removes each row that has a value less than
 #'        minimum_length in the product_length column.
-#' @param maximum_length rCRUX_primer_blast removes each row that has a
+#' @param maximum_length get_seeds_local removes each row that has a
 #'        value greater than maximum_length in the product_length column
-#' @param db a directory with a blast-formatted database
+#' @param blast_db_path a directory with a blast-formatted database
 #' @param task the task for blastn to perform - default here is "blastn_short",
 #'        which is optimized for searches with queries < 50 bp
 #' @param word_size is the fragment size used for blastn search - smaller word
@@ -48,32 +48,32 @@
 #' @export
 
 
-rcrux_primer_blast <- function(forward_primer, reverse_primer,
-                            file_out_dir, Metabarcode_name,
-                            accessionTaxa,
-                            db, mismatch = 6,
+get_seeds_local <- function(forward_primer_seq, reverse_primer_seq,
+                            output_directory_path, metabarcode_name,
+                            accession_taxa_sql_path,
+                            blast_db_path, mismatch = 6,
                             minimum_length = 5, maximum_length = 500,
                             primer_specificity_database = "nt", ...,
                             return_table = TRUE) {
 
     # Start by making the directory and checking for the sql and whatnot.
-    out <- paste0(file_out_dir, "/", Metabarcode_name, "/")
-    dir.create(file_out_dir)
+    out <- paste0(output_directory_path, "/", metabarcode_name, "/")
+    dir.create(output_directory_path)
     dir.create(out)
-    if (!file.exists(accessionTaxa)) {
-      stop("accessionTaxa does not exist")
+    if (!file.exists(accession_taxa_sql_path)) {
+      stop("accession_taxa_sql_path does not exist")
     }
 
 
     # Make fasta file from primer sequences
-    fasta <- paste0(">forward", "\n", forward, "\n", ">reverse", "\n", reverse, "\n")
-    primer_fasta_path <- paste0(file_out_dir, "/", Metabarcode_name, "primers.fasta")
+    fasta <- paste0(">forward", "\n", forward_primer_seq, "\n", ">reverse", "\n", reverse_primer_seq, "\n")
+    primer_fasta_path <- paste0(output_directory_path, "/", metabarcode_name, "primers.fasta")
     writeLines(fasta, primer_fasta_path)
 
 
 
     #Run run_primer on primer_fasta file
-    output_table <- run_primer_blastn(primer_fasta_path, db, ...)
+    output_table <- run_primer_blastn(primer_fasta_path, blast_db_path, ...)
 
 
     # parse amplicons from hits to forward and reverse hits
@@ -100,22 +100,22 @@ rcrux_primer_blast <- function(forward_primer, reverse_primer,
 
 
     taxonomized_table <- get_taxonomizr_from_accession(f_and_r,
-                                                        accessionTaxa)
+                                                        accession_taxa_sql_path)
 
     # save output
     save_output_as_csv(taxonomized_table,
                         "_primerTree_output_with_taxonomy", out,
-                        Metabarcode_name)
-    save_output_as_csv(f_and_r, "_rcrux_primer_blast_output", out,
-                        Metabarcode_name)
+                        metabarcode_name)
+    save_output_as_csv(f_and_r, "_get_seeds_local_output", out,
+                        metabarcode_name)
 
     # Count distinct taxonomic ranks - includes NA
     tax_rank_sum <- dplyr::summarise_at(taxonomized_table,c('phylum','class','order','family','genus','species'),dplyr::n_distinct)
 
-    # Write output to rcrux_blast_output
-    tax_rank_sum_table_path <- paste0(file_out_dir, "/", Metabarcode_name, "_unique_taxonomic_rank_counts.txt")
+    # Write output to blast_seeds_output
+    tax_rank_sum_table_path <- paste0(output_directory_path, "/", metabarcode_name, "_unique_taxonomic_rank_counts.txt")
     save_output_as_csv(tax_rank_sum, "_tax_rank_sum_table_path", out,
-                        Metabarcode_name)
+                        metabarcode_name)
 
 
     #return if you're supposed to

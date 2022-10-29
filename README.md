@@ -56,8 +56,8 @@ The following code can be used to build this database:
 ```
 library(taxonomizr)
 
-accession_taxa_path <- "/my/accessionTaxa.sql"
-prepareDatabase(accession_taxa_path)
+accession_taxa_sql_path <- "/my/accessionTaxa.sql"
+prepareDatabase(accession_taxa_sql_path)
 
 ```
 
@@ -68,13 +68,15 @@ The following example shows a simple rCRUX pipeline from start to finish. Note t
 
 * Note that local blast and taxonomic assignment databases can be stored on an external hard drive. It increases run time, but is a good option if computer storage capacity is limited.
 
-**get_seeds_remote**
-Searching jawless vertebrates (taxid: "1476529") and jawed vertebrates (taxid: "7776").
+There are two options to generate seeds for the database generating blast step [rCRUX::blast_seeds()]: get_seeds_local and get_seeds_remote. The local option is slower, however it is not subject to the memory limitations of using the NCBI primer_blast API. The local option is recommended if the user is building large database, wants to include any taxid in the search, and has many degenerate sites in their primer set.
 
-This example uses default parameters to minimize run time.
+**get_seeds_local**
+
+
+This example uses default parameters, with the exception of evalue, to minimize run time.
 
 ```
-output_directory <- "/my/rCRUX_output_directory/12S_V5F1_default_params" #path to desired output directory
+output_directory_path <- "/my/rCRUX_output_directory/12S_V5F1_default_params" #path to desired output directory
 
 metabarcode_name <- "12S_V5F1" # desired name of metabarcode locus
 
@@ -84,9 +86,44 @@ forward_primer_seq = "TAGAACAGGCTCCTCTAG"
 
 reverse_primer_seq =  "TTAGATACCCCACTATGC"
 
-get_seeds(forward_primer_seq,
+blast_db_path <- "/my/ncbi_nt/nt"
+
+
+get_seeds_local(forward_primer_seq,
+                 reverse_primer_seq,
+                 output_directory_path,
+                 metabarcode_name,
+                 accession_taxa_sql_path,
+                 blast_db_path, evalue = 300)
+
+
+rcrux_primer_blast(forward_primer, reverse_primer, blast_seeds_parent, Metabarcode_name, accession_taxa_path, blast_db_path, mismatch = 3, minimum_length = 100, maximum_length = 300, evalue = 300)
+
+# Two output .csv files are automatically created at this path based on the arguments passed to get_seeds_local.  One includes taxonomy the other does not.
+# A unique taxonomic rank summary file is also generated (e.g. the number of unique phyla, class, etc in the blast hits). If a taxonomic rank category contains NA's, they will be counted as a single unique rank.
+# Sequence availability in NCBI for a given taxid is a limiting factor.
+
+**get_seeds_remote**
+
+This example uses default parameters to minimize run time.
+
+Searching jawless vertebrates (taxid: "1476529") and jawed vertebrates (taxid: "7776").
+
+```
+output_directory_path <- "/my/rCRUX_output_directory/12S_V5F1_default_params" #path to desired output directory
+
+metabarcode_name <- "12S_V5F1" # desired name of metabarcode locus
+
+accession_taxa_sql_path <- "/my/accessionTaxa.sql"
+
+forward_primer_seq = "TAGAACAGGCTCCTCTAG"
+
+reverse_primer_seq =  "TTAGATACCCCACTATGC"
+
+
+get_seeds_remote(forward_primer_seq,
           reverse_primer_seq,
-          blast_seeds_parent,
+          output_directory_path,
           metabarcode_name,
           accession_taxa_path,
           organism = c("1476529", "7776"),
@@ -101,33 +138,7 @@ get_seeds(forward_primer_seq,
 [Modifying defaults can increase the number of returns by orders of magnitude.](#Search-options)
 
 
-**get_seeds_local**
-Searching jawless vertebrates (taxid: "1476529") and jawed vertebrates (taxid: "7776").
 
-This example uses default parameters to minimize run time.
-
-```
-output_directory <- "/my/rCRUX_output_directory/12S_V5F1_default_params" #path to desired output directory
-
-metabarcode_name <- "12S_V5F1" # desired name of metabarcode locus
-
-accession_taxa_sql_path <- "/my/accessionTaxa.sql"
-
-forward_primer_seq = "TAGAACAGGCTCCTCTAG"
-
-reverse_primer_seq =  "TTAGATACCCCACTATGC"
-
-get_seeds_local(forward_primer_seq,
-                 reverse_primer_seq,
-                 output_directory,
-                 metabarcode_name,
-                 accession_taxa_sql_path)
-
-# Two output .csv files are automatically created at this path based on the arguments passed to get_seeds_local.  One includes taxonomy the other does not.
-# A unique taxonomic rank summary file is also generated (e.g. the number of unique phyla, class, etc in the blast hits). If a taxonomic rank category contains NA's, they will be counted as a single unique rank.
-# Sequence availability in NCBI for a given taxid is a limiting factor.
-```
-[Modifying defaults can increase the number of returns by orders of magnitude.](#Search-options)
 
 **blast_seeds**
 Iterative searches are based on randomly sampling unique taxonomic groups for a given rank from the get_seeds_local output table to create a set of blast seeds. For example, the default is to randomly sample one read from each genus.  The user can select any taxonomic rank present in the get_seeds_local output table. The number of seeds selected may exceed the users available RAM, and for that reason the user can choose the maximum number of reads to blast at one time (max_to_blast, default = 1000). blast_seeds will subsample each set of seeds based on max_to_blast and process all seeds before starting a new search for seeds to blast.
@@ -141,7 +152,7 @@ blast_db_path <- "/my/local/blast_database/nt"
 
 accession_taxa_sql_path <- "/my/accessionTaxa.sql"
 
-output_directory <- '/my/rCRUX_output_directory/12S_V5F1_default_params/'
+output_directory_path <- '/my/rCRUX_output_directory/12S_V5F1_default_params/'
 
 metabarcode_name <- "12S_V5F1"
 
@@ -149,7 +160,7 @@ metabarcode_name <- "12S_V5F1"
 blast_seeds(seeds_output_path,
             blast_db_path,
             accession_taxa_sql_path,
-            output_directory,
+            output_directory_path,
             metabarcode_name)
 
 # After each round of blast, the system state is saved. If the script is terminated after a round of blast, the user can pick up where they left off. The user can also change parameters at this point (e.g. change the max_to_blast or rank)
@@ -161,7 +172,7 @@ blast_seeds(seeds_output_path,
 blast_seeds(seeds_output_path,
             blast_db_path,
             accession_taxa_sql_path,
-            output_directory,
+            output_directory_path,
             metabarcode_name,
             ncbi_bin = "/my/local/blast+_folder")
 
@@ -173,6 +184,18 @@ Example output can be found [here](/examples/12S_V5F1_generated_9-21-22).
 **Note**, there will be variability between runs due to primer blast return parameters and random sampling of the blast seeds table that occurs during blast_seeds.
 
 # Detailed Explanation of The Major Functions
+
+## Internal data pipeline
+
+# [get_seeds_local](https://lunagal.github.io/get_seeds_local)
+
+This script takes a set of forward and reverse primer sequences and generates csv summaries of data returned from a locally run adaptation of [NCBI's primer blast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) to find possible full length barcode sequence containing forward and reverse primer matches. It also generates a count of unique instances of taxonomic ranks (Phylum, Class, Order, Family, Genus, and Species)
+
+add info....
+
+## Search options
+add info...
+
 
 # [get_seeds_remote](https://lunagal.github.io/get_blast_seeds)
 
@@ -217,7 +240,7 @@ As of 2022-08-16, the primer blast GUI contains some options that are not implem
 You can find the description and suggested values for this search option. HITSIZE ='1000000' is added to the search below along with several options that increase the number of entries returned from primer_search.
 
 ```
-output_directory <- "/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_modified_params"
+output_directory_path <- "/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_modified_params"
 
 metabarcode_name <- "12S_V5F1"
 
@@ -230,7 +253,7 @@ reverse_primer_seq =  "TTAGATACCCCACTATGC"
 
 get_seeds_remote(forward_primer_seq,
                 reverse_primer_seq,
-                output_directory,
+                output_directory_path,
                 metabarcode_name,
                 accession_taxa_path,
                 HITSIZE ='1000000',
@@ -242,6 +265,7 @@ get_seeds_remote(forward_primer_seq,
                 organism = c("1476529", "7776"), return_table = FALSE)
 
 # This results in 111500 blast seed returns, note the default generated 1047.
+# This assumes the user is not throttled by memory limitations
 
 ```
 Example output can be found [here](/examples/12S_V5F1_generated_9-21-22).
@@ -267,25 +291,8 @@ Example output can be found [here](/examples/12S_V5F1_generated_9-21-22).
 
 
 
-## Internal data pipeline
 
-
-# [get_seeds_local](https://lunagal.github.io/rCRUX_primer_blast)
-
-This script takes a set of forward and reverse primer sequences and generates csv summaries of data returned from a locally run version of [NCBI's primer blast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) about full length barcode sequence containing primer matches. It also generates a count of unique instances of taxonomic ranks (Phylum, Class, Order, Family, Genus, and Species)
-
-get_seeds_local uses modified versions of functions from the [primerTree](https://CRAN.R-project.org/package=primerTree) package to submit queries to NCBI's primer BLAST tool, then aggregates results into a single data.frame. A locally run primer_search (Modified from [primerTree](https://CRAN.R-project.org/package=primerTree)) expands degenerate primers into each possible non-degenerate primer and submits a query for each. get_seeds_local further multiplies the number of queries by allowing the user to query the primers for each organism in a vector. get_seeds_local collects all these results from the locally run primer_search, filters them based on product length, and adds taxonomic data using the taxonomizr package.
-
-## Search options
-
-get_seeds_local utilizes many of the parameters from NCBI's primer blast tool. You can match the parameters to the fields available in the GUI here. First, use your browser to view the page source. Search for the field you are interested in by searching for the title of the field. It should be enclosed in a tag. Inside the label tag, it says for = "<name_of_parameter>". Copy the string after for = and add it to get_seeds_local as the name of a parameter, setting it equal to whatever you like.
-
-As of 2022-08-16, the primer blast GUI contains some options that are not implemented by primer_search. The [table below](#Table-of-available-options) documents available options.
-
-**You can checking [primerblast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) for more information on how to modify search options.  For example, if you to generate a larger hitsize, open the source of the primer designing tool and look for that string. You find the following:
-
-
-# [blast_seeds](https://lunagal.github.io/rcrux_blast)
+# [blast_seeds](https://lunagal.github.io/blast_seeds)
 
 blast_seeds uses the entries generated by get_seeds_remote or get_seeds_local and the nucleotide-nucleotide matching of blastn to generate a .csv of NCBI database entries that match a sequence found in the get_seeds_local or get_seeds_remote step.
 

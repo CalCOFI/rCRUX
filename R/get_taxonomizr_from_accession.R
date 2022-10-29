@@ -1,18 +1,18 @@
 #' Attach taxonomy data to an input table
 #'
 #' @param input a data.frame
-#' @param accessionTaxa_path the path to an accessionTaxa sql
+#' @param accession_taxa_sql_path the path to an accessionTaxa sql
 #' @return the data.frame with taxonomy data
 #' @export
-get_taxonomizr_from_accession <- function(input, accessionTaxa_path,
+get_taxonomizr_from_accession <- function(input, accession_taxa_sql_path,
                                         organize = TRUE) {
     if (!"accession" %in% colnames(input)) {
         stop("No `accession` column in input.")
     }
     input_taxids <- taxonomizr::accessionToTaxa(input$accession,
-                                            accessionTaxa_path)
+                                            accession_taxa_sql_path)
 
-    input_taxonomy <- taxonomizr::getTaxonomy(input_taxids, accessionTaxa_path,
+    input_taxonomy <- taxonomizr::getTaxonomy(input_taxids, accession_taxa_sql_path,
                                 desiredTaxa = c("species", "superkingdom",
                                 "kingdom", "phylum", "subphylum", "superclass",
                                 "class", "subclass", "order", "family",

@@ -2,7 +2,7 @@
 # data as arguments for restarting.
 # This makes the function less annoying and I can still wrap it in something
 # else.
-blast_datatable2 <- function(blast_seeds, save_dir, db_dir, accession_taxa_path,
+blast_datatable2 <- function(blast_seeds, save_dir, db_dir, accession_taxa_sql_path,
                             sample_size = 1000, wildcards = "NNNN",
                             num_rounds = 0, too_many_ns = NULL,
                             not_in_db = NULL, output_table = NULL,

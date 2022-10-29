@@ -8,21 +8,21 @@
 #' This is useful when searching for a large number of different combinations,
 #' allowing the function to output successful results.
 #'
-#' @param forward the forward primer
-#' @param reverse the reverse primer
+#' @param forward_primer_seq the forward primer
+#' @param reverse_primer_seq the reverse primer
 #' @param organisms a character vector containing an id or name parseable by
 #'        NCBI as an organism. If it is a vector with multiple entries, each
 #'        entry will be queried separately.
 #' @param db which NCBI database to search.
 #' @return a data.table summarizing the results of several primer_searches
 #' @export
-iterative_primer_search <- function(forward, reverse, organisms,
+iterative_primer_search <- function(forwar_primer_seq, reverse_primer_seq, organisms,
                                     db = "nt", ...) {
     output <- NULL
     # Use for loops to iterate over all the vector options
     for (org in organisms) {
         response <- try(
-            primer_search(forward, reverse, organism = org,
+            primer_search(forward_primer_seq, reverse_primer_seq, organism = org,
                 primer_specificity_database = db, ...),
             silent = TRUE
         )
