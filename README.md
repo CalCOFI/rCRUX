@@ -97,7 +97,7 @@ get_seeds_local(forward_primer_seq,
                  blast_db_path, evalue = 300)
 
 
-rcrux_primer_blast(forward_primer, reverse_primer, blast_seeds_parent, Metabarcode_name, accession_taxa_path, blast_db_path, mismatch = 3, minimum_length = 100, maximum_length = 300, evalue = 300)
+rcrux_primer_blast(forward_primer, reverse_primer, blast_seeds_parent, Metabarcode_name, accession_taxa_sql_path, blast_db_path, mismatch = 3, minimum_length = 100, maximum_length = 300, evalue = 300)
 
 # Two output .csv files are automatically created at this path based on the arguments passed to get_seeds_local.  One includes taxonomy the other does not.
 # A unique taxonomic rank summary file is also generated (e.g. the number of unique phyla, class, etc in the blast hits). If a taxonomic rank category contains NA's, they will be counted as a single unique rank.
@@ -125,7 +125,7 @@ get_seeds_remote(forward_primer_seq,
           reverse_primer_seq,
           output_directory_path,
           metabarcode_name,
-          accession_taxa_path,
+          accession_taxa_sql_path,
           organism = c("1476529", "7776"),
           return_table = FALSE)
 
@@ -255,7 +255,7 @@ get_seeds_remote(forward_primer_seq,
                 reverse_primer_seq,
                 output_directory_path,
                 metabarcode_name,
-                accession_taxa_path,
+                accession_taxa_sql_path,
                 HITSIZE ='1000000',
                 evalue='100000',
                 word_size='6',
