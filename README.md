@@ -43,6 +43,17 @@ NCBI's [BLAST+](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/) suite must
 
 rCRUX requires a local blast-formatted nucleotide database. These can be user generated or download a pre-formatted database from [NCBI](https://ftp.ncbi.nlm.nih.gov/blast/db/).  NCBI provides a tool (perl script) for downloading databases as part of the blast+ package. A brief help page can be found [here](https://www.ncbi.nlm.nih.gov/books/NBK569850/).
 
+The following shell script can be used to download the blast-formatted nucleotide database.
+
+```
+mkdir NCBI_blast_nt
+cd NCBI_blast_nt
+wget ftp://ftp.ncbi.nlm.nih.gov/blast/db/nt*
+time for file in *.tar.gz; do tar -zxvf $file; done
+cd ..
+
+```
+
 The nt database is **~242 GB** (as of 8/31/22) and can take several hours (overnight) to build. Loss of internet connection can lead to partially downloaded files and blastn errors. rCRUX can access and successfully build metabarcode references using databases stored on external drives.
 
 **Taxonomizr**
@@ -132,7 +143,7 @@ get_seeds_remote(forward_primer_seq,
 
 # Two output .csv files are automatically created at this path based on the arguments passed to get_seeds_remote.  One includes taxonomy the other does not.
 # A unique taxonomic rank summary file is also generated (e.g. the number of unique phyla, class, etc in the blast hits). If a taxonomic rank category contains NA's, they will be counted as a single unique rank.
-# Note that using default parameters only 1047 hits are returned from NCBI's primer blast.
+# Note that using default parameters only 1047 hits are returned from NCBI's primer blast (as of 9-25-22).
 # Sequence availability in NCBI for a given taxid is a limiting factor.
 ```
 [Modifying defaults can increase the number of returns by orders of magnitude.](#Search-options)
