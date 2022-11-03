@@ -113,6 +113,8 @@ rcrux_primer_blast(forward_primer, reverse_primer, blast_seeds_parent, Metabarco
 # Two output .csv files are automatically created at this path based on the arguments passed to get_seeds_local.  One includes taxonomy the other does not.
 # A unique taxonomic rank summary file is also generated (e.g. the number of unique phyla, class, etc in the blast hits). If a taxonomic rank category contains NA's, they will be counted as a single unique rank.
 # Sequence availability in NCBI for a given taxid is a limiting factor.
+```
+
 
 **get_seeds_remote**
 
@@ -146,6 +148,7 @@ get_seeds_remote(forward_primer_seq,
 # Note that using default parameters only 1047 hits are returned from NCBI's primer blast (as of 9-25-22).
 # Sequence availability in NCBI for a given taxid is a limiting factor.
 ```
+
 [Modifying defaults can increase the number of returns by orders of magnitude.](#Search-options)
 
 
@@ -178,7 +181,11 @@ blast_seeds(seeds_output_path,
 # The output includes a summary table of unique blast hits, a multi fasta file, a taxonomy file, a unique taxonomic rank summary file, a list of all of the accessions not present in your blast database, and a list of accessions with 4 or more Ns in a row (default for that parameter is wildcards = "NNNN")
 # the default number of reads to blast per rank is 1 (default for that parameter is sample_size = 1). The script will error out if the user asks for more reads per rank than exist in the blast seeds table.         
 ```
+
+
 **If BLAST+ is not in your path do the following**
+
+
 ```
 blast_seeds(seeds_output_path,
             blast_db_path,

@@ -7,3 +7,4 @@
 ^test_seeds$
 ^outputs$
 ^LICENSE\.md$
+^.*\.Rproj$
