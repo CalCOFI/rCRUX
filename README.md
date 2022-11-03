@@ -158,6 +158,8 @@ Sequence availability in NCBI for a given taxid is a limiting factor.
 
 
 **blast_seeds**
+
+
 Iterative searches are based on randomly sampling unique taxonomic groups for a given rank from the get_seeds_local output table to create a set of blast seeds. For example, the default is to randomly sample one read from each genus.  The user can select any taxonomic rank present in the get_seeds_local output table. The number of seeds selected may exceed the users available RAM, and for that reason the user can choose the maximum number of reads to blast at one time (max_to_blast, default = 1000). blast_seeds will subsample each set of seeds based on max_to_blast and process all seeds before starting a new search for seeds to blast.
 
 
