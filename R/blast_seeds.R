@@ -49,7 +49,6 @@ blast_seeds <- function(seeds_output_path, blast_db_path, accession_taxa_sql_pat
   dir.create(save_dir)
   dir.create(output_dir)
   blast_seeds <- read.csv(seeds_output_path)
-  print("works")
   output_table <- blast_datatable(blast_seeds, save_dir, blast_db_path,
                                   accession_taxa_sql_path, ...)
 
