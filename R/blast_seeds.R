@@ -1,7 +1,7 @@
 #' Wrapper function for blast_datatable that reads a data.frame from a path
 #'
 #' @description
-#' blast_seeds uses [RCRUX.dev::blast_datatable()] to search against a blast
+#' blast_seeds uses [rCRUX::blast_datatable()] to search against a blast
 #' formatted database. It creates a directory at `working_dir` if one does not
 #' already exist and generates `blast_seeds_output` and `.blast_seeds_save`
 #' inside that directory. It passes `<working_dir>/.blast_seeds_save` to
@@ -49,6 +49,7 @@ blast_seeds <- function(seeds_output_path, blast_db_path, accession_taxa_sql_pat
   dir.create(save_dir)
   dir.create(output_dir)
   blast_seeds <- read.csv(seeds_output_path)
+  print("works")
   output_table <- blast_datatable(blast_seeds, save_dir, blast_db_path,
                                   accession_taxa_sql_path, ...)
 
