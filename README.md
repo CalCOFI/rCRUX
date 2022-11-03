@@ -73,6 +73,8 @@ prepareDatabase(accession_taxa_sql_path)
 ```
 
 
+**Note** Please see the taxononmizr readme for manual installation of the accessionTaxa.sql database. This can be required with poor bandwidth connections.
+
 # Example pipeline
 
 The following example shows a simple rCRUX pipeline from start to finish. Note that this example will require internet access and considerable database storage (~314 GB, see section above), run time (mainly for blastn), and system resources to execute.
@@ -107,13 +109,11 @@ get_seeds_local(forward_primer_seq,
                  accession_taxa_sql_path,
                  blast_db_path, evalue = 300)
 
-
-rcrux_primer_blast(forward_primer, reverse_primer, blast_seeds_parent, Metabarcode_name, accession_taxa_sql_path, blast_db_path, mismatch = 3, minimum_length = 100, maximum_length = 300, evalue = 300)
-
-# Two output .csv files are automatically created at this path based on the arguments passed to get_seeds_local.  One includes taxonomy the other does not.
-# A unique taxonomic rank summary file is also generated (e.g. the number of unique phyla, class, etc in the blast hits). If a taxonomic rank category contains NA's, they will be counted as a single unique rank.
-# Sequence availability in NCBI for a given taxid is a limiting factor.
 ```
+
+Two output .csv files are automatically created at this path based on the arguments passed to get_seeds_local.  One includes taxonomy the other does not.
+
+A unique taxonomic rank summary file is also generated (e.g. the number of unique phyla, class, etc in the blast hits). If a taxonomic rank category contains NA's, they will be counted as a single unique rank. Sequence availability in NCBI for a given taxid is a limiting factor.
 
 
 **get_seeds_remote**
@@ -142,12 +142,15 @@ get_seeds_remote(forward_primer_seq,
           organism = c("1476529", "7776"),
           return_table = FALSE)
 
-
-# Two output .csv files are automatically created at this path based on the arguments passed to get_seeds_remote.  One includes taxonomy the other does not.
-# A unique taxonomic rank summary file is also generated (e.g. the number of unique phyla, class, etc in the blast hits). If a taxonomic rank category contains NA's, they will be counted as a single unique rank.
-# Note that using default parameters only 1047 hits are returned from NCBI's primer blast (as of 9-25-22).
-# Sequence availability in NCBI for a given taxid is a limiting factor.
 ```
+
+*Note that using default parameters only 1047 hits are returned from NCBI's primer blast (as of 9-25-22).*
+
+Two output .csv files are automatically created at this path based on the arguments passed to get_seeds_remote.  One includes taxonomy the other does not.
+
+A unique taxonomic rank summary file is also generated (e.g. the number of unique phyla, class, etc in the blast hits). If a taxonomic rank category contains NA's, they will be counted as a single unique rank.
+
+Sequence availability in NCBI for a given taxid is a limiting factor.
 
 [Modifying defaults can increase the number of returns by orders of magnitude.](#Search-options)
 
@@ -175,12 +178,14 @@ blast_seeds(seeds_output_path,
             blast_db_path,
             accession_taxa_sql_path,
             output_directory_path,
-            metabarcode_name)
-
-# After each round of blast, the system state is saved. If the script is terminated after a round of blast, the user can pick up where they left off. The user can also change parameters at this point (e.g. change the max_to_blast or rank)
-# The output includes a summary table of unique blast hits, a multi fasta file, a taxonomy file, a unique taxonomic rank summary file, a list of all of the accessions not present in your blast database, and a list of accessions with 4 or more Ns in a row (default for that parameter is wildcards = "NNNN")
-# the default number of reads to blast per rank is 1 (default for that parameter is sample_size = 1). The script will error out if the user asks for more reads per rank than exist in the blast seeds table.         
+            metabarcode_name)    
 ```
+
+
+After each round of blast, the system state is saved. If the script is terminated after a round of blast, the user can pick up where they left off. The user can also change parameters at this point (e.g. change the max_to_blast or rank)
+
+The output includes a summary table of unique blast hits, a multi fasta file, a taxonomy file, a unique taxonomic rank summary file, a list of all of the accessions not present in your blast database, and a list of accessions with 4 or more Ns in a row (default for that parameter is wildcards = "NNNN") the default number of reads to blast per rank is 1 (default for that parameter is sample_size = 1). The script will error out if the user asks for more reads per rank than exist in the blast seeds table.     
+
 
 
 **If BLAST+ is not in your path do the following**
@@ -281,11 +286,11 @@ get_seeds_remote(forward_primer_seq,
                 NUM_TARGETS_WITH_PRIMERS ='500000', minimum_length = 50,
                 MAX_TARGET_SIZE = 200,
                 organism = c("1476529", "7776"), return_table = FALSE)
-
-# This results in 111500 blast seed returns, note the default generated 1047.
-# This assumes the user is not throttled by memory limitations
-
 ```
+
+This results in 111500 blast seed returns, note the default generated 1047. This assumes the user is not throttled by memory limitations.
+
+
 Example output can be found [here](/examples/12S_V5F1_generated_9-21-22).
 
 ### Table of available options
@@ -324,35 +329,6 @@ After each iteration, the accessions recovered through blastn are removed from t
 
 After all blast seeds are processed, taxonomizr is used to add taxonomic data to the data.frame based on the accession numbers. The final output is the aggregate of all blastn calls with the taxonomic data added.
 
-## Example
-
-In this example, blast_seeds is called on the .csv generated by the get_seeds_remote example above. This example does not rely on an internet connection, but it will use a lot of memory and CPU time.
-
-```
-# These file directories need to be changed to locations on your device
-
-seeds_output_path <- '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_modified_params/12S_V5F1/12S_V5F1_primerTree_output_with_taxonomy.csv'
-
-blast_db_path <- "/Users/limeybean/Dropbox/CRUX_2.0/ncbi_nt/nt"
-
-accession_taxa_sql_path <- "/Users/limeybean/Dropbox/CRUX_2.0/accession2taxid/accessionTaxa.sql"
-
-output_directory <- '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_modified_params/12S_V5F1/'
-
-metabarcode_name <- "12S_V5F1"
-
-blast_seeds(seeds_output_path,
-            blast_db_path,
-            accession_taxa_sql_path,
-            output_directory,
-            metabarcode_name)
-
-
-# Using the get_seeds_remote output that used modified blast search settings (output with 111500 blast seed returns), blast_seeds resulted in 147479 returns.  
-
-# Using the get_seeds_remote output that used default blast search settings (output with 1049 blast seed returns), blast_seeds resulted in  109712 returns.
-
-```
 
 ## Funding
 
