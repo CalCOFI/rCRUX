@@ -78,16 +78,16 @@ get_seeds_local <- function(forward_primer_seq, reverse_primer_seq,
 
     # parse amplicons from hits to forward and reverse hits
     # First isolate forward and reverse reads and rename columns
-    F_only <-  dplyr::rename(dplyr::filter(output_table, qseqid=='forward'),gi=sgi, accession = saccver, mismatch_forward = mismatch, forward_start = sstart, forward_end = send )
-    R_only <-  dplyr::rename(dplyr::filter(output_table, qseqid=='reverse'), gi=sgi, accession = saccver, mismatch_reverse = mismatch, reverse_start = sstart, reverse_end = send )
+    F_only <-  dplyr::rename(dplyr::filter(output_table, qseqid=='forward'),gi=sgi, accession = saccver, mismatch_forward = mismatch, forward_start = sstart, forward_stop = send )
+    R_only <-  dplyr::rename(dplyr::filter(output_table, qseqid=='reverse'), gi=sgi, accession = saccver, mismatch_reverse = mismatch, reverse_start = sstart, reverse_stop = send )
 
     # keep only the accessions with forward and reverse primer hits, and add a column for product length
     f_and_r <- dplyr::inner_join(x=F_only, y=R_only, by=c("accession", "gi", "staxids"))
     f_and_r <- dplyr::mutate(f_and_r, product_length=0)
 
     # calculate product length if F and R primer pairs are in correct orientation to make amplicon
-    f_and_r <- dplyr::mutate(f_and_r, product_length = dplyr::case_when((forward_start < reverse_start & forward_start < forward_end & reverse_end < reverse_start ) ~ (as.numeric(reverse_start) - as.numeric(forward_start)),
-                                                                    (forward_start > reverse_start & forward_start > forward_end & reverse_end > reverse_start) ~ (as.numeric(forward_start) - as.numeric(reverse_start)),))
+    f_and_r <- dplyr::mutate(f_and_r, product_length = dplyr::case_when((forward_start < reverse_start & forward_start < forward_stop & reverse_stop < reverse_start ) ~ (as.numeric(reverse_start) - as.numeric(forward_start)),
+                                                                    (forward_start > reverse_start & forward_start > forward_stop & reverse_stop > reverse_start) ~ (as.numeric(forward_start) - as.numeric(reverse_start)),))
 
     # remove all F and R primer pairs that would not make an amplicon
     f_and_r <- dplyr::filter(f_and_r, !is.na(product_length))
