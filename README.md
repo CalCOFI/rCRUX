@@ -54,6 +54,25 @@ cd ..
 
 ```
 
+You can test your nt blast databaseusing the following command:
+
+```
+blastdbcmd -db '/Users/limeybean/Dropbox/CRUX_2.0/ncbi_nt/nt' -dbtype nucl -entry MN937193.1 -range 499-633
+```
+If you do not get the following, something went wrong in the build.
+
+```
+>MN937193.1:499-633 Jaydia carinatus mitochondrion, complete genome
+TTAGATACCCCACTATGCCTAGTCTTAAACCTAGATAGAACCCTACCTATTCTATCCGCCCGGGTACTACGAGCACCAGC
+TTAAAACCCAAAGGACTTGGCGGCGCTTCACACCCACCTAGAGGAGCCTGTTCTA
+```
+
+Possible error include but are not limited to:
+1. Partial downloads of database files. Extracting each TAR archive (e.g. nt.00.tar.gz.md5) should cresult in 8 files with the following extensions(.nhd, .nhi, .nhr, .nin, .nnd, .nni, .nog, and .nsq).  If a few archives fail during download, you can redownload and unpack those that failed. You do not have to redownload all archives.  
+
+2. You downloaded and built a blast database from ncbi fasta files but did not specify -parse_seqids
+
+
 The nt database is **~242 GB** (as of 8/31/22) and can take several hours (overnight) to build. Loss of internet connection can lead to partially downloaded files and blastn errors. rCRUX can access and successfully build metabarcode references using databases stored on external drives.
 
 **Taxonomizr**
