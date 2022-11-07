@@ -14,8 +14,7 @@ eDNA metabarcoding is increasingly used to survey biological communities using c
 
 
 ## Typical Workflow
-Needs to be updated, but general flow is still accurate.
-<img src="RCRUX_Flowchart.png" width = 10000 />
+<img src="RCRUX_Flowchart.pdf" width = 10000 />
 
 
 ## Installation
