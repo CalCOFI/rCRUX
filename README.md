@@ -54,7 +54,7 @@ cd ..
 
 ```
 
-You can test your nt blast databaseusing the following command:
+You can test your nt blast database using the following command:
 
 ```
 blastdbcmd -db '/Users/limeybean/Dropbox/CRUX_2.0/ncbi_nt/nt' -dbtype nucl -entry MN937193.1 -range 499-633
@@ -73,7 +73,7 @@ Possible error include but are not limited to:
 2. You downloaded and built a blast database from ncbi fasta files but did not specify -parse_seqids
 
 
-The nt database is **~242 GB** (as of 8/31/22) and can take several hours (overnight) to build. Loss of internet connection can lead to partially downloaded files and blastn errors. rCRUX can access and successfully build metabarcode references using databases stored on external drives.
+The nt database is **~242 GB** (as of 8/31/22) and can take several hours (overnight) to build. Loss of internet connection can lead to partially downloaded files and blastn errors (see above). rCRUX can access and successfully build metabarcode references using databases stored on external drives.
 
 **Taxonomizr**
 
@@ -91,8 +91,7 @@ prepareDatabase(accession_taxa_sql_path)
 
 ```
 
-
-**Note** Please see the taxononmizr readme for manual installation of the accessionTaxa.sql database. This can be required with poor bandwidth connections.
+**Note** Please see the taxononmizr readme for manual installation of the accessionTaxa.sql database. This can be required with poor bandwidth connections. If built manually, make sure to delete any files other than the accessionTaxa.sql database (e.g. keeping nucl_gb.accession2taxid.gz leads to a warning message).
 
 # Example pipeline
 
