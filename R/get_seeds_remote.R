@@ -98,7 +98,7 @@ get_seeds_remote <- function(forward_primer_seq, reverse_primer_seq,
 
     # save output
     save_output_as_csv(taxonomized_table,
-                        "_primerTree_output_with_taxonomy", out,
+                        "_filtered_primerTree_output_with_taxonomy", out,
                         metabarcode_name)
     save_output_as_csv(raw_table, "_raw_primerTree_output", out,
                         metabarcode_name)

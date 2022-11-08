@@ -177,7 +177,7 @@ Sequence availability in NCBI for a given taxid is a limiting factor.
 **blast_seeds**
 
 
-Iterative searches are based on randomly sampling unique taxonomic groups for a given rank from the get_seeds_local output table to create a set of blast seeds. For example, the default is to randomly sample one read from each genus.  The user can select any taxonomic rank present in the get_seeds_local output table. The number of seeds selected may exceed the users available RAM, and for that reason the user can choose the maximum number of reads to blast at one time (max_to_blast, default = 1000). blast_seeds will subsample each set of seeds based on max_to_blast and process all seeds before starting a new search for seeds to blast.
+Iterative searches are based on randomly sampling unique taxonomic groups for a given rank from the get_seeds_local or get_seeds_remote output table to create a set of blast seeds. For example, the default is to randomly sample one read from each genus.  The user can select any taxonomic rank present in the get_seeds_local output table. The number of seeds selected may exceed the users available RAM, and for that reason the user can choose the maximum number of reads to blast at one time (max_to_blast, default = 1000). blast_seeds will subsample each set of seeds based on max_to_blast and process all seeds before starting a new search for seeds to blast.
 
 
 ```
@@ -224,6 +224,13 @@ blast_seeds(seeds_output_path,
 Example output can be found [here](/examples/12S_V5F1_generated_9-21-22).
 
 **Note**, there will be variability between runs due to primer blast return parameters and random sampling of the blast seeds table that occurs during blast_seeds.
+
+**derep_and_clean_db**
+
+
+This function takes the output of blast_seeds and depreplicates identical sequences.  In this step, accessions with the same sequence are combined and if those accessions have different taxids (taxonomic paths).
+
+
 
 # Detailed Explanation of The Major Functions
 
@@ -355,6 +362,9 @@ After each iteration, the accessions recovered through blastn are removed from t
 
 After all blast seeds are processed, taxonomizr is used to add taxonomic data to the data.frame based on the accession numbers. The final output is the aggregate of all blastn calls with the taxonomic data added.
 
+# [derep_and_clean_db](https://lunagal.github.io/derep_and_clean_db)
+
+<img src="derep_and_clean_db-flowchart.png" width = 10000 />
 
 ## Funding
 

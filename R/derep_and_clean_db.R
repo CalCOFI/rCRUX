@@ -1,4 +1,4 @@
-#' function to deduplicate results based on identical sequences
+#' function to dereplicate blast_seed results based on identical sequences and clean up reads with multiple taxids
 #'
 #' @param output_dir the path to the output directory
 #' @param summary_path the path to the input file
@@ -10,7 +10,7 @@
 # "We ain't too pretty, we ain't too proud" - Billy Joel, "Only the good die young"
 
 
-dedup <- function(output_dir, summary_path, rank = c("phylum", "class", "order", "family", "genus", "species")) {
+derep_and_clean_db <- function(output_dir, summary_path, rank = c("phylum", "class", "order", "family", "genus", "species")) {
 
   # read rcrux blast summary.csv
   summary <- read.csv(summary_path)
@@ -73,20 +73,20 @@ dedup <- function(output_dir, summary_path, rank = c("phylum", "class", "order",
   #}
 
   write.csv(sub_dups,
-            file = paste(output_dir, "References_with_multiple_taxonomic_ranks.csv", sep = "/"),
+            file = paste(output_dir, "Sequences_with_multiple_taxonomic_paths.csv", sep = "/"),
             row.names = FALSE)
 
   write.csv(sub_dup_to_NA,
-            file = paste(output_dir, "References_with_NA_instead_of_multiple_taxonomic_ranks.csv", sep = "/"),
+            file = paste(output_dir, "Sequences_with_lowest_common_taxonomic_path_agreement.csv", sep = "/"),
             row.names = FALSE)
 
 
   write.csv(clean_tax,
-            file = paste(output_dir, "References_with_unique_taxonomic_ranks.csv", sep = "/"),
+            file = paste(output_dir, "Sequences_with_single_taxonomic_path.csv", sep = "/"),
             row.names = FALSE)
 
   write.csv(no_path_summary,
-            file = paste(output_dir, "References_with_NA_for_taxonomic_ranks.csv", sep = "/"),
+            file = paste(output_dir, "Sequences_with_mostly_NA_taxonomic_paths.csv", sep = "/"),
             row.names = FALSE)
 
 
