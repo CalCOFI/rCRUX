@@ -243,7 +243,7 @@ add info...
 
 # [get_seeds_remote](https://lunagal.github.io/get_blast_seeds)
 
-<img src="get_seeds_remote-flowchart.png" width = 10000 />
+<img src="get_seed_remote-flowchart.png" width = 10000 />
 
 
 This script takes a set of forward and reverse primer sequences and generates csv summaries of data returned from [NCBI's primer blast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) about full length barcode sequence containing primer matches. It also generates a count of unique instances of taxonomic ranks (Phylum, Class, Order, Family, Genus, and Species)
