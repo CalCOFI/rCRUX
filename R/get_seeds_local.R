@@ -92,6 +92,10 @@ get_seeds_local <- function(forward_primer_seq, reverse_primer_seq,
     # remove all F and R primer pairs that would not make an amplicon
     f_and_r <- dplyr::filter(f_and_r, !is.na(product_length))
 
+    #save unfiltered seeds output
+    save_output_as_csv(f_and_r, "_unfiltered_get_seeds_local_output", out,
+                        metabarcode_name)
+
     # keep only hits with acceptable product length
     f_and_r <- dplyr::filter(f_and_r, dplyr::between(product_length, minimum_length, maximum_length))
 
@@ -104,10 +108,9 @@ get_seeds_local <- function(forward_primer_seq, reverse_primer_seq,
 
     # save output
     save_output_as_csv(taxonomized_table,
-                        "_primerTree_output_with_taxonomy", out,
+                        "_filtered_get_seeds_local_output_with_taxonomy", out,
                         metabarcode_name)
-    save_output_as_csv(f_and_r, "_get_seeds_local_output", out,
-                        metabarcode_name)
+
 
     # Count distinct taxonomic ranks - includes NA
     tax_rank_sum <- dplyr::summarise_at(taxonomized_table,c('phylum','class','order','family','genus','species'),dplyr::n_distinct)

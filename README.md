@@ -231,6 +231,8 @@ Example output can be found [here](/examples/12S_V5F1_generated_9-21-22).
 
 # [get_seeds_local](https://lunagal.github.io/get_seeds_local)
 
+<img src="get_seeds_local-flowchart.png" width = 10000 />
+
 This script takes a set of forward and reverse primer sequences and generates csv summaries of data returned from a locally run adaptation of [NCBI's primer blast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) to find possible full length barcode sequence containing forward and reverse primer matches. It also generates a count of unique instances of taxonomic ranks (Phylum, Class, Order, Family, Genus, and Species)
 
 add info....
