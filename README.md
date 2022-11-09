@@ -96,9 +96,9 @@ prepareDatabase(accession_taxa_sql_path)
 
 The following example shows a simple rCRUX pipeline from start to finish. Note that this example will require internet access and considerable database storage (~314 GB, see section above), run time (mainly for blastn), and system resources to execute.
 
-* Note that local blast and taxonomic assignment databases can be stored on an external hard drive. It increases run time, but is a good option if computer storage capacity is limited.
+**Note** that local blast and taxonomic assignment databases can be stored on an external hard drive. It increases run time, but is a good option if computer storage capacity is limited.
 
-There are two options to generate seeds for the database generating blast step [rCRUX::blast_seeds()]: get_seeds_local and get_seeds_remote. The local option is slower, however it is not subject to the memory limitations of using the NCBI primer_blast API. The local option is recommended if the user is building large database, wants to include any taxid in the search, and has many degenerate sites in their primer set.
+There are two options to generate seeds for the database generating blast step [rCRUX::blast_seeds()]: get_seeds_local and get_seeds_remote. The local option is slower, however it is not subject to the memory limitations of using the NCBI primer_blast API. The local option is recommended if the user is building a large database, wants to include any taxid in the search, and has many degenerate sites in their primer set.
 
 **get_seeds_local**
 
@@ -161,7 +161,7 @@ get_seeds_remote(forward_primer_seq,
 
 ```
 
-*Note that using default parameters only 1047 hits are returned from NCBI's primer blast (as of 9-25-22).*
+**Note** that using default parameters only 1047 hits are returned from NCBI's primer blast (as of 9-25-22). Returns hit sizes and contents are varible depending on parameters and database updates
 
 Two output .csv files are automatically created at this path based on the arguments passed to get_seeds_remote.  One includes taxonomy the other does not.
 
