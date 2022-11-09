@@ -69,12 +69,6 @@ derep_and_clean_db <- function(output_directory_path, summary_path, metabarcode_
     sub_dup_to_NA <- dplyr::mutate(sub_dup_to_NA, species = gsub(".*, .*", "NA", species))
 
 
-
-  # write output
-  #c <- c("clean_tax", )
-  #for (o in output){
-  #}
-
   write.csv(sub_dups,
             file = paste(out, "Sequences_with_multiple_taxonomic_paths.csv", sep = "/"),
             row.names = FALSE)
@@ -91,6 +85,8 @@ derep_and_clean_db <- function(output_directory_path, summary_path, metabarcode_
   write.csv(no_path_summary,
             file = paste(out, "Sequences_with_mostly_NA_taxonomic_paths.csv", sep = "/"),
             row.names = FALSE)
+
+  paths_to_summary_tables <- c(paste(out, "Sequences_with_lowest_common_taxonomic_path_agreement.csv", sep = "/"), paste(out, "Sequences_with_single_taxonomic_path.csv", sep = "/"))
 
   representative_fasta_and_taxonomy(paths_to_summary_tables, metabarcode_name, out)
 
