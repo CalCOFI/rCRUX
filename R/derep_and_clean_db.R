@@ -13,7 +13,7 @@
 derep_and_clean_db <- function(output_directory_path, summary_path, metabarcode_name) {
 
   out <- paste0(output_directory_path, "/derep_and_clean_db/")
-  supress.warnings(dir.create(out))
+  suppress.warnings(dir.create(out))
 
 
   # read rcrux blast summary.csv
