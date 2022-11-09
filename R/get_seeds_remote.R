@@ -73,8 +73,8 @@ get_seeds_remote <- function(forward_primer_seq, reverse_primer_seq,
 
     # Start by making the directory and checking for the sql and whatnot.
     out <- paste0(output_directory_path, "/", metabarcode_name, "/")
-    dir.create(output_directory_path)
-    dir.create(out)
+    suppressWarnings(dir.create(output_directory_path))
+    suppressWarnings(dir.create(out))
     if (!file.exists(accession_taxa_sql_path)) {
       stop("accession_taxa_sql_path does not exist")
     }
