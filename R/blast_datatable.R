@@ -263,6 +263,59 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     output_table_path <- paste(save_dir, "output_table.txt", sep = "/")
     output_table <- read.csv(output_table_path, colClasses = "character")
 
+    ####fix blastn taxids here
+
+    #Identify rows with multiple ids and filter into new dataframe
+    multi_taxids <- dplyr::filter(output_table, grepl(';', BLAST_db_taxids))
+
+    #remove multitaxids from output table
+    clean_tax <- dplyr::setdiff(output_table, multi_taxids)
+
+    #make a list of multi_taxid accessions for blastdbcmd
+    accession <- paste0(multi_taxids$accession, collapse=",")
+
+    # send accessions through blastdbcmd
+    expand_multi_taxids_output <- system2("blastdbcmd", args = c("-db", blast_db_path,
+                                                             "-dbtype", "nucl",
+                                                             "-entry", accession,
+                                                             "-outfmt", "'%a %T'"),
+                                                   stdout = TRUE, stderr = FALSE)
+
+    #make df to store fixed multi taxid info
+    accession_df <- dplyr::select(multi_taxids, accession)
+
+    # make df for blastdbcmd output
+    column_names <-  c("accession",
+                   "BLAST_db_taxids")
+
+    accession_output_table <- expand_multi_taxids_output %>%
+                           tibble::as_tibble() %>%
+    tidyr::separate(col = value, into = column_names,
+                  sep = " ")
+
+    # add row_id for sorting later
+    accession_output_table <- dplyr::mutate(accession_output_table, row_id=row_number())
+
+    # left join accessions that had mutli_taxids  with the blastcmd output - there wil be NA's so sort by row number to keep related blastdbcm output together - accessions that are identical
+    accession_df <- dplyr::full_join(accession_df, accession_output_table, keep = TRUE)
+    accession_df <- dplyr::arrange(accession_df, row_id)
+
+    # fill NA's in columns with the initial accession value
+    accession_df <- zoo::na.locf(zoo::na.locf(accession_df), fromLast=TRUE)
+
+    # left join original multi_taxid table with the new expanded table -  fleshes out the info
+    accession_df <- dplyr::left_join(accession_df, multi_taxids, by = c("accession.x" = "accession"))
+
+    # remove unnecessary columns
+    accession_df <- dplyr::select(accession_df, -c(accession.x, BLAST_db_taxids.y, row_id))
+
+    # change name of columns for concatonating with the clean data
+    accession_df <- dplyr::rename(accession_df, accession = accession.y, BLAST_db_taxids=BLAST_db_taxids.x)
+
+    # add the expanded blastdbcmd output with the single taxid table.
+    output_table <- rbind(accession_df, clean_tax)
+
+
     output_table_taxonomy <-
       get_taxonomizr_from_accession(output_table, accession_taxa_sql_path)
 
