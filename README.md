@@ -253,7 +253,14 @@ We note that we exclude all sequences with taxids that are NA. Such sequences ar
 
 The result of this function is a final clean reference database file set composed of a paired .fasta and taxonomy.txt. In addition, all representative sequences and associated accessions are saved in References_with_multiple_taxonomic_ranks.csv and References_with_unique_taxonomic_ranks.csv files. These files allow for the traceback of representative sequences to multiple accessions.
 
+```
+summary_path <- "/my/rCRUX_output_directory/12S_V5F1_default_params/blast_seeds_output/summary.csv"
+# this is the output from blast_seeds
 
+derep_and_clean_db(output_directory_path, summary_path, metabarcode_name)
+
+
+```
 
 
 
