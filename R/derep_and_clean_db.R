@@ -1,8 +1,8 @@
 #' function to dereplicate blast_seed results based on identical sequences and clean up reads with multiple taxids
 #'
-#' @param output_dir the path to the output directory
+#' @param output_directory_path the path to the output directory
 #' @param summary_path the path to the input file
-
+#' @param metabarcode_name used to name the subdirectory and the files.
 #' @return NULL
 #' @export
 
@@ -10,7 +10,10 @@
 # "We ain't too pretty, we ain't too proud" - Billy Joel, "Only the good die young"
 
 
-derep_and_clean_db <- function(output_dir, summary_path, rank = c("phylum", "class", "order", "family", "genus", "species")) {
+derep_and_clean_db <- function(output_directory_path, summary_path, metabarcode_name) {
+
+  out <- paste0(output_directory_path, "/", derep_and_clean, "/")
+  dir.create(out)
 
   # read rcrux blast summary.csv
   summary <- read.csv(summary_path)
@@ -73,21 +76,63 @@ derep_and_clean_db <- function(output_dir, summary_path, rank = c("phylum", "cla
   #}
 
   write.csv(sub_dups,
-            file = paste(output_dir, "Sequences_with_multiple_taxonomic_paths.csv", sep = "/"),
+            file = paste(out, "Sequences_with_multiple_taxonomic_paths.csv", sep = "/"),
             row.names = FALSE)
 
   write.csv(sub_dup_to_NA,
-            file = paste(output_dir, "Sequences_with_lowest_common_taxonomic_path_agreement.csv", sep = "/"),
+            file = paste(out, "Sequences_with_lowest_common_taxonomic_path_agreement.csv", sep = "/"),
             row.names = FALSE)
 
 
   write.csv(clean_tax,
-            file = paste(output_dir, "Sequences_with_single_taxonomic_path.csv", sep = "/"),
+            file = paste(out, "Sequences_with_single_taxonomic_path.csv", sep = "/"),
             row.names = FALSE)
 
   write.csv(no_path_summary,
-            file = paste(output_dir, "Sequences_with_mostly_NA_taxonomic_paths.csv", sep = "/"),
+            file = paste(out, "Sequences_with_mostly_NA_taxonomic_paths.csv", sep = "/"),
             row.names = FALSE)
 
+  representative_fasta_and_taxonomy(paths_to_summary_tables, metabarcode_name, out)
+
+}
+
+
+
+# function to get the representative fasta and taxonomy files for derep_and_clean_db
+
+representative_fasta_and_taxonomy <- function(paths_to_summary_tables, metabarcode_name, output_directory_path){
+
+  # read in the file paths
+  concat <- readr::read_csv(paths_to_summary_tables, show_col_types = FALSE)
+
+  # grab the first instance of an accession to make representative
+  concat <- dplyr::mutate(concat, rep_accession = purrr::map(strsplit(concat$accession, split = ","), 1) )
+
+  # if only one accession give one fasta description and if more than one give another
+  concat <- dplyr::mutate(concat, rep_accession_number = ifelse(concat$num_of_accessions == 1, paste0(concat$rep_accession), ifelse(concat$num_of_accessions > 1, paste0(concat$rep_accession,"_representative_of_", concat$num_of_accessions, "_identical_accessions"), 0)))
+
+
+  # Write a fasta
+  fasta <- character(nrow(concat) * 2)
+  fasta[c(TRUE, FALSE)] <- paste0(">", concat$rep_accession_number)
+  fasta[c(FALSE, TRUE)] <- concat$sequence
+  writeLines(fasta, paste0(output_directory_path, "/", metabarcode_name, "_derep_and_clean.fasta"))
+
+
+  # Taxonomy file format (tidyr and dplyr)
+  taxa_table <-  dplyr::select(concat,rep_accession_number, phylum, class, order, family, genus, species)
+  taxa_table <-tidyr::unite(taxa_table,taxonomic_path, phylum:species, sep = ";", remove = TRUE, na.rm = FALSE)
+  taxa_table <-dplyr::slice(taxa_table,-1)
+
+  # Write the thing
+  taxa_table_path <- paste0(output_directory_path, "/", metabarcode_name, "_derep_and_clean_taxonomy.txt")
+  write.table(taxa_table, file = taxa_table_path, row.names = FALSE, col.names=FALSE, sep = "\t")
+
+  # Count distinct taxonomic ranks - includes NA
+  tax_rank_sum <- dplyr::summarise_at(concat,c('phylum','class','order','family','genus','species'),dplyr::n_distinct)
+
+  # Write output to blast_seeds_output
+  tax_rank_sum_table_path <- paste0(output_directory_path, "/", metabarcode_name, "_derep_and_clean_unique_taxonomic_rank_counts.txt")
+  write.table(tax_rank_sum, file = tax_rank_sum_table_path, row.names = FALSE, col.names=TRUE, sep = ",")
 
 }
