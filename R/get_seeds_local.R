@@ -116,9 +116,8 @@ get_seeds_local <- function(forward_primer_seq, reverse_primer_seq,
     tax_rank_sum <- dplyr::summarise_at(taxonomized_table,c('superkingdom', 'phylum','class','order','family','genus','species'),dplyr::n_distinct)
 
     # Write output to blast_seeds_output
-    tax_rank_sum_table_path <- paste0(output_directory_path, "/", metabarcode_name, "_unique_taxonomic_rank_counts.txt")
-    save_output_as_csv(tax_rank_sum, "_tax_rank_sum_table_path", out,
-                        metabarcode_name)
+    tax_rank_sum_table_path <- paste0(output_directory_path, "/", metabarcode_name, "_filtered_get_seeds_local_unique_taxonomic_rank_counts.txt")
+    write.table(tax_rank_sum, file = tax_rank_sum_table_path, row.names = FALSE, col.names=TRUE, sep = ",")
 
 
     #return if you're supposed to
