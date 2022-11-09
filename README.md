@@ -251,7 +251,9 @@ Accessions with the same sequence are collapsed into a representative sequence. 
 
 We note that we exclude all sequences with taxids that are NA. Such sequences are not immediately useful for classification of metabarcoding sequences. However, we caution that such results can be indicative of off target amplification of a given primer set. For example, the MiFish 12S primer set amplifies uncultured marine bacteria among other taxa (taxid = NA) indicating off target amplification of non-fish taxa. These sequences are saved in the References_with_NA_for_taxonomic_ranks.csv file.
 
-The result of this function is a final clean reference database file set composed of a paired .fasta and taxonomy.txt. In addition, all representative sequences and associated accessions are saved in References_with_multiple_taxonomic_ranks.csv and References_with_unique_taxonomic_ranks.csv files. These files allow for the traceback of representative sequences to multiple accessions.
+The result of this function is a final clean reference database file set composed of a paired metabarcode_name_derep_and_clean.fasta and metabarcode_name_derep_and_clean_taxonomy.txt. A summary file of the number of unique taxonomic ranks is also generated: metabarcode_name_derep_and_clean_unique_taxonomic_rank_counts.txt. In addition, all representative sequences and associated accessions are saved in Sequences_with_lowest_common_taxonomic_path_agreement.csv, Sequences_with_mostly_NA_taxonomic_paths.csv,
+Sequences_with_multiple_taxonomic_paths.csv, and
+Sequences_with_single_taxonomic_path.csv files. These files allow for the traceback of representative sequences to multiple accessions.
 
 ```
 summary_path <- "/my/rCRUX_output_directory/12S_V5F1_default_params/blast_seeds_output/summary.csv"
