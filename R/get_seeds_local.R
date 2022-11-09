@@ -57,7 +57,7 @@ get_seeds_local <- function(forward_primer_seq, reverse_primer_seq,
                             return_table = TRUE) {
 
     # Start by making the directory and checking for the sql and whatnot.
-    out <- paste0(output_directory_path, "/", metabarcode_name, "/")
+    out <- paste0(output_directory_path, "/get_seeds_local/")
     suppressWarnings(dir.create(output_directory_path))
     suppressWarnings(dir.create(out))
     if (!file.exists(accession_taxa_sql_path)) {
