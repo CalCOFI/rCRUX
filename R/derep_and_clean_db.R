@@ -20,7 +20,7 @@ derep_and_clean_db <- function(output_directory_path, summary_path, metabarcode_
   summary <- read.csv(summary_path)
 
   # get relevant df to work with
-  summary <- dplyr::select(summary, accession, amplicon_length, sequence, taxid, phylum, class, order, family, genus, species)
+  summary <- dplyr::select(summary, accession, amplicon_length, sequence, taxid, superkingdom, phylum, class, order, family, genus, species)
 
   #remove hyphens from sequence
   summary <-  dplyr::mutate(summary, sequence = gsub("-", "", sequence))
@@ -33,7 +33,7 @@ derep_and_clean_db <- function(output_directory_path, summary_path, metabarcode_
 
 
   # merge accessions and ranks for identical sequence
-  phy_sum <- dplyr::summarize(dplyr::group_by(summary, sequence), accession = paste0(accession, collapse = ", "), amplicon_length = paste0(unique(amplicon_length), collapse = ", "), taxid = paste0(unique(taxid), collapse = ", "), phylum = paste0(unique(phylum), collapse = ", "), class = paste0(unique(class), collapse = ", "), order = paste0(unique(order), collapse = ", "), family = paste0(unique(family), collapse = ", "), genus = paste0(unique(genus), collapse = ", "),   species = paste0(unique(species), collapse = ", "))
+  phy_sum <- dplyr::summarize(dplyr::group_by(summary, sequence), accession = paste0(accession, collapse = ", "), amplicon_length = paste0(unique(amplicon_length), collapse = ", "), taxid = paste0(unique(taxid), collapse = ", "), superkingdom = paste0(unique(superkingdom), collapse = ", "), phylum = paste0(unique(phylum), collapse = ", "), class = paste0(unique(class), collapse = ", "), order = paste0(unique(order), collapse = ", "), family = paste0(unique(family), collapse = ", "), genus = paste0(unique(genus), collapse = ", "),   species = paste0(unique(species), collapse = ", "))
 
 
   #count number of accessions make new column
@@ -41,6 +41,7 @@ derep_and_clean_db <- function(output_directory_path, summary_path, metabarcode_
 
   # remove , NA from ranks - they are most likely due to env seq or issues with sequence submission
 
+    phy_sum <-  dplyr::mutate(phy_sum, superkingdom = gsub(", NA", "", superkingdom))
     phy_sum <-  dplyr::mutate(phy_sum, phylum = gsub(", NA", "", phylum))
     phy_sum <- dplyr::mutate(phy_sum, class = gsub(", NA", "", class))
     phy_sum <- dplyr::mutate(phy_sum, order = gsub(", NA", "", order))
@@ -52,7 +53,7 @@ derep_and_clean_db <- function(output_directory_path, summary_path, metabarcode_
 
   #Identify rows with multiple ids
   # subset dups:
-  sub_dups <- dplyr::filter(phy_sum, grepl(', ', phylum) | grepl(', ', class) | grepl(', ', order) | grepl(', ', family) | grepl(', ', genus) | grepl(', ', species))
+  sub_dups <- dplyr::filter(phy_sum, grepl(', ', superkingdom) | grepl(', ', phylum) | grepl(', ', class) | grepl(', ', order) | grepl(', ', family) | grepl(', ', genus) | grepl(', ', species))
 
 
   #remove single taxonomy sequence
@@ -62,6 +63,7 @@ derep_and_clean_db <- function(output_directory_path, summary_path, metabarcode_
   # change rank to NA if multiple names
   sub_dup_to_NA <- sub_dups
 
+    sub_dup_to_NA <- dplyr::mutate(sub_dup_to_NA, superkingdom = gsub(".*, .*", "NA", superkingdom))
     sub_dup_to_NA <- dplyr::mutate(sub_dup_to_NA, phylum = gsub(".*, .*", "NA", phylum))
     sub_dup_to_NA <- dplyr::mutate(sub_dup_to_NA, class = gsub(".*, .*", "NA", class))
     sub_dup_to_NA <- dplyr::mutate(sub_dup_to_NA, order = gsub(".*, .*", "NA", order))
@@ -117,8 +119,8 @@ representative_fasta_and_taxonomy <- function(paths_to_summary_tables, metabarco
 
 
   # Taxonomy file format (tidyr and dplyr)
-  taxa_table <-  dplyr::select(concat,rep_accession_number, phylum, class, order, family, genus, species)
-  taxa_table <-tidyr::unite(taxa_table,taxonomic_path, phylum:species, sep = ";", remove = TRUE, na.rm = FALSE)
+  taxa_table <-  dplyr::select(concat,rep_accession_number, superkingdom, phylum, class, order, family, genus, species)
+  taxa_table <-tidyr::unite(taxa_table,taxonomic_path, superkingdom:species, sep = ";", remove = TRUE, na.rm = FALSE)
   taxa_table <-dplyr::slice(taxa_table,-1)
 
   # Write the thing
@@ -126,7 +128,7 @@ representative_fasta_and_taxonomy <- function(paths_to_summary_tables, metabarco
   write.table(taxa_table, file = taxa_table_path, row.names = FALSE, col.names=FALSE, sep = "\t")
 
   # Count distinct taxonomic ranks - includes NA
-  tax_rank_sum <- dplyr::summarise_at(concat,c('phylum','class','order','family','genus','species'),dplyr::n_distinct)
+  tax_rank_sum <- dplyr::summarise_at(concat,c('superkingdom', 'phylum','class','order','family','genus','species'),dplyr::n_distinct)
 
   # Write output to blast_seeds_output
   tax_rank_sum_table_path <- paste0(output_directory_path, "/", metabarcode_name, "_derep_and_clean_unique_taxonomic_rank_counts.txt")

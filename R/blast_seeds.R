@@ -69,7 +69,7 @@ blast_seeds <- function(seeds_output_path, blast_db_path, accession_taxa_sql_pat
   write.table(taxa_table, file = taxa_table_path, row.names = FALSE, col.names=FALSE, sep = "\t")
 
   # Count distinct taxonomic ranks - includes NA
-  tax_rank_sum <- dplyr::summarise_at(output_table,c('phylum','class','order','family','genus','species'),dplyr::n_distinct)
+  tax_rank_sum <- dplyr::summarise_at(output_table,c('superkingdom','phylum','class','order','family','genus','species'),dplyr::n_distinct)
 
   # Write output to blast_seeds_output
   tax_rank_sum_table_path <- paste0(output_dir, "/", metabarcode_name, "_unique_taxonomic_rank_counts.txt")
