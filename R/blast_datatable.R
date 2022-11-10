@@ -288,16 +288,15 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     column_names <-  c("accession",
                    "BLAST_db_taxids")
 
-    accession_output_table <- expand_multi_taxids_output %>%
-                           tibble::as_tibble() %>%
-    tidyr::separate(col = value, into = column_names,
-                  sep = " ")
+    accession_output_table <- tibble::as_tibble(expand_multi_taxids_output)
+    accession_output_table <-  tidyr::separate(accession_output_table, col = value, into = column_names,
+                                 sep = " ")
 
     # add row_id for sorting later
     accession_output_table <- dplyr::mutate(accession_output_table, row_id= dplyr::row_number())
 
     # left join accessions that had mutli_taxids  with the blastcmd output - there wil be NA's so sort by row number to keep related blastdbcm output together - accessions that are identical
-    accession_df <- dplyr::full_join(accession_df, accession_output_table, keep = TRUE)
+    accession_df <- dplyr::full_join(accession_df, accession_output_table,  by = "accession", keep = TRUE)
     accession_df <- dplyr::arrange(accession_df, row_id)
 
     # fill NA's in columns with the initial accession value
