@@ -294,7 +294,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
                   sep = " ")
 
     # add row_id for sorting later
-    accession_output_table <- dplyr::mutate(accession_output_table, row_id=row_number())
+    accession_output_table <- dplyr::mutate(accession_output_table, row_id= dplyr::row_number())
 
     # left join accessions that had mutli_taxids  with the blastcmd output - there wil be NA's so sort by row number to keep related blastdbcm output together - accessions that are identical
     accession_df <- dplyr::full_join(accession_df, accession_output_table, keep = TRUE)
