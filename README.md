@@ -98,10 +98,9 @@ The following example shows a simple rCRUX pipeline from start to finish. Note t
 
 **Note:** Blast databases and the taxonomic assignment databases (accessionTaxa.sql) can be stored on external hard drive. It increases run time, but is a good option if computer storage capacity is limited.
 
-There are two options to generate seeds for the database generating blast step [rCRUX::blast_seeds_local()] [rCRUX::blast_seeds_remote()]. The local option is slower, however it is not subject to the memory limitations of using the NCBI primer_blast API. The local option is recommended if the user is building a large database, wants to include any taxid in the search, and has many degenerate sites in their primer set.
+There are two options to generate seeds for the database generating blast step blast_seeds_local() or blast_seeds_remote(). The local option is slower, however it is not subject to the memory limitations of using the NCBI primer_blast API. The local option is recommended if the user is building a large database, wants to include any taxid in the search, and has many degenerate sites in their primer set.
 
-### get_seeds_local()
-
+## get_seeds_local()
 
 This example uses default parameters, with the exception of evalue, to minimize run time.
 
@@ -151,7 +150,7 @@ get_seeds_local(forward_primer_seq,
 ```
 
 
-### get_seeds_remote()
+## get_seeds_remote()
 
 This example uses default parameters to minimize run time.
 
@@ -191,7 +190,7 @@ Sequence availability in NCBI for a given taxid is a limiting factor.
 
 
 
-### blast_seeds()
+## blast_seeds()
 
 
 Iterative searches are based on randomly sampling unique taxonomic groups for a given rank from the get_seeds_local or get_seeds_remote output table to create a set of blast seeds. For example, the default is to randomly sample one read from each genus.  The user can select any taxonomic rank present in the get_seeds_local output table. The number of seeds selected may exceed the users available RAM, and for that reason the user can choose the maximum number of reads to blast at one time (max_to_blast, default = 1000). blast_seeds will subsample each set of seeds based on max_to_blast and process all seeds before starting a new search for seeds to blast.
@@ -242,10 +241,10 @@ Example output can be found [here](/examples/12S_V5F1_generated_9-21-22).
 
 **Note:** There will be variability between runs due to primer blast return parameters and random sampling of the blast seeds table that occurs during blast_seeds. However, variability can be decreased by changing parameters.
 
-### derep_and_clean_db()
+## derep_and_clean_db()
 
 
-This function takes the output of blast_seeds and dereplicates identical sequences to generate a clean reference database.
+This function takes the output of blast_seeds and de-replicates identical sequences and collapses ambiguous taxonomy to generate a clean reference database.
 
 Accessions with the same sequence are collapsed into a representative sequence. If those accessions have different taxids (taxonomic paths), we determine the lowest common taxonomic agreement across the multiple accessions with an identical sequence. For example, for the MiFish 12S locus, nearly all rockfishes in the genus *Sebastes* have identical sequences. Instead of including ~110 identical reference sequences, one for each individual species, we report a single representative sequence with a lowest common taxonomic agreement of the genus *Sebastes*. This prevents classification bias for taxa with more sequences and also provides accurate taxonomic resolution within the reference database.
 
