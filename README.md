@@ -127,7 +127,7 @@ get_seeds_local(forward_primer_seq,
 
 ```
 
-Two output .csv files are automatically created at this path based on the arguments passed to get_seeds_local.  One includes taxonomy the other does not.
+Two output .csv files are automatically created at this path based on the arguments passed to get_seeds_local.  One includes all unfiltered output the other is filtered based on user defined parameters and includes taxonomy.
 
 A unique taxonomic rank summary file is also generated (e.g. the number of unique phyla, class, etc in the blast hits). If a taxonomic rank category contains NA's, they will be counted as a single unique rank. Sequence availability in NCBI for a given taxid is a limiting factor.
 
@@ -178,13 +178,13 @@ get_seeds_remote(forward_primer_seq,
 
 ```
 
-**Note:** When using default parameters only 1047 hits are returned from NCBI's primer blast (as of 9-25-22). Returns hit sizes and contents are variable depending on parameters and database updates
+**Note:** When using default parameters only 1047 hits are returned from NCBI's primer blast (as of 9-25-22). Returns hit sizes and contents are variable depending on parameters, random blast sampling, and database updates.
 
-Two output .csv files are automatically created at this path based on the arguments passed to get_seeds_remote.  One includes taxonomy the other does not.
+Two output .csv files are automatically created at this path based on the arguments passed to get_seeds_remote.  One includes all unfiltered output the other is filtered based on user defined parameters and includes taxonomy.
 
 A unique taxonomic rank summary file is also generated (e.g. the number of unique phyla, class, etc in the blast hits). If a taxonomic rank category contains NA's, they will be counted as a single unique rank, inflating the true count.
 
-Sequence availability in NCBI for a given taxid is a limiting factor.
+Sequence availability in NCBI for a given taxid is a limiting factor, as are degenerate bases and API memory allocation.
 
 [Modifying defaults can increase the number of returns by orders of magnitude.](#Search-options)
 
@@ -193,7 +193,7 @@ Sequence availability in NCBI for a given taxid is a limiting factor.
 ## blast_seeds()
 
 
-Iterative searches are based on randomly sampling unique taxonomic groups for a given rank from the get_seeds_local or get_seeds_remote output table to create a set of blast seeds. For example, the default is to randomly sample one read from each genus.  The user can select any taxonomic rank present in the get_seeds_local output table. The number of seeds selected may exceed the users available RAM, and for that reason the user can choose the maximum number of reads to blast at one time (max_to_blast, default = 1000). blast_seeds will subsample each set of seeds based on max_to_blast and process all seeds before starting a new search for seeds to blast.
+Iterative searches are based on a stratified random sampling unique taxonomic groups for a given rank from the get_seeds_local or get_seeds_remote output table. For example, the default is to randomly sample one read from each genus.  The user can select any taxonomic rank present in the get_seeds_local output table. The number of seeds selected may cause blastn to exceed the users available RAM, and for that reason the user can choose the maximum number of reads to blast at one time (max_to_blast, default = 1000). blast_seeds will subsample each set of seeds based on max_to_blast and process all seeds before starting a new search for seeds to blast.
 
 
 ```
@@ -217,9 +217,9 @@ blast_seeds(seeds_output_path,
 ```
 
 
-After each round of blast, the system state is saved. If the script is terminated after a round of blast, the user can pick up where they left off. The user can also change parameters at this point (e.g. change the max_to_blast or rank)
+After each round of blast, the system state is saved. If the script is terminated after a full round of blast, the user can pick up where they left off. The user can also change parameters at this point (e.g. change the max_to_blast or rank)
 
-The output includes a summary table of unique blast hits (summary.csv), a multi fasta file (metabarcode_name_.fasta), a taxonomy file (metabarcode_name_taxonomy.txt), a unique taxonomic rank summary file (metabarcode_name_taxonomic_rank_counts.txt), a list of all of the accessions not present in your blast database (blastdbcmd_failed.csv), and a list of accessions with 4 or more Ns in a row (default for that parameter is wildcards = "NNNN") (too_many_ns.csv). The default number of reads to blast per rank is 1 (default for that parameter is sample_size = 1). The script will error out if the user asks for more reads per rank than exist in the blast seeds table.     
+The output includes a summary table of all unique blast hits (summary.csv), a multi fasta file of all unique hits (metabarcode_name_.fasta), a taxonomy file of all unique hits (metabarcode_name_taxonomy.txt), a unique taxonomic rank summary file (metabarcode_name_taxonomic_rank_counts.txt), a list of all of the accessions not present in your blast database (e.g. relevant if you ran get_seeds_remote; blastdbcmd_failed.csv), and a list of accessions with 4 or more Ns in a row (default for that parameter is wildcards = "NNNN"; too_many_ns.csv). The default number of reads to blast per rank is 1 (default for that parameter is sample_size = 1). The script will error out if the user asks for more reads per rank than exist in the blast seeds table.     
 
 
 
@@ -237,22 +237,14 @@ blast_seeds(seeds_output_path,
 
 ```
 
-Example output can be found [here](/examples/12S_V5F1_generated_9-21-22).
+Example output can be found [here](/examples/12S_V5F1_generated_11-10-22).
 
-**Note:** There will be variability between runs due to primer blast return parameters and random sampling of the blast seeds table that occurs during blast_seeds. However, variability can be decreased by changing parameters.
+**Note:** There will be variability between runs due to primer blast return parameters and random sampling of the blast seeds table that occurs during blast_seeds. However, variability can be decreased by changing parameters (e.g. randomly sampling species rather than genus will decrease run to run variability).
 
 ## derep_and_clean_db()
 
 
 This function takes the output of blast_seeds and de-replicates identical sequences and collapses ambiguous taxonomy to generate a clean reference database.
-
-Accessions with the same sequence are collapsed into a representative sequence. If those accessions have different taxids (taxonomic paths), we determine the lowest common taxonomic agreement across the multiple accessions with an identical sequence. For example, for the MiFish 12S locus, nearly all rockfishes in the genus *Sebastes* have identical sequences. Instead of including ~110 identical reference sequences, one for each individual species, we report a single representative sequence with a lowest common taxonomic agreement of the genus *Sebastes*. This prevents classification bias for taxa with more sequences and also provides accurate taxonomic resolution within the reference database.
-
-We note that we exclude all sequences with taxids that are NA. Such sequences are not immediately useful for classification of metabarcoding sequences. However, we caution that such results can be indicative of off target amplification of a given primer set. For example, the MiFish 12S primer set amplifies uncultured marine bacteria among other taxa (taxid = NA) indicating off target amplification of non-fish taxa. These sequences are saved in the References_with_NA_for_taxonomic_ranks.csv file.
-
-The result of this function is a final clean reference database file set composed of a paired metabarcode_name_derep_and_clean.fasta and metabarcode_name_derep_and_clean_taxonomy.txt. A summary file of the number of unique taxonomic ranks is also generated: metabarcode_name_derep_and_clean_unique_taxonomic_rank_counts.txt. In addition, all representative sequences and associated accessions are saved in Sequences_with_lowest_common_taxonomic_path_agreement.csv, Sequences_with_mostly_NA_taxonomic_paths.csv,
-Sequences_with_multiple_taxonomic_paths.csv, and
-Sequences_with_single_taxonomic_path.csv files. These files allow for the traceback of representative sequences to multiple accessions.
 
 ```
 summary_path <- "/my/rCRUX_output_directory/12S_V5F1_default_params/blast_seeds_output/summary.csv"
@@ -263,12 +255,18 @@ derep_and_clean_db(output_directory_path, summary_path, metabarcode_name)
 
 ```
 
+**Note:** Accessions with the same sequence are collapsed into a representative sequence. If those accessions have different taxids (taxonomic paths), we determine the lowest taxonomic agreement across the multiple accessions with an identical sequence. For example, for the MiFish 12S locus, nearly all rockfishes in the genus *Sebastes* have identical sequences. Instead of including ~110 identical reference sequences, one for each individual species, we report a single representative sequence with a lowest common taxonomic agreement of the genus *Sebastes*. This prevents classification bias for taxa with more sequences and also provides accurate taxonomic resolution within the reference database.
+
+**Note:** We exclude all sequences with taxids that are NA. Such sequences are not immediately useful for classification of metabarcoding sequences. However, we caution that such results can be indicative of off target amplification of a given primer set. For example, the MiFish 12S primer set amplifies uncultured marine bacteria among other taxa (taxid = NA) indicating off target amplification of non-fish taxa. These sequences are saved in the References_with_NA_for_taxonomic_ranks.csv file.
+
+The result of this function is a final clean reference database file set composed of a paired metabarcode_name_derep_and_clean.fasta and metabarcode_name_derep_and_clean_taxonomy.txt. A summary file of the number of unique taxonomic ranks is also generated: metabarcode_name_derep_and_clean_unique_taxonomic_rank_counts.txt. In addition, all representative sequences and associated accessions are saved in Sequences_with_lowest_common_taxonomic_path_agreement.csv, Sequences_with_mostly_NA_taxonomic_paths.csv,
+Sequences_with_multiple_taxonomic_paths.csv, and
+Sequences_with_single_taxonomic_path.csv files. These files allow for the traceback of representative sequences to multiple accessions.
 
 
-# Detailed Explanation of The Major Functions
+Example output can be found [here](/examples/12S_V5F1_generated_11-10-22).
 
-## Internal data pipeline
-
+# Detailed Explanation For The Major Functions
 ### [get_seeds_local](https://lunagal.github.io/get_seeds_local)
 
 <img src="get_seeds_local-flowchart.png" width = 10000 />
@@ -357,7 +355,7 @@ get_seeds_remote(forward_primer_seq,
 This results in 111500 blast seed returns, note the default generated 1047. This of course assumes the user is not throttled by memory limitations.
 
 
-Example output can be found [here](/examples/12S_V5F1_generated_9-21-22).
+Example output can be found [here](/examples/12S_V5F1_generated_11-10-22).
 
 #### Table of available options
 
