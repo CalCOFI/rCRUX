@@ -263,6 +263,16 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     output_table_path <- paste(save_dir, "output_table.txt", sep = "/")
     output_table <- read.csv(output_table_path, colClasses = "character")
 
+    #remove hyphens and reads with multiple Ns in output and recount amplicon length.
+    output_table <- dplyr::mutate(output_table, sequence = gsub("-", "", sequence))
+
+    too_many_ns <- dplyr::filter(output_table, grepl(wildcards, sequence))
+
+    output_table <- dplyr::setdiff(output_table, too_many_ns)
+
+    output_table <- dplyr::mutate(output_table, amplicon_length = nchar(sequence))
+
+
     ####fix blastn taxids here
 
     #Identify rows with multiple ids and filter into new dataframe
