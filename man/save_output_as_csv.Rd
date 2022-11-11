@@ -4,7 +4,7 @@
 \alias{save_output_as_csv}
 \title{Function to save data in .csv files}
 \usage{
-save_output_as_csv(file_name, description, file_out, Metabarcode)
+save_output_as_csv(file_name, description, file_out, metabarcode_name)
 }
 \arguments{
 \item{file_name}{the object to write}
@@ -14,7 +14,7 @@ directly before the extension}
 
 \item{file_out}{a parent directory; it should end in a /}
 
-\item{Metabarcode}{a label that appears before the file name}
+\item{metabarcode_name}{a label that appears before the file name}
 }
 \value{
 The value of write.table

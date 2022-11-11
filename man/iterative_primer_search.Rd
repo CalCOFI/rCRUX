@@ -4,18 +4,24 @@
 \alias{iterative_primer_search}
 \title{Call primer_search with several parameters and aggregate the results}
 \usage{
-iterative_primer_search(forward, reverse, organisms, db = "nt", ...)
+iterative_primer_search(
+  forwar_primer_seq,
+  reverse_primer_seq,
+  organisms,
+  db = "nt",
+  ...
+)
 }
 \arguments{
-\item{forward}{the forward primer}
-
-\item{reverse}{the reverse primer}
+\item{reverse_primer_seq}{the reverse primer}
 
 \item{organisms}{a character vector containing an id or name parseable by
 NCBI as an organism. If it is a vector with multiple entries, each
 entry will be queried separately.}
 
 \item{db}{which NCBI database to search.}
+
+\item{forward_primer_seq}{the forward primer}
 }
 \value{
 a data.table summarizing the results of several primer_searches

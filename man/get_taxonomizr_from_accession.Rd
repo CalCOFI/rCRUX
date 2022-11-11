@@ -4,12 +4,12 @@
 \alias{get_taxonomizr_from_accession}
 \title{Attach taxonomy data to an input table}
 \usage{
-get_taxonomizr_from_accession(input, accessionTaxa_path, organize = TRUE)
+get_taxonomizr_from_accession(input, accession_taxa_sql_path, organize = TRUE)
 }
 \arguments{
 \item{input}{a data.frame}
 
-\item{accessionTaxa_path}{the path to an accessionTaxa sql}
+\item{accession_taxa_sql_path}{the path to an accessionTaxa sql}
 }
 \value{
 the data.frame with taxonomy data

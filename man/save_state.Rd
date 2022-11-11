@@ -10,7 +10,8 @@ save_state(
   unsampled_indices,
   too_many_ns,
   blastdbcmd_failed,
-  num_rounds
+  num_rounds,
+  blast_seeds_m
 )
 }
 \arguments{
@@ -27,6 +28,8 @@ in a fasta with too many Ns}
 database}
 
 \item{num_rounds}{the number of rounds so far}
+
+\item{blast_seeds_m}{blast seeds table but with blast status update}
 }
 \description{
 Helper function to save the state of a running blast search

@@ -7,24 +7,26 @@
 blast_datatable(
   blast_seeds,
   save_dir,
-  db,
-  accession_taxa_path,
+  blast_db_path,
+  accession_taxa_sql_path,
   ncbi_bin = NULL,
   force_db = FALSE,
-  sample_size = 1000,
-  wildcards = "NNNN"
+  sample_size = 1,
+  wildcards = "NNNN",
+  rank = "genus",
+  max_to_blast = 1000
 )
 }
 \arguments{
 \item{blast_seeds}{a data.frame formatted like the output from
-get_blast_seeds}
+get_seeds_remote or get_seeds_local}
 
 \item{save_dir}{a directory in which to create files representing the
 current state}
 
-\item{db}{a directory with a blast-formatted database}
+\item{blast_db_path}{a directory with a blast-formatted database}
 
-\item{accession_taxa_path}{a path to an sql created by
+\item{accession_taxa_sql_path}{a path to an sql created by
 \code{\link[taxonomizr:prepareDatabase]{taxonomizr::prepareDatabase()}}}
 
 \item{ncbi_bin}{the directory that the blast+ suite is in. If NULL, the
@@ -33,18 +35,23 @@ program will use your PATH environmental variable to locate them}
 \item{force_db}{if true, try to use blast databases that don't appear to
 be blast databases}
 
-\item{sample_size}{the number of entries to accumulate into a fasta before
-calling blastn}
+\item{sample_size}{the number of entries to sample per rank
+before calling blastn - errors if not enough entries per rank}
 
 \item{wildcards}{a character vector representing the number of wildcards to
 discard}
+
+\item{rank}{the column representing the taxonomic rank to sample}
+
+\item{max_to_blast}{is the maximum number of entries to accumulate into a
+fasta before calling blastn}
 }
 \value{
 A data.frame representing the output of blastn
 }
 \description{
 Given a datatable with the column names of the datatable returned by
-\code{\link[RCRUX.dev:get_blast_seeds]{RCRUX.dev::get_blast_seeds()}}, use blastdbcmd to convert entries into
+\code{\link[rCRUX::get_seeds_remote(), or rCRUX:get_seeds_local]{rCRUX::get_seeds_remote(), or rCRUX::get_seeds_local()}}, use blastdbcmd to convert entries into
 fasta files, then uses blastn to query ncbi databases for those
 sequences. It compiles the results of blastn into a data.frame that it
 returns. Additionally, it saves its state as text files in a specified
@@ -52,7 +59,7 @@ directory with each iteration.
 }
 \details{
 blast_datatable uses blastdbcmd and blastn to find sequences. It samples rows
-from \code{blast_seeds} and uses blastdbcmd to find a seqence that corresponds to
+from \code{blast_seeds} and uses blastdbcmd to find a sequence that corresponds to
 the accession number and forward and reverse stops recorded in the table.
 blastdbcmd outputs sequences as .fasta-formatted strings, which
 blast_datatable concatenates into a multi-line fasta, then passes to blastn
