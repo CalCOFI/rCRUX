@@ -32,9 +32,9 @@ library(rCRUX)
 
 ## Dependencies
 
-#### NOTE: These only need to be downloaded once or as NCBI updates databases. </br>
+**NOTE:** These only need to be downloaded once or as NCBI updates databases. rCRUX can access and successfully build metabarcode references using databases stored on external drives. </br>
 
-### **BLAST+**
+### BLAST+
 
 NCBI's [BLAST+](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/) suite must be locally installed and accessible in the user's path. NCBI provides installation instructions for [Windows](https://www.ncbi.nlm.nih.gov/books/NBK52637/), [Linux](https://www.ncbi.nlm.nih.gov/books/NBK52640/), and [Mac OS](https://www.ncbi.nlm.nih.gov/books/NBK569861/). Version 2.10.1+ is verified compatible with rCRUX.
 
@@ -72,13 +72,13 @@ Possible error include but are not limited to:
 2. You downloaded and built a blast database from ncbi fasta files but did not specify -parse_seqids
 
 
-The nt database is **~242 GB** (as of 8/31/22) and can take several hours (overnight) to build. Loss of internet connection can lead to partially downloaded files and blastn errors (see above). rCRUX can access and successfully build metabarcode references using databases stored on external drives.
+The nt database is **~242 GB** (as of 8/31/22) and can take several hours (overnight) to build. Loss of internet connection can lead to partially downloaded files and blastn errors (see above).
 
 ### Taxonomizr
 
 rCRUX uses the [taxonomizr](https://cran.r-project.org/web/packages/taxonomizr/vignettes/usage.html) package for taxonomic assignment based on NCBI [Taxonomy id's \(taxids\)](https://www.ncbi.nlm.nih.gov/). Many rCRUX functions require a path to a local taxonomizr readable sqlite database. This database can be built using taxonomizr's [prepareDatabase](https://www.rdocumentation.org/packages/taxonomizr/versions/0.8.0/topics/prepareDatabase) function.
 
-This database is **~72 GB** (as of 8/31/22) and can take several hours (overnight) to build. Loss of internet connection can lead to partially downloaded files and taxonomizr run errors. rCRUX can access and successfully build metabarcode references using databases stored on external drives.
+This database is **~72 GB** (as of 8/31/22) and can take several hours (overnight) to build. Loss of internet connection can lead to partially downloaded files and taxonomizr run errors.
 
 The following code can be used to build this database:
 
@@ -90,15 +90,15 @@ prepareDatabase(accession_taxa_sql_path)
 
 ```
 
-**Note:** For poor bandwidth connections, please see the taxononmizr readme for manual installation of the accessionTaxa.sql database. However, if built manually, make sure to delete any files other than the accessionTaxa.sql database (e.g. keeping nucl_gb.accession2taxid.gz leads to a warning message).
+**Note:** For poor bandwidth connections, please see the [taxononmizr readme for manual installation](https://cran.r-project.org/web/packages/taxonomizr/readme/README.html) of the accessionTaxa.sql database. If built manually, make sure to delete any files other than the accessionTaxa.sql database (e.g. keeping nucl_gb.accession2taxid.gz leads to a warning message).
 
 # Example pipeline
 
 The following example shows a simple rCRUX pipeline from start to finish. Note that this example will require internet access and considerable database storage (~**314 GB**, see section above), run time (mainly for blastn), and system resources to execute.
 
-**Note:** Local blast and taxonomic assignment databases can be stored on an external hard drive. It increases run time, but is a good option if computer storage capacity is limited.
+**Note:** Blast databases and the taxonomic assignment databases (accessionTaxa.sql) can be stored on external hard drive. It increases run time, but is a good option if computer storage capacity is limited.
 
-There are two options to generate seeds for the database generating blast step [rCRUX::blast_seeds()]: get_seeds_local and get_seeds_remote. The local option is slower, however it is not subject to the memory limitations of using the NCBI primer_blast API. The local option is recommended if the user is building a large database, wants to include any taxid in the search, and has many degenerate sites in their primer set.
+There are two options to generate seeds for the database generating blast step [rCRUX::blast_seeds_local()] [rCRUX::blast_seeds_remote()]. The local option is slower, however it is not subject to the memory limitations of using the NCBI primer_blast API. The local option is recommended if the user is building a large database, wants to include any taxid in the search, and has many degenerate sites in their primer set.
 
 ### get_seeds_local()
 
