@@ -1,8 +1,10 @@
 
 #' Call primer_search with several parameters and aggregate the results
 #'
-#' This function acts like primer_search and parse_primer hits all in one. Its
-#' parameters are very similar to primer_search, but it takes vectors for
+#' This function acts like [primerTree::primer_search()] and
+#' [primerTree::parse_primer()] hits all in one. It calls
+#' [rCRUX::modifiedPrimerTree_Functions()] to perform tasks. Its parameters
+#' are very similar to [primerTree::primer_search()], but it takes vectors for
 #' organism and for database and performs a primer search for each combination.
 #' It downgrades errors from primer_search and parse_primer_hits into warnings.
 #' This is useful when searching for a large number of different combinations,
@@ -13,7 +15,7 @@
 #' @param organisms a character vector containing an id or name parseable by
 #'        NCBI as an organism. If it is a vector with multiple entries, each
 #'        entry will be queried separately.
-#' @param db which NCBI database to search.
+#' @param db which NCBI database to search. The default is db - 'nt' (e.g. nr).
 #' @return a data.table summarizing the results of several primer_searches
 #' @export
 iterative_primer_search <- function(forwar_primer_seq, reverse_primer_seq, organisms,

@@ -1,1 +1,0 @@
-This folder holds old code that we may need to reference for some reason. The original markdown was sent to me by Emily and contains none of my work. Code_blocks is a copy of the contents of the code blocks in that markdown. scripts contains files that I made for an earlier version of rcrux.

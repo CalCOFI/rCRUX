@@ -1,5 +1,3 @@
-Restarting R session...
-
 > devtools::install_github("LunaGal/rCRUX")
 Downloading GitHub repo LunaGal/rCRUX@HEAD
 ✔  checking for file ‘/private/var/folders/9z/v7b94pjx0_52k1_28gv_mjdc0000gn/T/RtmpvEkpnv/remotes4a071eb3f6fc/LunaGal-rCRUX-a02a097/DESCRIPTION’ ...
@@ -83,4 +81,4 @@ Calling blastn. This may take a long time.
 NULL
 > derep_and_clean_db(output_directory_path, summary_path, metabarcode_name)
 
-> 
+>
