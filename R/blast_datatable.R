@@ -1,15 +1,19 @@
-#' Take a datatable and return the results of BLASTing it
+#' Take a seed datatable and return the results of BLASTing it
 #'
 #' @description
 #' Given a datatable with the column names of the datatable returned by
-#' [rCRUX::get_seeds_remote(), or rCRUX::get_seeds_local()], use blastdbcmd to convert entries into
-#' fasta files, then uses blastn to query ncbi databases for those
-#' sequences. It compiles the results of blastn into a data.frame that it
-#' returns. Additionally, it saves its state as text files in a specified
-#' directory with each iteration.
+#' [rCRUX::get_seeds_remote()], or [rCRUX::get_seeds_local()], uses a random
+#' stratified sample based on taxonomic rank to iteratively process the data
+#' The random sample entires are sent to run_blastdbcmd_blastn_and_aggregate_resuts
+#' which uses blastdbcmd to convert entries into fasta files, passes them to
+#' blastn to query ncbi databases with those sequences. It compiles the results
+#' of blastn into a data.frame that it returns. Additionally, it saves its state
+#' as text files in a specified directory with each iteration.
+#'
 #'
 #' @details
-#' blast_datatable uses blastdbcmd and blastn to find sequences. It samples rows
+#' blast_datatable uses run_blastdbcmd_blastn_and_aggregate_resuts to run
+#' blastdbcmd and blastn to find sequences. It samples rows
 #' from `blast_seeds` and uses blastdbcmd to find a sequence that corresponds to
 #' the accession number and forward and reverse stops recorded in the table.
 #' blastdbcmd outputs sequences as .fasta-formatted strings, which
@@ -22,7 +26,7 @@
 #' local files as it goes. This allows the function to resume a partially
 #' completed blast, mitigating the consequences of encountering an
 #' error or experiencing other interruptions. The local files are written to
-#' `save_dir` by [RCRUX.dev::save_state()]. Manually changing these files is not
+#' `save_dir` by [rCRUX::save_state()]. Manually changing these files is not
 #' suggested as it can change the behavior of blast_datatable. To start from an
 #' incomplete blast_datatable, specify the same save_dir as the incomplete
 #' blast. blast_datable will automatically detect save files and resume from
@@ -51,14 +55,16 @@
 #' @param force_db if true, try to use blast databases that don't appear to
 #'        be blast databases
 #' @param sample_size the number of entries to sample per rank
-#'        before calling blastn - errors if not enough entries per rank
+#'        before calling blastn - errors if not enough entries per rank (default = 1)
 #' @param max_to_blast is the maximum number of entries to accumulate into a
-#'        fasta before calling blastn
+#'        fasta before calling blastn (default = 1000)
 #' @param wildcards a character vector representing the number of wildcards to
-#'        discard
-#' @param rank the column representing the taxonomic rank to sample
+#'        discard (default = "NNNN")
+#' @param rank the column representing the taxonomic rank to randomly sample (default = genus)
 #' @return A data.frame representing the output of blastn
 #' @export
+
+
 blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa_sql_path,
                             ncbi_bin = NULL, force_db = FALSE,
                             sample_size = 1, wildcards = "NNNN", rank = 'genus', max_to_blast = 1000) {

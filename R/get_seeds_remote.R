@@ -63,6 +63,8 @@
 #'        NCBI
 #' @return a data.frame containing the same information as the .csv it generates
 #' @export
+
+
 get_seeds_remote <- function(forward_primer_seq, reverse_primer_seq,
                             output_directory_path, metabarcode_name,
                             accession_taxa_sql_path,

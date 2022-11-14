@@ -1,0 +1,278 @@
+> library(rCRUX)
+>
+>
+> blast_seeds_parent <- "/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_modified_params/"
+> metabarcode <- "12S_V5F1"
+> accession_taxa_path <- "/Users/limeybean/Dropbox/CRUX_2.0/accession2taxid/accessionTaxa.sql"
+>
+> get_blast_seeds("TAGAACAGGCTCCTCTAG", "TTAGATACCCCACTATGC",
++                 blast_seeds_parent, metabarcode, accession_taxa_path, HITSIZE ='1000000', evalue='100000',
++                 word_size='6', MAX_TARGET_PER_TEMPLATE = '5',
++                 NUM_TARGETS_WITH_PRIMERS ='500000', minimum_length = 60,
++                 MAX_TARGET_SIZE = 200,
++                 organism = c("1476529", "7776"), return_table = FALSE)
+BLASTing 1 primer combinations
+Submitting Primer-BLAST query
+BLAST alignment processing, refreshing in 20 seconds...
+BLAST alignment completed in 30 seconds
+BLASTing 1 primer combinations
+Submitting Primer-BLAST query
+BLAST alignment processing, refreshing in 20 seconds...
+BLAST alignment processing, refreshing in 20 seconds...
+BLAST alignment processing, refreshing in 20 seconds...
+BLAST alignment processing, refreshing in 20 seconds...
+BLAST alignment processing, refreshing in 20 seconds...
+BLAST alignment processing, refreshing in 20 seconds...
+BLAST alignment processing, refreshing in 20 seconds...
+BLAST alignment processing, refreshing in 20 seconds...
+BLAST alignment completed in 228 seconds
+NULL
+>
+>
+>
+>
+>
+>
+> seeds_path <- '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_modified_params/12S_V5F1/12S_V5F1_primerTree_output_with_taxonomy.csv'
+> db_dir <- "/Users/limeybean/Dropbox/CRUX_2.0/ncbi_nt/nt"
+> accession_taxa_path <- "/Users/limeybean/Dropbox/CRUX_2.0/accession2taxid/accessionTaxa.sql"
+> working_dir <- '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_modified_params/12S_V5F1/'
+> metabarcode <- "12S_V5F1"
+>
+> rcrux_blast(seeds_path, db_dir, accession_taxa_path, working_dir, metabarcode)
+
+BLAST round 1
+111489 indices left to process.
+
+genus has 5566 unique occurrences in the blast seeds data table.
+These may be subset...
+Running blastdbcmd on 1000 samples.
+Calling blastn. This may take a long time.
+9336050 blast hits returned.
+48046 unique blast hits after this round.
+Running blastdbcmd on 1000 samples.
+Calling blastn. This may take a long time.
+10994427 blast hits returned.
+57532 unique blast hits after this round.
+Running blastdbcmd on 1000 samples.
+Calling blastn. This may take a long time.
+10658268 blast hits returned.
+129487 unique blast hits after this round.
+Running blastdbcmd on 1000 samples.
+Calling blastn. This may take a long time.
+6238574 blast hits returned.
+130189 unique blast hits after this round.
+Running blastdbcmd on 1000 samples.
+Calling blastn. This may take a long time.
+8251489 blast hits returned.
+145613 unique blast hits after this round.
+Running blastdbcmd on 566 samples.
+Calling blastn. This may take a long time.
+5674239 blast hits returned.
+146811 unique blast hits after this round.
+
+BLAST round 7
+1137 indices left to process.
+
+genus has 12 unique occurrences in the blast seeds data table.
+These may be subset...
+Running blastdbcmd on 12 samples.
+Calling blastn. This may take a long time.
+17341 blast hits returned.
+146894 unique blast hits after this round.
+
+BLAST round 8
+1113 indices left to process.
+
+genus has 7 unique occurrences in the blast seeds data table.
+These may be subset...
+Running blastdbcmd on 7 samples.
+Calling blastn. This may take a long time.
+47 blast hits returned.
+146919 unique blast hits after this round.
+
+BLAST round 9
+1097 indices left to process.
+
+genus has 6 unique occurrences in the blast seeds data table.
+These may be subset...
+Running blastdbcmd on 6 samples.
+Calling blastn. This may take a long time.
+124 blast hits returned.
+146945 unique blast hits after this round.
+
+BLAST round 10
+1076 indices left to process.
+
+genus has 6 unique occurrences in the blast seeds data table.
+These may be subset...
+Running blastdbcmd on 6 samples.
+Calling blastn. This may take a long time.
+47 blast hits returned.
+146954 unique blast hits after this round.
+
+BLAST round 11
+1068 indices left to process.
+
+genus has 4 unique occurrences in the blast seeds data table.
+These may be subset...
+Running blastdbcmd on 4 samples.
+Calling blastn. This may take a long time.
+28 blast hits returned.
+146962 unique blast hits after this round.
+
+BLAST round 12
+1062 indices left to process.
+
+genus has 2 unique occurrences in the blast seeds data table.
+These may be subset...
+Running blastdbcmd on 2 samples.
+Calling blastn. This may take a long time.
+2 blast hits returned.
+146964 unique blast hits after this round.
+
+BLAST round 13
+1060 indices left to process.
+
+genus has 4 unique occurrences in the blast seeds data table.
+These may be subset...
+Running blastdbcmd on 4 samples.
+Calling blastn. This may take a long time.
+26 blast hits returned.
+146983 unique blast hits after this round.
+
+BLAST round 14
+1043 indices left to process.
+
+genus has 3 unique occurrences in the blast seeds data table.
+These may be subset...
+Running blastdbcmd on 3 samples.
+Calling blastn. This may take a long time.
+42 blast hits returned.
+146985 unique blast hits after this round.
+
+BLAST round 15
+1040 indices left to process.
+
+genus has 4 unique occurrences in the blast seeds data table.
+These may be subset...
+Running blastdbcmd on 4 samples.
+Calling blastn. This may take a long time.
+19 blast hits returned.
+146995 unique blast hits after this round.
+
+BLAST round 16
+1030 indices left to process.
+
+genus has 2 unique occurrences in the blast seeds data table.
+These may be subset...
+Running blastdbcmd on 2 samples.
+Calling blastn. This may take a long time.
+5 blast hits returned.
+147000 unique blast hits after this round.
+
+BLAST round 17
+1026 indices left to process.
+
+genus has 5 unique occurrences in the blast seeds data table.
+These may be subset...
+Running blastdbcmd on 5 samples.
+Calling blastn. This may take a long time.
+21 blast hits returned.
+147012 unique blast hits after this round.
+
+BLAST round 18
+1017 indices left to process.
+
+genus has 5 unique occurrences in the blast seeds data table.
+These may be subset...
+Running blastdbcmd on 5 samples.
+Calling blastn. This may take a long time.
+1072 blast hits returned.
+147268 unique blast hits after this round.
+
+BLAST round 19
+1010 indices left to process.
+
+genus has 3 unique occurrences in the blast seeds data table.
+These may be subset...
+Running blastdbcmd on 3 samples.
+Calling blastn. This may take a long time.
+7 blast hits returned.
+147270 unique blast hits after this round.
+
+BLAST round 20
+1006 indices left to process.
+
+genus has 2 unique occurrences in the blast seeds data table.
+These may be subset...
+Running blastdbcmd on 2 samples.
+Calling blastn. This may take a long time.
+8 blast hits returned.
+147276 unique blast hits after this round.
+
+BLAST round 21
+1003 indices left to process.
+
+genus has 2 unique occurrences in the blast seeds data table.
+These may be subset...
+Running blastdbcmd on 2 samples.
+Calling blastn. This may take a long time.
+17 blast hits returned.
+147280 unique blast hits after this round.
+
+BLAST round 22
+999 indices left to process.
+
+The number of unsampled indices is less than or equal to the maximum number to be blasted
+Running blastdbcmd on 999 samples.
+Calling blastn. This may take a long time.
+2352868 blast hits returned.
+147479 unique blast hits after this round.
+NULL
+Warning message:
+In dir.create(working_dir) :
+  '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_modified_params1/12S_V5F1' already exists
+>
+>
+>
+# This example shows an error generated if the user tries to blast more
+# seeds than their RAM can support
+>
+> seeds_path <- '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_modified_params/12S_V5F1/12S_V5F1_primerTree_output_with_taxonomy.csv'
+> db_dir <- "/Users/limeybean/Dropbox/CRUX_2.0/ncbi_nt/nt"
+> accession_taxa_path <- "/Users/limeybean/Dropbox/CRUX_2.0/accession2taxid/accessionTaxa.sql"
+> working_dir <- '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_modified_params/12S_V5F1/'
+> metabarcode <- "12S_V5F1"
+>
+>
+>
+> rcrux_blast(seeds_path, db_dir, accession_taxa_path, working_dir,
++             metabarcode, max_to_blast = 2000)
+Max to blast 2000
+BLAST round 1
+111489 indices left to process.
+Running blastdbcmd on 5568 samples.
+Calling blastn. This may take a long time.
+0 blast hits returned.
+Error in blast_datatable(blast_seeds, save_dir, db_dir, accession_taxa_path,  :
+  Blastn having trouble blasting the number of seeds selected.  Try using a taxonomic rank with fewer unique groups, and reduce the value for max_to_blast
+In addition: Warning messages:
+1: In dir.create(working_dir) :
+  '/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_modified_params/12S_V5F1' already exists
+>
+
+### This marker returns more hits when I randomly search genus, than the RAM on
+### my computer can store.  I choose to go up one taxonomic rank, to family, and
+### was able to complete the run.
+###
+### I increased the max_to_blast = 2000 from the default of 1000.  After the
+### first round of blast at the rank of family, there were few families left to
+### sample, and it took about 200 rounds of blast to get to 1000 accessions
+### left to blast.
+### This script saves the status from the most recently completed round of blast
+### so you can stop the script if it appears to be running slowly and modify the
+### parameters to speed up the database build.
+>
+
+>

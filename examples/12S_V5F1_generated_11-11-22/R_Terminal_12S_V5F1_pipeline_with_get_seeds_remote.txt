@@ -1,0 +1,86 @@
+Restarting R session...
+
+> devtools::install_github("LunaGal/rCRUX")
+Downloading GitHub repo LunaGal/rCRUX@HEAD
+✔  checking for file ‘/private/var/folders/9z/v7b94pjx0_52k1_28gv_mjdc0000gn/T/RtmpvEkpnv/remotes4a071eb3f6fc/LunaGal-rCRUX-a02a097/DESCRIPTION’ ...
+─  preparing ‘rCRUX’:
+✔  checking DESCRIPTION meta-information ...
+─  checking for LF line-endings in source and make files and shell scripts
+─  checking for empty or unneeded directories
+─  building ‘rCRUX_0.0.0.9000.tar.gz’
+
+Installing package into ‘/Users/limeybean/Library/R/x86_64/4.1/library’
+(as ‘lib’ is unspecified)
+* installing *source* package ‘rCRUX’ ...
+** using staged installation
+** R
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (rCRUX)
+> library(rCRUX)
+> output_directory_path <- "/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_remote_111122" #path to desired output directory
+>
+>
+> metabarcode_name <- "12S_V5F1" # desired name of metabarcode locus
+>
+> accession_taxa_sql_path <- "/Users/limeybean/Dropbox/CRUX_2.0/accession2taxid/accessionTaxa.sql"
+>
+> forward_primer_seq = "TAGAACAGGCTCCTCTAG"
+>
+> reverse_primer_seq =  "TTAGATACCCCACTATGC"
+>
+> blast_db_path <- "/Users/limeybean/Dropbox/CRUX_2.0/ncbi_nt/nt"
+>
+> seeds_output_path <- "/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_remote_111122/get_seeds_remote/12S_V5F1_filtered_get_seeds_remote_output_with_taxonomy.csv"
+>
+> summary_path <- "/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_remote_111122/blast_seeds_output/summary.csv"
+> get_seeds_remote(forward_primer_seq,
++                  reverse_primer_seq,
++                  output_directory_path,
++                  metabarcode_name,
++                  accession_taxa_sql_path,
++                  organism = c("1476529", "7776"),
++                  return_table = FALSE)
+BLASTing 1 primer combinations
+Submitting Primer-BLAST query
+BLAST alignment processing, refreshing in 20 seconds...
+BLAST alignment completed in 30 seconds
+BLASTing 1 primer combinations
+Submitting Primer-BLAST query
+BLAST alignment processing, refreshing in 20 seconds...
+BLAST alignment processing, refreshing in 20 seconds...
+BLAST alignment completed in 50 seconds
+NULL
+> blast_seeds(seeds_output_path,
++             blast_db_path,
++             accession_taxa_sql_path,
++             output_directory_path,
++             metabarcode_name)
+
+BLAST round 1
+1065 indices left to process.
+
+genus has 89 unique occurrences in the blast seeds data table.
+These may be subset...
+Running blastdbcmd on 89 samples.
+Calling blastn. This may take a long time.
+865324 blast hits returned.
+106123 unique blast hits after this round.
+
+BLAST round 2
+666 indices left to process.
+
+The number of unsampled indices is less than or equal to the maximum number to be blasted
+Running blastdbcmd on 666 samples.
+Calling blastn. This may take a long time.
+639 blast hits returned.
+106166 unique blast hits after this round.
+NULL
+> derep_and_clean_db(output_directory_path, summary_path, metabarcode_name)
+
+> 

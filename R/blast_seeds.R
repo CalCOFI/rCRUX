@@ -5,7 +5,7 @@
 #' formatted database. It creates a directory at `working_dir` if one does not
 #' already exist and generates `blast_seeds_output` and `.blast_seeds_save`
 #' inside that directory. It passes `<working_dir>/.blast_seeds_save` to
-#' [RCRUX.dev::blast_datatable()] as the save directory and generates files in
+#' [rCRUX::blast_datatable()] as the save directory and generates files in
 #' `rblast_seeds_output` recording the results of the blast.
 #'
 #' @details
@@ -29,9 +29,13 @@
 #' @param warnings value to set the "warn" option to during the function call.
 #'        On exit it returns to the previous value. Setting this argument to
 #'        NULL will not change the option.
-#' @param ... additional arguments passed to [RCRUX.dev::blast_datatable()]
+#' @param ... additional arguments passed to [rCRUX::blast_datatable()]
 #' @return NULL
 #' @export
+#'
+
+
+
 blast_seeds <- function(seeds_output_path, blast_db_path, accession_taxa_sql_path, working_dir,
                         metabarcode_name, expand_vectors = TRUE, warnings = 0, ...) {
   # So that run_blastdbcmd doesn't overwhelm the user with errors
