@@ -21,5 +21,5 @@ The value of write.table
 }
 \description{
 Calls write.table with file_name as the first argument
-and <file_out><Metabarcode><description>.csv as the second
+and \code{file_out_Metabarcode_description.csv} as the second
 }

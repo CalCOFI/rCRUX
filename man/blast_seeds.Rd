@@ -34,14 +34,14 @@ and not_in db into real tables and write them in the output directory}
 On exit it returns to the previous value. Setting this argument to
 NULL will not change the option.}
 
-\item{...}{additional arguments passed to \code{\link[RCRUX.dev:blast_datatable]{RCRUX.dev::blast_datatable()}}}
+\item{...}{additional arguments passed to \code{\link[=blast_datatable]{blast_datatable()}}}
 }
 \description{
 blast_seeds uses \code{\link[=blast_datatable]{blast_datatable()}} to search against a blast
 formatted database. It creates a directory at \code{working_dir} if one does not
 already exist and generates \code{blast_seeds_output} and \code{.blast_seeds_save}
 inside that directory. It passes \verb{<working_dir>/.blast_seeds_save} to
-\code{\link[RCRUX.dev:blast_datatable]{RCRUX.dev::blast_datatable()}} as the save directory and generates files in
+\code{\link[=blast_datatable]{blast_datatable()}} as the save directory and generates files in
 \code{rblast_seeds_output} recording the results of the blast.
 }
 \section{Saving data}{

@@ -15,5 +15,15 @@ get_taxonomizr_from_accession(input, accession_taxa_sql_path, organize = TRUE)
 the data.frame with taxonomy data
 }
 \description{
-Attach taxonomy data to an input table
+This function will append taxids and taxonomy to any dataframe with a column
+named accession that contains NCBI accessions (technically accession versions).
+
+It takes a dataframe and searches for column called accession.  If present,
+the column data is passed to \code{\link[taxonomizr:accessionToTaxa]{taxonomizr::accessionToTaxa()}} to find the
+corresponding taxids. The taxids are passed to \code{\link[taxonomizr:getTaxonomy]{taxonomizr::getTaxonomy()}}
+and the following taxonomic information is retrieved for each of the following
+ranks: species, superkingdom, kingdom, phylum, subphylum, superclass, class,
+subclass, order, family, subfamily, genus, infraorder, subcohort, superorder,
+superfamily, tribe, subspecies, subgenus, species group, parvorder, varietas.
+New columns for taxid and each rank are appended to the dataframe.
 }

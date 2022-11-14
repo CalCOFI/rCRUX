@@ -19,7 +19,7 @@ iterative_primer_search(
 NCBI as an organism. If it is a vector with multiple entries, each
 entry will be queried separately.}
 
-\item{db}{which NCBI database to search.}
+\item{db}{which NCBI database to search. The default is db - 'nt' (e.g. nr).}
 
 \item{forward_primer_seq}{the forward primer}
 }
@@ -27,8 +27,10 @@ entry will be queried separately.}
 a data.table summarizing the results of several primer_searches
 }
 \description{
-This function acts like primer_search and parse_primer hits all in one. Its
-parameters are very similar to primer_search, but it takes vectors for
+This function acts like \code{\link[primerTree:primer_search]{primerTree::primer_search()}} and
+primerTree's parse_primer() hits all in one. It calls
+\code{\link[=modifiedPrimerTree_Functions]{modifiedPrimerTree_Functions()}} to perform tasks. Its parameters
+are very similar to \code{\link[primerTree:primer_search]{primerTree::primer_search()}}, but it takes vectors for
 organism and for database and performs a primer search for each combination.
 It downgrades errors from primer_search and parse_primer_hits into warnings.
 This is useful when searching for a large number of different combinations,

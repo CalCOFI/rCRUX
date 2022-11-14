@@ -1,7 +1,7 @@
 #' Function to save data in .csv files
 #'
 #' Calls write.table with file_name as the first argument
-#' and <file_out><Metabarcode><description>.csv as the second
+#' and `file_out_Metabarcode_description.csv` as the second
 #'
 #' @param file_name the object to write
 #' @param description a string to include in the .csv name

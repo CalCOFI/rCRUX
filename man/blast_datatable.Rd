@@ -2,7 +2,7 @@
 % Please edit documentation in R/blast_datatable.R
 \name{blast_datatable}
 \alias{blast_datatable}
-\title{Take a datatable and return the results of BLASTing it}
+\title{Take a seed datatable and return the results of BLASTing it}
 \usage{
 blast_datatable(
   blast_seeds,
@@ -36,29 +36,32 @@ program will use your PATH environmental variable to locate them}
 be blast databases}
 
 \item{sample_size}{the number of entries to sample per rank
-before calling blastn - errors if not enough entries per rank}
+before calling blastn - errors if not enough entries per rank (default = 1)}
 
 \item{wildcards}{a character vector representing the number of wildcards to
-discard}
+discard (default = "NNNN")}
 
-\item{rank}{the column representing the taxonomic rank to sample}
+\item{rank}{the column representing the taxonomic rank to randomly sample (default = genus)}
 
 \item{max_to_blast}{is the maximum number of entries to accumulate into a
-fasta before calling blastn}
+fasta before calling blastn (default = 1000)}
 }
 \value{
 A data.frame representing the output of blastn
 }
 \description{
 Given a datatable with the column names of the datatable returned by
-\code{\link[rCRUX::get_seeds_remote(), or rCRUX:get_seeds_local]{rCRUX::get_seeds_remote(), or rCRUX::get_seeds_local()}}, use blastdbcmd to convert entries into
-fasta files, then uses blastn to query ncbi databases for those
-sequences. It compiles the results of blastn into a data.frame that it
-returns. Additionally, it saves its state as text files in a specified
-directory with each iteration.
+\code{\link[=get_seeds_remote]{get_seeds_remote()}}, or \code{\link[=get_seeds_local]{get_seeds_local()}}, uses a random
+stratified sample based on taxonomic rank to iteratively process the data
+The random sample entires are sent to run_blastdbcmd_blastn_and_aggregate_resuts
+which uses blastdbcmd to convert entries into fasta files, passes them to
+blastn to query ncbi databases with those sequences. It compiles the results
+of blastn into a data.frame that it returns. Additionally, it saves its state
+as text files in a specified directory with each iteration.
 }
 \details{
-blast_datatable uses blastdbcmd and blastn to find sequences. It samples rows
+blast_datatable uses run_blastdbcmd_blastn_and_aggregate_resuts to run
+blastdbcmd and blastn to find sequences. It samples rows
 from \code{blast_seeds} and uses blastdbcmd to find a sequence that corresponds to
 the accession number and forward and reverse stops recorded in the table.
 blastdbcmd outputs sequences as .fasta-formatted strings, which
@@ -71,7 +74,7 @@ blast_datatable writes intermediate results and metadata about the search to
 local files as it goes. This allows the function to resume a partially
 completed blast, mitigating the consequences of encountering an
 error or experiencing other interruptions. The local files are written to
-\code{save_dir} by \code{\link[RCRUX.dev:save_state]{RCRUX.dev::save_state()}}. Manually changing these files is not
+\code{save_dir} by \code{\link[=save_state]{save_state()}}. Manually changing these files is not
 suggested as it can change the behavior of blast_datatable. To start from an
 incomplete blast_datatable, specify the same save_dir as the incomplete
 blast. blast_datable will automatically detect save files and resume from

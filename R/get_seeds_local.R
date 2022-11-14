@@ -36,14 +36,14 @@
 #' "-num_alignments", "10000000",
 #'
 #' @param forward_primer_seq passed to primer_to_fasta, which turns it into fasta
-#'        file to be past to get_seeds_local (e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG")
+#'        file to be past to get_seeds_local (e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG").
 #' @param reverse_primer_seq passed to primer_to_fasta, which turns it into fasta
-#'        file to be past to get_seeds_local (e.g. reverse_primer_seq <-  "TTAGATACCCCACTATGC")
+#'        file to be past to get_seeds_local (e.g. reverse_primer_seq <-  "TTAGATACCCCACTATGC").
 #' @param output_directory_path the parent directory to place the data in
-#'        (e.g. "/path/to/output/12S_V5F1_remote_111122")
+#'        (e.g. "/path/to/output/12S_V5F1_local_111122_e300_111122").
 #' @param metabarcode_name used to name the subdirectory and the files. If a
 #'        directory named metabarcode_name does not exist in output_directory_path, a
-#'        new directory will be created. get_seeds_remote appends
+#'        new directory will be created. get_seeds_local appends
 #'        metabarcode_name to the beginning of each of the files it
 #'        generates (e.g. metabarcode_name <- "12S_V5F1").
 #' @param accession_taxa_sql_path the path to sql created by taxonomizr

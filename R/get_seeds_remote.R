@@ -2,7 +2,7 @@
 #'
 #' @description
 #' get_seeds_remote combines modified versions of [primerTree::primer_search()]
-#' and [primerTree::parse_primer()] to make [rCRUX::iterative_primer_search()]
+#' and primerTree's parse_primer to make [rCRUX::iterative_primer_search()]
 #' which is called to query NCBI's
 #' [primer BLAST](https://www.ncbi.nlm.nih.gov/tools/primer-blast/)
 #' tool, filters the results, then aggregates them into a single data.frame.
@@ -69,7 +69,7 @@
 #'        metabarcode_name to the beginning of each of the two files it
 #'        generates (e.g. metabarcode_name <- "12S_V5F1").
 #' @param accession_taxa_sql_path the path to sql created by taxonomizr
-          (e.g. accession_taxa_sql_path <- "/my/accessionTaxa.sql")
+#'          (e.g. accession_taxa_sql_path <- "/my/accessionTaxa.sql")
 #' @param organism a vector of character vectors. Each character vector is
 #'        passed in turn to primer_search, which passes them to NCBI.
 #'        get_seeds_remote aggregates all of the results into a single file.

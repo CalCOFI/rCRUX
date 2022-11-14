@@ -28,25 +28,29 @@ run_primer_blastn(
 which is optimized for searches with queries < 50 bp}
 
 \item{word_size}{is the fragment size used for blastn search - smaller word
-sizes increase sensitivity and time of the search - default value is 7}
+sizes increase sensitivity and time of the search.
+The default is word_size =  7}
 
 \item{evalue}{is the number of expected hits with a similar quality score
-found by chance - default is 3e-7.}
+found by chance. The default is evalue = 3e-7.}
 
 \item{coverage}{is the minimum percent of the query length recovered in the
-subject hits}
+subject hits. The default is coverage = 90.}
 
 \item{perID}{is the minimum percent identity of the query relative to the
-subject hits, the default is 50}
+subject hits. The default is perID = 2.}
 
-\item{reward}{is the reward for nucleotide match, the default is 2}
+\item{reward}{is the reward for nucleotide match. The default is reward = 2.}
 }
 \value{
-a tibble representing the blastn results
+a tibble 'output_table' representing the blastn results
 }
 \description{
 Takes the input string, writes it to a temporary file,
 and calls blastn with that file as the query. Warning:
 if a file at the path specified by temp already exists,
 it will be overwritten then deleted.
+
+The number of alignments returned for a given blast search is hardcoded at
+"-num_alignments", "10000000",
 }
