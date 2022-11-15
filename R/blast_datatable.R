@@ -71,6 +71,9 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
                             sample_size = 1, wildcards = "NNNN", rank = 'genus', max_to_blast = 1000, ...) {
 
 
+  print("align =")
+  print(align)
+
 
   if (!(check_db(blast_db_path) || force_db)) {
     stop(blast_db_path, " is probably not a blast database.
@@ -128,7 +131,8 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     blast_seeds_m$blast_status[-unsampled_indices] <- "done"
 
     # collect indices to blast
-    # if unsampled indices are greater than the max to blast (default n = 1000), the blast seed table will be randomly sampled by taxonomic ranks
+    # if unsampled indices are greater than the max to blast (default n = 1000),
+    # the blast seed table will be randomly sampled by taxonomic ranks
 
 
 
@@ -265,12 +269,13 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
   }
 
-  # If we get a taxid from blastn can we just use that? - TBD
+  # Clean up final datatable by removing any hyphens, updating amplicon_length
+  # and removing reads with too many Ns
 
     output_table_path <- paste(save_dir, "output_table.txt", sep = "/")
     output_table <- read.csv(output_table_path, colClasses = "character")
 
-    #remove hyphens and reads with multiple Ns in output and recount amplicon length.
+  #remove hyphens and reads with multiple Ns in output and recount amplicon length.
     output_table <- dplyr::mutate(output_table, sequence = gsub("-", "", sequence))
 
     too_many_ns <- dplyr::filter(output_table, grepl(wildcards, sequence))
@@ -280,7 +285,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     output_table <- dplyr::mutate(output_table, amplicon_length = nchar(sequence))
 
 
-    ####fix blastn taxids here
+  #### The blast db downloaded from NCBIs FTP site has reads that have been collapsed across multiple accessions with identical sequences.
 
     #Identify rows with multiple ids and filter into new dataframe
     multi_taxids <- dplyr::filter(output_table, grepl(';', BLAST_db_taxids))
