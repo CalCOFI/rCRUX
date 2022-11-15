@@ -398,13 +398,29 @@ It creates a directory `get_seeds_remote` in the `output_directory_path`. It cre
 
 ### Detailed Steps
 
+get_seeds_remote passes the forward and reverse primer sequence for a given
+PCR product to [iterative_primer_search](https://lunagal.github.io/iterative_primer_search) along with the taxid(s) of
+the organism(s) to blast, the database to search, and many additional possible
+parameters to NCBI's primer blast tool (see Note below). Degenerate primers
+are converted into all possible non degenerate sets and a user defined maximum
+number of primer combinations is passed to to the API using [modifiedPrimerTree_Functions](https://lunagal.github.io/modifiedPrimerTree_Functions). Multiple taxids are
+searched independently, as are multiple database searches (e.g. c('nt', 'refseq_representative_genomes'). The data are parsed and stored in a dataframe, which are also written to a file with the suffix
+`_unfiltered_get_seeds_remote_output.csv`.
 
+These hits are further filtered using [filter_primer_hits](https://lunagal.github.io/filter_primer_hits) to
+calculate and append amplicon size to the dataframe. Only hits that pass with default
+or user modified length and number of mismatches parameters are retained.
 
-not finished...
+Taxonomy is appended to these filtered hits using
+[get_taxonomizr_from_accession](https://lunagal.github.io/get_taxonomizr_from_accession). The results are written to
+to file with the suffix `_filtered_get_seeds_remote_output_with_taxonomy.csv`.
+The number of unique instances for each rank in the taxonomic path for the
+filtered hits are tallied (NAs are counted once per rank) and written to a
+file with the suffix `_filtered_get_seeds_local_remote_taxonomic_rank_counts.txt`
 
-get_seeds_remote uses modified versions of functions from the [primerTree](https://CRAN.R-project.org/package=primerTree) package to submit queries to NCBI's primer BLAST tool, then aggregates results into a single data.frame. primer_search (Modified from [primerTree](https://CRAN.R-project.org/package=primerTree)) expands degenerate primers into each possible non-degenerate primer and submits a query for each. get_seeds_remote further multiplies the number of queries by allowing the user to query the primers for each organism in a vector. get_seeds_remote collects all these results from primer_search, filters them based on product length, and adds taxonomic data using the taxonomizr package.
+**Notes:**
+get_seeds_remote passes many parameters to NCBI's primer blast tool. See below for more information.
 
-**Organism(s)**
 primer BLAST defaults to homo sapiens, so it is important that you supply a specific organism or organisms. NCBI's taxids can be found [here](https://www.ncbi.nlm.nih.gov/taxonomy). You can specify multiple organism by passing a character vector containing each of the options, like in the example below.
 
 Often NCBI API will throttle higher taxonomic ranks (Domain, Phylum, etc.). One work around is to supply multiple lower level taxonomic ranks (Class, Family level, etc.) or use get_seeds_local.
@@ -489,7 +505,6 @@ Often NCBI API will throttle higher taxonomic ranks (Domain, Phylum, etc.). One 
         for more information.
 
 
-
 **Check NCBI's primer blast for additional search options**
 
 get_seeds_remote passes many parameters to NCBI's primer blast tool. You can match the parameters to the fields available in the GUI here. First, use your browser to view the page source. Search for the field you are interested in by searching for the title of the field. It should be enclosed in a tag. Inside the label tag, it says for = "<name_of_parameter>". Copy the string after for = and add it to get_seeds_remote as the name of a parameter, setting it equal to whatever you like.
@@ -511,7 +526,7 @@ get_seeds_remote passes many parameters to NCBI's primer blast tool. You can mat
 
 As of 2022-08-16, the primer blast GUI contains some options that are not implemented by primer_search. The [table below](#Table-of-available-options) documents available options.
 
-**You can check [primerblast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) for more information on how to modify search options. For example, if want you to generate a larger hitsize, open the source of the primer designing tool and look for that string. You find the following:
+You can check [primerblast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) for more information on how to modify search options. For example, if want you to generate a larger hitsize, open the source of the primer designing tool and look for that string. You find the following:
 
 ```
 <label for="HITSIZE" class="m ">Max number of sequences returned by Blast</label>
@@ -564,9 +579,6 @@ get_seeds_remote(forward_primer_seq,
 # This results in approximately 111500 blast seed returns (there is some variation due to database updates, etc.), note the default generated approximately 1047.
 # This assumes the user is not throttled by memory limitations.              
 ```
-
-
-
 
 
 ### [blast_seeds](https://lunagal.github.io/blast_seeds)
