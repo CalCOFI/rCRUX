@@ -105,17 +105,17 @@ There are two options to generate seeds for the database generating blast step b
 This example uses default parameters, with the exception of evalue, to minimize run time.
 
 ```
-output_directory_path <- "/my/rCRUX_output_directory/12S_V5F1_default_params" #path to desired output directory
+output_directory_path <- "/my/directory/12S_V5F1_local_111122_e300" #path to desired output directory
 
 metabarcode_name <- "12S_V5F1" # desired name of metabarcode locus
 
-accession_taxa_sql_path <- "/my/accessionTaxa.sql"
+accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql"
 
 forward_primer_seq = "TAGAACAGGCTCCTCTAG"
 
 reverse_primer_seq =  "TTAGATACCCCACTATGC"
 
-blast_db_path <- "/my/ncbi_nt/nt"
+blast_db_path <- "/my/directory/ncbi_nt/nt"
 
 
 get_seeds_local(forward_primer_seq,
@@ -144,7 +144,7 @@ get_seeds_local(forward_primer_seq,
                  metabarcode_name,
                  accession_taxa_sql_path,
                  blast_db_path, evalue = 300,
-                 ncbi_bin = "/my/local/blast+_folder")
+                 ncbi_bin = "/my/directory/blast+_folder")
 
 
 ```
@@ -157,11 +157,11 @@ This example uses default parameters to minimize run time.
 Searching jawless vertebrates (taxid: "1476529") and jawed vertebrates (taxid: "7776").
 
 ```
-output_directory_path <- "/my/rCRUX_output_directory/12S_V5F1_default_params" #path to desired output directory
+output_directory_path <- "/my/directory/12S_V5F1_remote_111122" #path to desired output directory
 
 metabarcode_name <- "12S_V5F1" # desired name of metabarcode locus
 
-accession_taxa_sql_path <- "/my/accessionTaxa.sql"
+accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql"
 
 forward_primer_seq = "TAGAACAGGCTCCTCTAG"
 
@@ -197,14 +197,14 @@ Iterative searches are based on a stratified random sampling unique taxonomic gr
 
 
 ```
-seeds_output_path <- '/my/rCRUX_output_directory/12S_V5F1_filtered_get_seeds_remote_output_with_taxonomy.csv'
+seeds_output_path <- '/my/directory/12S_V5F1_remote_111122/12S_V5F1_filtered_get_seeds_remote_output_with_taxonomy.csv'
 # this is output from get_seeds_local or get_seeds_remote
 
-blast_db_path <- "/my/local/blast_database/nt"
+blast_db_path <- "/my/directory/blast_database/nt"
 
-accession_taxa_sql_path <- "/my/accessionTaxa.sql"
+accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql"
 
-output_directory_path <- '/my/rCRUX_output_directory/12S_V5F1_default_params/'
+output_directory_path <- '/my/directory/12S_V5F1_remote_111122/'
 
 metabarcode_name <- "12S_V5F1"
 
@@ -232,7 +232,7 @@ blast_seeds(seeds_output_path,
             accession_taxa_sql_path,
             output_directory_path,
             metabarcode_name,
-            ncbi_bin = "/my/local/blast+_folder")
+            ncbi_bin = "/my/directory/blast+_folder")
 
 
 ```
@@ -247,7 +247,7 @@ Example output can be found [here](/examples/12S_V5F1_generated_11-10-22).
 This function takes the output of blast_seeds and de-replicates identical sequences and collapses ambiguous taxonomy to generate a clean reference database.
 
 ```
-summary_path <- "/my/rCRUX_output_directory/12S_V5F1_default_params/blast_seeds_output/summary.csv"
+summary_path <- "/my/directory/12S_V5F1_remote_111122/blast_seeds_output/summary.csv"
 # this is the output from blast_seeds
 
 derep_and_clean_db(output_directory_path, summary_path, metabarcode_name)
@@ -359,6 +359,25 @@ Information about the blastn parameters can be found in run_primer_blast, and by
 +       The default is ncbi_bin = NULL
 +       if not specified in path do the following: ncbi_bin = "/my/local/blast+_folder".
 
+#### Example
+```
+forward_primer_seq = "TAGAACAGGCTCCTCTAG"
+reverse_primer_seq =  "TTAGATACCCCACTATGC"
+output_directory_path <- "/my/directory/12S_V5F1_local_111122_species_750" #path to desired output directory
+metabarcode_name <- "12S_V5F1" # desired name of metabarcode locus
+accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql"
+blast_db_path <- "/my/directory/ncbi_nt/nt"
+
+get_seeds_local(forward_primer_seq,
+                reverse_primer_seq,
+                output_directory_path,
+                metabarcode_name,
+                accession_taxa_sql_path,
+                blast_db_path, rank = species, max_to_blast = 750)
+
+# using the rank of species will increase the number of total unique blast hitsize
+# modifying the max_to_blast submits fewer reads simultaneously and reduces overall RAM while extending the run.
+```
 
 
 ### [get_seeds_remote](https://lunagal.github.io/get_blast_seeds)

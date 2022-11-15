@@ -2,7 +2,7 @@
 % Please edit documentation in R/run_blastdbcmd_blastn_and_aggregate_resuts.R
 \name{run_blastdbcmd_blastn_and_aggregate_resuts}
 \alias{run_blastdbcmd_blastn_and_aggregate_resuts}
-\title{runs \code{\link[=run_blastdbcmd]{run_blastdbcmd()}}, \code{\link[=run_blastn]{run_blastn()}}, and aggregates and
+\title{Runs \code{\link[=run_blastdbcmd]{run_blastdbcmd()}}, \code{\link[=run_blastn]{run_blastn()}}, and aggregates and
 saves the results}
 \usage{
 run_blastdbcmd_blastn_and_aggregate_resuts(

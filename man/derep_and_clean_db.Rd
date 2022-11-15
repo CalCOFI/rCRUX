@@ -2,7 +2,7 @@
 % Please edit documentation in R/derep_and_clean_db.R
 \name{derep_and_clean_db}
 \alias{derep_and_clean_db}
-\title{de-replicates identical sequences and finds the lowest taxonomic agreement
+\title{De-replicates identical sequences and finds the lowest taxonomic agreement
 for sequences with multiple taxids}
 \usage{
 derep_and_clean_db(output_directory_path, summary_path, metabarcode_name)

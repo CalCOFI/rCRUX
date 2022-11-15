@@ -83,6 +83,25 @@
 #'        do the following: ncbi_bin = "/my/local/blast+_folder".
 #' @return NULL
 #' @export
+#'
+#' @examples
+#' forward_primer_seq = "TAGAACAGGCTCCTCTAG"
+#' reverse_primer_seq =  "TTAGATACCCCACTATGC"
+#' output_directory_path <- "/my/directory/12S_V5F1_local_111122_species_750" #path to desired output directory
+#' metabarcode_name <- "12S_V5F1" # desired name of metabarcode locus
+#' accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql"
+#' blast_db_path <- "/my/directory/ncbi_nt/nt"
+#'
+#' get_seeds_local(forward_primer_seq,
+#'                 reverse_primer_seq,
+#'                 output_directory_path,
+#'                 metabarcode_name,
+#'                 accession_taxa_sql_path,
+#'                 blast_db_path, rank = species, max_to_blast = 750)
+#'
+#' # using the rank of species will increase the number of total unique blast hitsize
+#' # modifying the max_to_blast submits fewer reads simultaneously and reduces overall RAM while extending the run.
+
 
 
 get_seeds_local <- function(forward_primer_seq, reverse_primer_seq,
