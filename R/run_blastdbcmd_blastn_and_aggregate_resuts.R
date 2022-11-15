@@ -1,4 +1,4 @@
-#' runs [rCRUX::run_blastdbcmd()], [rCRUX::run_blastn()], and aggregates and
+#' Runs [rCRUX::run_blastdbcmd()], [rCRUX::run_blastn()], and aggregates and
 #' saves the results
 #'
 #' @description

@@ -1,4 +1,3 @@
-
 #' Call primer_search with several parameters and aggregate the results
 #'
 #' This function acts like [primerTree::primer_search()] and

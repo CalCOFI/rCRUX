@@ -19,6 +19,8 @@
 #' @param .progress name of the progress bar to use, see 'create_progress_bar'
 #' @return httr response object of the query, pass to \code{\link{parse_primer_hits}} to parse the results.
 #' @noRd
+
+
 primer_search = function(forward, reverse, num_permutations=25, ..., .parallel=FALSE, .progress='none'){
   if(missing(forward) || missing(reverse))
     BLAST_primer()

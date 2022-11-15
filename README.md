@@ -271,12 +271,73 @@ Example output can be found [here](/examples/12S_V5F1_generated_11-10-22).
 
 <img src="get_seeds_local-flowchart.png" width = 10000 />
 
-This script takes a set of forward and reverse primer sequences and generates csv summaries of data returned from a locally run adaptation of [NCBI's primer blast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) to find possible full length barcode sequence containing forward and reverse primer matches. It also generates a count of unique instances of taxonomic ranks (Phylum, Class, Order, Family, Genus, and Species)
+#### Overview
+[get_seeds_local](https://lunagal.github.io/get_seeds_local) is a local interpretation of [get_seeds_remote](https://lunagal.github.io/get_seeds_remote) that avoids querying NCBI's [primer BLAST](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) tool. This script takes a set of forward and reverse primer sequences and generates csv summaries of data returned from a locally run adaptation of [NCBI's primer blast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) to find possible full length barcode sequence containing forward and reverse primer matches. It also generates a count of unique instances of taxonomic ranks (Phylum, Class, Order, Family, Genus, and Species)
 
-add info....
+Although it is slower than remotely generating blast seeds, it is not subject to the arbitrary throttling of jobs that require significant memory.
 
-#### Search options
-add info...
+#### Expected Output
+It creates a 'get_seeds_local' directory at `output_directory_path` if one doesn't yet exist, then creates a subdirectory inside `output_directory_path` named after `metabarcode_name`. It creates three files inside that directory. One represents the unfiltered output and another represents the output after filtering with user modifiable parameters and with appended taxonomy. Also generated is a summary of unique taxonomic ranks after filtering.
+
+#### Detailed Steps
+get_seeds_local passes the forward and reverse primer sequence for a given PCR product to [run_primer_blastn](https://lunagal.github.io/run_primer_blastn). run_primer_blastn takes the primer fasta file, and individually queries them against a blast formatted database using the task "blastn_short". The result is an output table with the following columns of data: qseqid (query subject id), sgi (subject gi), saccver (subject accession version), mismatch (number of mismatches between the subject a query), sstart (subject start), send (subject end), staxids (subject taxids).
+
+The returned blast hits for each sequence are matched and checked to see if they generate plausible amplicon (e.g. amplify the same accession and are in the correct orientation to produce a PCR product). These hits are written to a file with the suffix `_unfiltered_get_seeds_local_output.csv`.  These hits are further filtered for length and number of mismatches.
+
+Taxonomy is appended to these filtered hits using [get_taxonomizr_from_accession](https://lunagal.github.io/get_taxonomizr_from_accession). The results are written to to file with the suffix `_filtered_get_seeds_local_output_with_taxonomy.csv`. The number of unique instances for each rank in the taxonomic path for the filtered hits are tallied (NAs are counted once per rank) and written to a file with the suffix `_filtered_get_seeds_local_unique_taxonomic_rank_counts.txt`.
+
+**Note:**
+Information about the blastn parameters can be found in run_primer_blast, and by accessing blastn -help in your terminal.  Default parameters were optimized to provide results similar to that generated through remote blast via primer-blast as implemented in [iterative_primer_search](https://lunagal.github.io/iterative_primer_search) and [modifiedPrimerTree_Functions](https://lunagal.github.io/modifiedPrimerTree_Functions). The number of alignments returned for a given blast search is hardcoded at "-num_alignments", "10000000",
+
+
+#### Parameters
+
+**forward_primer_seq** passed to primer_to_fasta, which turns it into fasta
+        file to be past to get_seeds_local (e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG").
+**reverse_primer_seq** passed to primer_to_fasta, which turns it into fasta
+        file to be past to get_seeds_local (e.g. reverse_primer_seq <-  "TTAGATACCCCACTATGC").
+**output_directory_path** the parent directory to place the data in
+        (e.g. "/path/to/output/12S_V5F1_local_111122_e300_111122").
+**metabarcode_name** used to name the subdirectory and the files. If a
+        directory named metabarcode_name does not exist in output_directory_path, a
+        new directory will be created. get_seeds_local appends
+        metabarcode_name to the beginning of each of the files it
+        generates (e.g. metabarcode_name <- "12S_V5F1").
+**accession_taxa_sql_path the path to sql** created by taxonomizr
+        (e.g. accession_taxa_sql_path <- "/my/accessionTaxa.sql")
+**mismatch** the highest acceptable mismatch value per hit. get_seeds_local removes each
+        row with a mismatch greater than the specified value.
+        The default is mismatch = 6
+**minimum_length** get_seeds_local removes each row that has a value less than
+        minimum_length in the product_length column.
+        The default is minimum_length = 5
+**maximum_length** get_seeds_local removes each row that has a
+        value greater than maximum_length in the product_length column
+        The default is maximum_length = 500
+**blast_db_path** a directory with a blast-formatted database.
+        (e.g blast_db_path <- "/my/ncbi_nt/nt")
+**task** passed to [run_primer_blastn](https://lunagal.github.io/run_primer_blastn) the task for blastn to
+        perform - default here is "blastn_short", which is optimized
+        for searches with queries < 50 bp
+**word_size** passed to [run_primer_blastn](https://lunagal.github.io/run_primer_blastn) is the fragment size
+        used for blastn search - smaller word sizes increase sensitivity and
+        time of the search. The default is word_size =  7
+**evalue** passed to [run_primer_blastn](https://lunagal.github.io/run_primer_blastn) is the number of
+        expected hits with a similar quality score found by chance.
+        The default is evalue = 3e-7.
+**coverage** passed to [run_primer_blastn](https://lunagal.github.io/run_primer_blastn) is the minimum
+        percent of the query length recovered in the subject hits.
+        The default is coverage = 90.
+**perID** passed to [run_primer_blastn](https://lunagal.github.io/run_primer_blastn) is the minimum percent
+        identity of the query relative to the subject hits.
+        The default is perID = 2.
+**reward** passed to [run_primer_blastn](https://lunagal.github.io/run_primer_blastn) is the reward for
+        nucleotide match. The default is reward = 2.
+**ncbi_bin passed to [run_primer_blastn](https://lunagal.github.io/run_primer_blastn) is the path to blast+
+        tools if not in the user's path.  Specify only if blastn and is not in
+        your path. The default is ncbi_bin = NULL - if not specified in path
+        do the following: ncbi_bin = "/my/local/blast+_folder".
+
 
 
 ### [get_seeds_remote](https://lunagal.github.io/get_blast_seeds)

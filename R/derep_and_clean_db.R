@@ -1,4 +1,4 @@
-#' de-replicates identical sequences and finds the lowest taxonomic agreement
+#' De-replicates identical sequences and finds the lowest taxonomic agreement
 #' for sequences with multiple taxids
 #'
 #' @description
