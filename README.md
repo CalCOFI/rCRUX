@@ -454,18 +454,13 @@ Often NCBI API will throttle higher taxonomic ranks (Domain, Phylum, etc.). One 
         passed in turn to primer_search, which passes them to NCBI.
         get_seeds_remote aggregates all of the results into a single file
 +       e.g. organism = c("1476529", "7776"))
-+       Note: increasing taxonomic
-        rank (e.g. increasing from order to class) for this parameter can
-        maximize primer hits, but can also lead to API run throttling due to
-        memory limitations
++       Note: increasing taxonomic rank (e.g. increasing from order to class) for this parameter can maximize primer hits, but can also lead to API run throttling due to memory limitations
 **num_permutations**
 + the number of primer permutations to search, if the
         degenerate bases cause more than this number of permutations to exist,
         this number will be sampled from all possible permutations.
-+        The default is num_permutations = 50  
-+        Note for very degenerate bases,
-        searches may be empty due to poor mutual matches for a given forward
-        and reverse primer combination.
++       The default is num_permutations = 50  
++       Note for very degenerate bases, searches may be empty due to poor mutual matches for a given forward and reverse primer combination.
 **mismatch**
 + the highest acceptable mismatch value. parse_primer_hits
         returns a table with a mismatch column. get_seeds_remote removes each
@@ -489,20 +484,14 @@ Often NCBI API will throttle higher taxonomic ranks (Domain, Phylum, etc.). One 
 + a primer BLAST search parameter set high to maximize the
         number of observations returned.
 +       The default HITSIZE = 50000
-+       Note: increasing this parameter can
-        maximize primer hits, but can also lead to API run throttling due to
-        memory limitations
++       Note: increasing this parameter can maximize primer hits, but can also lead to API run throttling due to memory limitations
 **NUM_TARGETS_WITH_PRIMERS**
 + a primer BLAST search parameter set high to
         maximize the number of observations returned.
 +       The default is NCBI NUM_TARGETS_WITH_PRIMERS = 1000
-+       Note: increasing
-        this parameter can maximize primer hits, but can also lead to API run
-        throttling due to memory limitations
++       Note: increasing this parameter can maximize primer hits, but can also lead to API run throttling due to memory limitations
 **...**
-+ additional arguments passed to [modifiedPrimerTree_Functions](https://lunagal.github.io/modifiedPrimerTree_Functions). See
-        [NCBI primer-blast tool]](https://www.ncbi.nlm.nih.gov/tools/primer-blast/)
-        for more information.
++ additional arguments passed to [modifiedPrimerTree_Functions](https://lunagal.github.io/modifiedPrimerTree_Functions). See [NCBI primer-blast tool]](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) for more information.
 
 
 **Check NCBI's primer blast for additional search options**
