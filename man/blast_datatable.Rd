@@ -3,7 +3,7 @@
 \name{blast_datatable}
 \alias{blast_datatable}
 \title{Controls the iterative blast search implemented by
-rCrux::run_blastdbcmd_blastn_and_aggregate_resuts], cleans the output, and
+\link{run_blastdbcmd_blastn_and_aggregate_resuts}, cleans the output, and
 adds taxonomy}
 \usage{
 blast_datatable(

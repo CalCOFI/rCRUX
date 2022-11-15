@@ -1,5 +1,5 @@
 #' Controls the iterative blast search implemented by
-#' rCrux::run_blastdbcmd_blastn_and_aggregate_resuts], cleans the output, and
+#' [rCRUX::run_blastdbcmd_blastn_and_aggregate_resuts], cleans the output, and
 #' adds taxonomy
 #'
 #'
