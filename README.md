@@ -267,19 +267,19 @@ Sequences_with_single_taxonomic_path.csv files. These files allow for the traceb
 Example output can be found [here](/examples/12S_V5F1_generated_11-10-22).
 
 # Detailed Explanation For The Major Functions
-### [get_seeds_local](https://lunagal.github.io/get_seeds_local)
+## [get_seeds_local](https://lunagal.github.io/get_seeds_local)
 
 <img src="get_seeds_local-flowchart.png" width = 10000 />
 
-#### Overview
-[get_seeds_local](https://lunagal.github.io/get_seeds_local) is a local interpretation of [get_seeds_remote](https://lunagal.github.io/get_seeds_remote) that avoids querying NCBI's [primer BLAST](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) tool. This script takes a set of forward and reverse primer sequences and generates csv summaries of data returned from a locally run adaptation of [NCBI's primer blast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) to find possible full length barcode sequence containing forward and reverse primer matches. It also generates a count of unique instances of taxonomic ranks (Phylum, Class, Order, Family, Genus, and Species)
+### Overview
+[get_seeds_local](https://lunagal.github.io/get_seeds_local) takes a set of forward and reverse primer sequences and generates csv summaries of data returned from a locally run adaptation of [NCBI's primer blast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) to find possible full length barcode sequence containing forward and reverse primer matches. It also generates a count of unique instances of taxonomic ranks (Phylum, Class, Order, Family, Genus, and Species).
 
-Although it is slower than remotely generating blast seeds, it is not subject to the arbitrary throttling of jobs that require significant memory.
+This script is a local interpretation of [get_seeds_remote](https://lunagal.github.io/get_seeds_remote) that avoids querying NCBI's [primer BLAST](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) tool. Although it is slower than remotely generating blast seeds, it is not subject to the arbitrary throttling of jobs that require significant memory.
 
-#### Expected Output
-It creates a 'get_seeds_local' directory at `output_directory_path` if one doesn't yet exist, then creates a subdirectory inside `output_directory_path` named after `metabarcode_name`. It creates three files inside that directory. One represents the unfiltered output and another represents the output after filtering with user modifiable parameters and with appended taxonomy. Also generated is a summary of unique taxonomic ranks after filtering.
+### Specific Output
+It creates a `get_seeds_local` directory at `output_directory_path` if one doesn't yet exist, then creates a subdirectory inside `output_directory_path` named after `metabarcode_name`. It creates three files inside that directory. One represents the unfiltered output and another represents the output after filtering with user modifiable parameters and with appended taxonomy. Also generated is a summary of unique taxonomic ranks after filtering.
 
-#### Detailed Steps
+### Detailed Steps
 get_seeds_local passes the forward and reverse primer sequence for a given PCR product to [run_primer_blastn](https://lunagal.github.io/run_primer_blastn). run_primer_blastn takes the primer fasta file, and individually queries them against a blast formatted database using the task "blastn_short". The result is an output table with the following columns of data: qseqid (query subject id), sgi (subject gi), saccver (subject accession version), mismatch (number of mismatches between the subject a query), sstart (subject start), send (subject end), staxids (subject taxids).
 
 The returned blast hits for each sequence are matched and checked to see if they generate plausible amplicon (e.g. amplify the same accession and are in the correct orientation to produce a PCR product). These hits are written to a file with the suffix `_unfiltered_get_seeds_local_output.csv`.  These hits are further filtered for length and number of mismatches.
@@ -290,7 +290,7 @@ Taxonomy is appended to these filtered hits using [get_taxonomizr_from_accession
 Information about the blastn parameters can be found in run_primer_blast, and by accessing blastn -help in your terminal.  Default parameters were optimized to provide results similar to that generated through remote blast via primer-blast as implemented in [iterative_primer_search](https://lunagal.github.io/iterative_primer_search) and [modifiedPrimerTree_Functions](https://lunagal.github.io/modifiedPrimerTree_Functions). The number of alignments returned for a given blast search is hardcoded at "-num_alignments", "10000000",
 
 
-#### Parameters
+### Parameters
 **forward_primer_seq**
 + passed to primer_to_fasta, which turns it into fasta
         file to be past to get_seeds_local.
@@ -359,11 +359,11 @@ Information about the blastn parameters can be found in run_primer_blast, and by
 +       The default is ncbi_bin = NULL
 +       if not specified in path do the following: ncbi_bin = "/my/local/blast+_folder".
 
-#### Example
+### Example
 ```
 forward_primer_seq = "TAGAACAGGCTCCTCTAG"
 reverse_primer_seq =  "TTAGATACCCCACTATGC"
-output_directory_path <- "/my/directory/12S_V5F1_local_111122_species_750" #path to desired output directory
+output_directory_path <- "/my/directory/12S_V5F1_local_111122_species_750"
 metabarcode_name <- "12S_V5F1" # desired name of metabarcode locus
 accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql"
 blast_db_path <- "/my/directory/ncbi_nt/nt"
@@ -375,17 +375,44 @@ get_seeds_local(forward_primer_seq,
                 accession_taxa_sql_path,
                 blast_db_path, rank = species, max_to_blast = 750)
 
-# using the rank of species will increase the number of total unique blast hitsize
-# modifying the max_to_blast submits fewer reads simultaneously and reduces overall RAM while extending the run.
+# using the rank of species will increase the number of total unique blast hits
+# modifying the max_to_blast submits fewer reads simultaneously and reduces overall RAM while extending the run
 ```
 
 
-### [get_seeds_remote](https://lunagal.github.io/get_blast_seeds)
+## [get_seeds_remote](https://lunagal.github.io/get_seeds_remote)
 
 <img src="get_seed_remote-flowchart.png" width = 10000 />
 
+### Overview
 
-This script takes a set of forward and reverse primer sequences and generates csv summaries of [NCBI's primer blast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) data returns. Only nearly full length barcode sequences containing primer matches are captured. It also generates a count of unique instances of taxonomic ranks (Phylum, Class, Order, Family, Genus, and Species) captured in the seed library.
+[get_seeds_remote](https://lunagal.github.io/get_seeds_remote)  takes a set of forward and reverse primer sequences and generates csv summaries of [NCBI's primer blast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) data returns. Only nearly full length barcode sequences containing primer matches are captured. It also generates a count of unique instances of taxonomic ranks (Phylum, Class, Order, Family, Genus, and Species) captured in the seed library.
+
+#' This script combines modified versions of [primerTree::primer_search()]
+#' and primerTree's parse_primer to make [rCRUX::iterative_primer_search()]
+#' which is called to query NCBI's
+#' [primer BLAST](https://www.ncbi.nlm.nih.gov/tools/primer-blast/)
+#' tool, filters the results, then aggregates them into a single data.frame.
+
+
+### Expected Output
+#' It creates a directory `get_seeds_remote` in the `output_directory_path`.
+#' It creates three files inside that directory. One represents the unfiltered
+#' output and another represents the output after filtering with user modifiable
+#' parameters and with appended taxonomy. Also generated is a summary of unique
+#' taxonomic ranks after filtering.
+
+
+### Detailed Steps
+### Parameters
+### Example  
+
+
+
+
+
+
+
 
 get_seeds_remote uses modified versions of functions from the [primerTree](https://CRAN.R-project.org/package=primerTree) package to submit queries to NCBI's primer BLAST tool, then aggregates results into a single data.frame. primer_search (Modified from [primerTree](https://CRAN.R-project.org/package=primerTree)) expands degenerate primers into each possible non-degenerate primer and submits a query for each. get_seeds_remote further multiplies the number of queries by allowing the user to query the primers for each organism in a vector. get_seeds_remote collects all these results from primer_search, filters them based on product length, and adds taxonomic data using the taxonomizr package.
 
