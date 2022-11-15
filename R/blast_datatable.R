@@ -1,46 +1,71 @@
-#' Take a seed datatable and return the results of BLASTing it
+#' Controls the iterative blast search implemented by
+#' rCrux::run_blastdbcmd_blastn_and_aggregate_resuts], cleans the output, and
+#' adds taxonomy
+#'
 #'
 #' @description
 #' Given a datatable with the column names of the datatable returned by
 #' [rCRUX::get_seeds_remote()], or [rCRUX::get_seeds_local()], uses a random
 #' stratified sample based on taxonomic rank to iteratively process the data
-#' The random sample entires are sent to run_blastdbcmd_blastn_and_aggregate_resuts
-#' which uses blastdbcmd to convert entries into fasta files, passes them to
-#' blastn to query ncbi databases with those sequences. It compiles the results
-#' of blastn into a data.frame that it returns. Additionally, it saves its state
-#' as text files in a specified directory with each iteration.
+#' The random sample entires are sent to
+#' [rCRUX::run_blastdbcmd_blastn_and_aggregate_resuts()], which uses blastdbcmd
+#' to convert entries into fasta files, passes them to blastn to query local
+#' blast formatted databases with those sequences. It compiles the results
+#' of blastn into a data.frame that it cleans and returns with taxonomy added
+#' using [rCRUX::get_taxonomizr_from_accession]. Additionally, it saves its
+#' state as text files in a specified directory with each iteration, allowing
+#' the user to restart an interrupted run of [rCRUX::blast_seeds()].
 #'
 #'
 #' @details
-#' blast_datatable uses run_blastdbcmd_blastn_and_aggregate_resuts to run
-#' blastdbcmd and blastn to find sequences. It samples rows
-#' from `blast_seeds` and uses blastdbcmd to find a sequence that corresponds to
-#' the accession number and forward and reverse stops recorded in the table.
-#' blastdbcmd outputs sequences as .fasta-formatted strings, which
-#' blast_datatable concatenates into a multi-line fasta, then passes to blastn
-#' as an argument. blast-datatable repeats this process until no rows remain,
-#' aggregating the results in a single data.frame.
+#' blast_datatable uses [rCRUX::run_blastdbcmd_blastn_and_aggregate_resuts()] to
+#' run blastdbcmd and blastn to find sequences. It randomly samples rows of the
+#' seed table based on the taxonomic rank supplied by the user. The user can
+#' specify how many sequences can be blasted simultaneously using max_to_blast.
+#' The random sample will be subset for blasting. Once all of the seeds of the
+#' random sample are processed, they are removed from the dataframe as are the
+#' seeds found as blast hits. blast-datatable repeats this process or stratified
+#' random sampling until there are fewer reads remaining than max_to_blast, at
+#' which point it blasts all remaining seeds. The final aggregated results are
+#' cleaned for multiple blast taxids, hyphens, and wildcards.
 #'
-#' # Saving data
-#' blast_datatable writes intermediate results and metadata about the search to
-#' local files as it goes. This allows the function to resume a partially
-#' completed blast, mitigating the consequences of encountering an
-#' error or experiencing other interruptions. The local files are written to
-#' `save_dir` by [rCRUX::save_state()]. Manually changing these files is not
-#' suggested as it can change the behavior of blast_datatable. To start from an
-#' incomplete blast_datatable, specify the same save_dir as the incomplete
-#' blast. blast_datable will automatically detect save files and resume from
-#' where it left off.
+#' Note:
+#' The blast db downloaded from NCBIs FTP site has representative
+#' accessions meaning identical sequences have been collapsed across multiple
+#' accessions even if they have different taxid. Here we identify representative
+#' accessions with multiple taxids, and unpack all of the accessions that were
+#' collapsed into that representative accessions.
+#'
+#' We are not identifying or unpacking the representative accessions
+#' that report a single taxid
+#'
+#' Saving data:
+#' blast_datatable uses files generated in
+#' [rCRUX::run_blastdbcmd_blastn_and_aggregate_resuts()] that store intermediate
+#' results and metadata about the search to local files as it goes. This allows
+#' the function to resume a partially completed blast, partially mitigating
+#' the consequences of encountering an error or experiencing other interruptions.
+#' Interruptions while blasting a subset of a random stratified sample will
+#' result in a loss of the remaining reads of the subsample, and may decrease
+#' overall blast returns. The local files are written to `save_dir` by
+#' [rCRUX::save_state()]. Manually changing these files is not suggested as
+#' it can change the behavior of blast_datatable.
+#'
+#' Restarting an interrupted [rCRUX::blast_seed()] run:
+#' To restart from an incomplete blast_datatable, submit the previous command
+#' again. Do not modify the paths specified in the previous command, however
+#' parameter arguments (e.g. rank, max_to_blast) can be modified. blast_datable
+#' will automatically detect save files and resume from where it left off.
 #'
 #' Warning: If you are resuming from an interrupted blast, make sure you supply
 #' the same data.frame for `blast_seeds`. If you intend to start a new blast,
 #' make sure that there is not existing blast save data in the directory you
 #' supply for `save_dir`.
 #'
-#' Note that blast_datatable does not save intermediate data
+#' Note: blast_datatable does not save intermediate data
 #' from blastdbcmd, so if it is interupted while getting building the fasta to
 #' submit to blastn it will need to repeat some work when resumed. The argument
-#' `sample_size` controls the frequency with which it calls blastn, so it can
+#' `max_to_blast` controls the frequency with which it calls blastn, so it can
 #' be used to make blast_datatable save more frequently.
 #'
 #' @param blast_seeds a data.frame formatted like the output from
@@ -282,7 +307,13 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     output_table <- dplyr::mutate(output_table, amplicon_length = nchar(sequence))
 
 
-  #### The blast db downloaded from NCBIs FTP site has reads that have been collapsed across multiple accessions with identical sequences.
+  #### The blast db downloaded from NCBIs FTP site has representative accessions
+  # meaning identical sequences have been collapsed across multiple accessions
+  # even if they have different taxid.
+  # Here we identify representative accessions with multiple taxids, and unpack
+  # all of the accessions that go into that representitive accessions.
+  # Note - we are not identifying or unpacking the representative accessions
+  # that report a single taxid
 
     #Identify rows with multiple ids and filter into new dataframe
     multi_taxids <- dplyr::filter(output_table, grepl(';', BLAST_db_taxids))

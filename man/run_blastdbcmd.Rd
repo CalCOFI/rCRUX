@@ -2,7 +2,8 @@
 % Please edit documentation in R/run_blastdbcmd.R
 \name{run_blastdbcmd}
 \alias{run_blastdbcmd}
-\title{Extracts query parameters from a row and calls blastdbcmd}
+\title{Extracts seed amplicon sequence from blast databases using blastdbcmd and
+primer start and end coordinates stored in the seeds table}
 \usage{
 run_blastdbcmd(query_row, db, ncbi_bin = NULL)
 }
@@ -11,7 +12,10 @@ run_blastdbcmd(query_row, db, ncbi_bin = NULL)
 
 \item{db}{a directory with a blast-formatted database}
 
-\item{ncbi_bin}{if not null use it as the parent directory for blastn}
+\item{ncbi_bin}{is the path to blast+ tools if not in the user's path.
+Specify only if blastn and blastdbcmd  are not in your path.
+The default is ncbi_bin = NULL - if not specified in path do the
+following: ncbi_bin = "/my/local/blast+_folder".}
 }
 \value{
 a fasta-formatted character vector

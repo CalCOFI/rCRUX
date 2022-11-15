@@ -2,7 +2,8 @@
 % Please edit documentation in R/run_blastdbcmd_blastn_and_aggregate_resuts.R
 \name{run_blastdbcmd_blastn_and_aggregate_resuts}
 \alias{run_blastdbcmd_blastn_and_aggregate_resuts}
-\title{runs blastdbcmd, blastn and aggregates the results}
+\title{runs \code{\link[=run_blastdbcmd]{run_blastdbcmd()}}, \code{\link[=run_blastn]{run_blastn()}}, and aggregates and
+saves the results}
 \usage{
 run_blastdbcmd_blastn_and_aggregate_resuts(
   sample_indices = sample_indices,
@@ -16,7 +17,8 @@ run_blastdbcmd_blastn_and_aggregate_resuts(
   unsampled_indices,
   output_table,
   wildcards,
-  num_rounds
+  num_rounds,
+  ...
 )
 }
 \arguments{
@@ -29,7 +31,11 @@ current state}
 
 \item{db}{the type of blast db - e.g. nt}
 
-\item{ncbi_bin}{path to blast+ tools if not in path}
+\item{ncbi_bin}{passed to \code{\link[=run_blastdbcmd]{run_blastdbcmd()}} \code{\link[=run_blastn]{run_blastn()}} is
+the path to blast+ tools if not in the user's path.  Specify only if
+blastn and blastdbcmd  are not in your path.
+The default is ncbi_bin = NULL - if not specified in path do the
+following: ncbi_bin = "/my/local/blast+_folder".}
 
 \item{too_many_ns}{a vector of indices that result
 in a fasta with too many Ns}
@@ -42,11 +48,21 @@ in a fasta with too many Ns}
 
 \item{output_table}{the table of results}
 
-\item{wildcards}{a character vector representing the number of wildcards to
-discard}
+\item{wildcards}{is a character vector that represents the minimum number
+of consecutive Ns the user will tolerate in a given seed or hit
+sequence. The default is wildcards = "NNNN"}
 
 \item{num_rounds}{number of rounds of blast}
+
+\item{...}{additional arguments passed to \code{\link[=run_blastn]{run_blastn()}}}
 }
 \description{
-runs blastdbcmd, blastn and aggregates the results
+It uses \code{\link[=run_blastdbcmd]{run_blastdbcmd()}} to find a seed sequence that corresponds to
+the accession number and forward and reverse stops recorded in the seeds table.
+\code{\link[=run_blastdbcmd]{run_blastdbcmd()}} outputs sequences as .fasta-formatted strings, which
+run_blastdbcmd_blastn_and_aggregate_resuts concatenates into a multi-line
+fasta, then passes to \code{\link[=run_blastn]{run_blastn()}} as an argument. The output of
+\code{\link[=run_blastn]{run_blastn()}} is de-replicated by accession, and only the longest
+read per replicates is retained in the output table. The run state is saved
+and passed back to \code{\link[=blast_datatable]{blast_datatable()}}.
 }

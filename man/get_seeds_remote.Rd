@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_seeds_remote.R
 \name{get_seeds_remote}
 \alias{get_seeds_remote}
-\title{Query primer_blast and generate a .csv to use for blast_seeds}
+\title{Query primer NCBI's Blast and generate a .csv to use for blast_seeds}
 \usage{
 get_seeds_remote(
   forward_primer_seq,
@@ -103,7 +103,8 @@ It creates three files inside that directory. One represents the unfiltered
 output and another represents the output after filtering with user modifiable
 parameters and with appended taxonomy. Also generated is a summary of unique
 taxonomic ranks after filtering.
-
+}
+\details{
 get_seeds_remote passes the forward and reverse primer sequence for a given
 PCR product to \code{\link[=iterative_primer_search]{iterative_primer_search()}} along with the taxid(s) of
 the organism(s) to blast, the database to search, and many additional possible

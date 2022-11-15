@@ -1,5 +1,9 @@
 #' Helper function to save the state of a running blast search
 #'
+#' @details
+#' Used by [rCRUX::run_blastdbcmd_blastn_and_aggregate_resuts()] to cash output
+#' data after completed blast searches.
+#'
 #' @param save_dir the directory to save in
 #' @param output_table the outputs generated so far
 #' @param blast_seeds_m blast seeds table but with blast status update

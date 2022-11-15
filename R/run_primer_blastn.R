@@ -1,11 +1,9 @@
 #' Runs blastn with the input primer sequences converted to a primer_fasta file
 #' as a query
 #'
-#' @description
-#' Takes the input string, writes it to a temporary file,
-#' and calls blastn with that file as the query. Warning:
-#' if a file at the path specified by temp already exists,
-#' it will be overwritten then deleted.
+#' @details
+#' Calls blastn with a primer fasta file as the query. The user can not add
+#' additional search parameters, but can modify the available parameters.
 #'
 #' @details
 #' run_primer_blastn takes a fasta file containing primers, uses blastn-short to
@@ -14,6 +12,9 @@
 #' saccver (subject accession version), mismatch (number of mismatches between
 #' the subject a query), sstart (subject start), send (subject end), staxids
 #' (subject taxids).
+#'
+#' Information about the blastn parameters can be found by accessing blastn -help
+#' and at [NCBI](https://www.ncbi.nlm.nih.gov/books/NBK279684/).
 #'
 #' Note:
 #' The number of alignments returned for a given blast search is hardcoded at

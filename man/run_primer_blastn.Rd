@@ -22,7 +22,10 @@ run_primer_blastn(
 
 \item{db}{path to blast formatted database}
 
-\item{ncbi_bin}{if not null use it as the parent directory for blastn}
+\item{ncbi_bin}{is the path to blast+ tools if not in the user's path.
+Specify only if blastn and blastdbcmd  are not in your path.
+The default is ncbi_bin = NULL - if not specified in path do the
+following: ncbi_bin = "/my/local/blast+_folder".}
 
 \item{task}{the task for blastn to perform - default here is "blastn_short",
 which is optimized for searches with queries < 50 bp}
@@ -38,7 +41,7 @@ found by chance. The default is evalue = 3e-7.}
 subject hits. The default is coverage = 90.}
 
 \item{perID}{is the minimum percent identity of the query relative to the
-subject hits. The default is perID = 2.}
+subject hits. The default is perID = 50.}
 
 \item{reward}{is the reward for nucleotide match. The default is reward = 2.}
 }
@@ -46,11 +49,24 @@ subject hits. The default is perID = 2.}
 a tibble 'output_table' representing the blastn results
 }
 \description{
-Takes the input string, writes it to a temporary file,
-and calls blastn with that file as the query. Warning:
-if a file at the path specified by temp already exists,
-it will be overwritten then deleted.
+Runs blastn with the input primer sequences converted to a primer_fasta file
+as a query
+}
+\details{
+Calls blastn with a primer fasta file as the query. The user can not add
+additional search parameters, but can modify the available parameters.
 
+run_primer_blastn takes a fasta file containing primers, uses blastn-short to
+query them to a blast formatted database. The result is an output table with
+the following columns of data: qseqid (query subject id), sgi (subject gi),
+saccver (subject accession version), mismatch (number of mismatches between
+the subject a query), sstart (subject start), send (subject end), staxids
+(subject taxids).
+
+Information about the blastn parameters can be found by accessing blastn -help
+and at \href{https://www.ncbi.nlm.nih.gov/books/NBK279684/}{NCBI}.
+
+Note:
 The number of alignments returned for a given blast search is hardcoded at
-"-num_alignments", "10000000",
+"-num_alignments 10000000".
 }

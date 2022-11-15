@@ -75,6 +75,11 @@ The default is perID = 2.}
 
 \item{reward}{(passed to \code{\link[=run_primer_blastn]{run_primer_blastn()}} is the reward for
 nucleotide match. The default is reward = 2.}
+
+\item{ncbi_bin}{passed to \code{\link[=run_primer_blastn]{run_primer_blastn()}} is the path to blast+
+tools if not in the user's path.  Specify only if blastn and is not in
+your path. The default is ncbi_bin = NULL - if not specified in path
+do the following: ncbi_bin = "/my/local/blast+_folder".}
 }
 \description{
 get_seeds_local is a local interpretation of \code{\link[=get_seeds_remote]{get_seeds_remote()}} that avoids
@@ -87,7 +92,8 @@ named after \code{metabarcode_name}. It creates three files inside that director
 One represents the unfiltered output and another represents the output after
 filtering with user modifiable parameters and with appended taxonomy. Also
 generated is a summary of unique taxonomic ranks after filtering.
-
+}
+\details{
 get_seeds_local passes the forward and reverse primer sequence for a given
 PCR product to blastn which individually queries them against a blast formatted
 database using the task "blastn_short". The returned blast hits for each

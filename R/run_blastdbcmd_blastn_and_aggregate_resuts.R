@@ -1,4 +1,16 @@
-#' runs blastdbcmd, blastn and aggregates the results
+#' runs [rCRUX::run_blastdbcmd()], [rCRUX::run_blastn()], and aggregates and
+#' saves the results
+#'
+#' @description
+#' It uses [rCRUX::run_blastdbcmd()] to find a seed sequence that corresponds to
+#' the accession number and forward and reverse stops recorded in the seeds table.
+#' [rCRUX::run_blastdbcmd()] outputs sequences as .fasta-formatted strings, which
+#' run_blastdbcmd_blastn_and_aggregate_resuts concatenates into a multi-line
+#' fasta, then passes to [rCRUX::run_blastn()] as an argument. The output of
+#' [rCRUX::run_blastn()] is de-replicated by accession, and only the longest
+#' read per replicates is retained in the output table. The run state is saved
+#' and passed back to [rCRUX::blast_datatable()].
+#'
 #'
 #' @param sample_indices the indices to sample
 #' @param save_dir a directory in which to create files representing the
@@ -23,6 +35,7 @@
 #' @param num_rounds number of rounds of blast
 #' @param blastdbcmd_failed the indicies not found in your blast db
 #' @param ... additional arguments passed to [rCRUX::run_blastn()]
+#'
 #' @return NULL
 #' @export
 

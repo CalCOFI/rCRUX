@@ -34,3 +34,7 @@ database}
 \description{
 Helper function to save the state of a running blast search
 }
+\details{
+Used by \code{\link[=run_blastdbcmd_blastn_and_aggregate_resuts]{run_blastdbcmd_blastn_and_aggregate_resuts()}} to cash output
+data after completed blast searches.
+}

@@ -1,9 +1,18 @@
-#' Runs blastn with the input fasta as a query
+#' Runs blastn with the seed amplicon input fasta as a query
 #'
-#' Takes the input string, writes it to a temporary file,
-#' and calls blastn with that file as the query. Warning:
-#' if a file at the path specified by temp already exists,
-#' it will be overwritten then deleted.
+#' @details
+#' Calls blastn with a fasta file as the query. The user can not add
+#' additional search parameters, but can modify the available parameters.
+#'
+#' @details
+#' run_blastn takes a fasta file, and query them to a blast formatted database.
+#' The result is an output table with
+#' the following columns of data: accession, amplicon_length, pident,
+#' query_accession, accession_sequence_length, amplicon_start, amplicon_stop,
+#' sequence, evalue, BLAST_db_taxids.
+#'
+#' Information about the blastn parameters can be found by accessing blastn -help
+#' and at [NCBI](https://www.ncbi.nlm.nih.gov/books/NBK279684/).
 #'
 #' @param fasta a fasta-formatted string
 #' @param temp: a file path to write a temporary fasta to. The default is
@@ -27,6 +36,7 @@
 
 run_blastn <- function(fasta, db_dir, temp = NULL, ncbi_bin = NULL,
                        evalue = 1e-6, align = 50000, coverage = 50, perID = 70) {
+
   # This is a hacky workaround to deal with the fact
   # that blastn wants a file path as a query
   # Ideally, we would find a way (perhaps a process substitution?)
@@ -36,9 +46,6 @@ run_blastn <- function(fasta, db_dir, temp = NULL, ncbi_bin = NULL,
   # 2) It allows for easy changes if we ever figure out an elegant way to do
   # the handoff
 
-
-  print("align rb=")
-  print(align)
 
 
   if (is.null(temp)) {

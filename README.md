@@ -197,7 +197,7 @@ Iterative searches are based on a stratified random sampling unique taxonomic gr
 
 
 ```
-seeds_output_path <- '/my/rCRUX_output_directory/12S_V5F1_primerTree_output_with_taxonomy.csv'
+seeds_output_path <- '/my/rCRUX_output_directory/12S_V5F1_filtered_get_seeds_remote_output_with_taxonomy.csv'
 # this is output from get_seeds_local or get_seeds_remote
 
 blast_db_path <- "/my/local/blast_database/nt"

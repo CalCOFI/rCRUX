@@ -1,5 +1,7 @@
-#' Extracts query parameters from a row and calls blastdbcmd
+#' Extracts seed amplicon sequence from blast databases using blastdbcmd and
+#' primer start and end coordinates stored in the seeds table
 #'
+#' @description
 #' Given a row from a blast_seed formatted data.frame, extracts arguments
 #' for blastdbcmd, then returns the output of the blastdbcmd call.
 #'
