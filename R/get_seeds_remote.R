@@ -56,6 +56,35 @@
 #' See [rCRUX::iterative_primer_search()] and [rCRUX::modifiedPrimerTree_Functions]
 #' for additional run parameters not included below.
 #'
+#' Check NCBI's primer blast for additional search options**
+#'
+#' get_seeds_remote passes many parameters to NCBI's primer blast tool. You can
+#' match the parameters to the fields available in the GUI here. First, use your
+#' browser to view the page source. Search for the field you are interested in
+#' by searching for the title of the field. It should be enclosed in a tag.
+#' Inside the label tag, it says for = "<name_of_parameter>". Copy the string
+#' after for = and add it to get_seeds_remote as the name of a parameter,
+#' setting it equal to whatever you like.
+#'
+#'
+#' | Name                                   |       Default  |
+#' |----------------------------------------|----------------|
+#' | PRIMER_SPECIFICITY_DATABASE            | nt             |
+#' | EXCLUDE_ENV                            | unchecked      |
+#' | ORGANISM                               | Homo sapiens   |
+#' | TOTAL_PRIMER_SPECIFICITY_MISMATCH      | 1              |
+#' | PRIMER_3END_SPECIFICITY_MISMATCH       | 1              |
+#' | TOTAL_MISMATCH_IGNORE                  | 6              |
+#' | MAX_TARGET_SIZE                        | 4000           |
+#' | HITSIZE                                | 50000          |
+#' | EVALUE                                 | 30000          |
+#' | WORD_SIZE                              | 7              |
+#' | NUM_TARGETS_WITH_PRIMERS               | 1000           |
+#' | MAX_TARGET_PER_TEMPLATE                | 100            |
+#'
+#' As of 2022-08-16, the primer blast GUI contains some options that are not implemented by primer_search. The [table below](#Table-of-available-options) documents available options.
+#'
+#'
 #' @param forward_primer_seq passed to primer_search, which turns it into a list of
 #'        each primer it could be based on its degenerate primers, then passes
 #'        each one in turn to NCBI (e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG")
@@ -114,6 +143,35 @@
 #'
 #' @return a data.frame containing the same information as the .csv it generates
 #' @export
+#' @example
+#'
+#' forward_primer_seq = "TAGAACAGGCTCCTCTAG"
+#' reverse_primer_seq =  "TTAGATACCCCACTATGC"
+#' output_directory_path <- "/my/directory/12S_V5F1_remote_111122_modified_params"
+#' metabarcode_name <- "12S_V5F1"
+#' accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql"
+#' blast_db_path <- "/my/directory/ncbi_nt/nt"
+#' accession_taxa_sql_path <- "/my/directory/accession2taxid/accessionTaxa.sql"
+#'
+#'
+#' get_seeds_remote(forward_primer_seq,
+#'                 reverse_primer_seq,
+#'                 output_directory_path,
+#'                 metabarcode_name,
+#'                 accession_taxa_sql_path,
+#'                 HITSIZE ='1000000',
+#'                 evalue='100000',
+#'                 word_size='6',
+#'                 MAX_TARGET_PER_TEMPLATE = '5',
+#'                 NUM_TARGETS_WITH_PRIMERS ='500000', minimum_length = 50,
+#'                 MAX_TARGET_SIZE = 200,
+#'                 organism = c("1476529", "7776"), return_table = FALSE)
+#'
+#'
+#' # This results in approximately 111500 blast seed returns (there is some variation due to database updates, etc.), note the default generated approximately 1047.
+#' # This assumes the user is not throttled by memory limitations.
+#'
+#'
 
 
 get_seeds_remote <- function(forward_primer_seq, reverse_primer_seq,

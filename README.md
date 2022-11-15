@@ -386,51 +386,134 @@ get_seeds_local(forward_primer_seq,
 
 ### Overview
 
-[get_seeds_remote](https://lunagal.github.io/get_seeds_remote)  takes a set of forward and reverse primer sequences and generates csv summaries of [NCBI's primer blast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) data returns. Only nearly full length barcode sequences containing primer matches are captured. It also generates a count of unique instances of taxonomic ranks (Phylum, Class, Order, Family, Genus, and Species) captured in the seed library.
+[get_seeds_remote](https://lunagal.github.io/get_seeds_remote) takes a set of forward and reverse primer sequences and generates csv summaries of [NCBI's primer blast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) data returns. Only full length barcode sequences containing primer matches are captured. It also generates a count of unique instances of taxonomic ranks (Phylum, Class, Order, Family, Genus, and Species) captured in the seed library.
 
-#' This script combines modified versions of [primerTree::primer_search()]
-#' and primerTree's parse_primer to make [rCRUX::iterative_primer_search()]
-#' which is called to query NCBI's
-#' [primer BLAST](https://www.ncbi.nlm.nih.gov/tools/primer-blast/)
-#' tool, filters the results, then aggregates them into a single data.frame.
+This script uses [iterative_primer_search](https://lunagal.github.io/iterative_primer_search) to perform tasks. Its parameters are very similar to primerTree's primer_search(), but it takes vectors for organism and for database and performs a primer search for each combination. For each combination it calls [modifiedPrimerTree_Functions](https://lunagal.github.io/modifiedPrimerTree_Functions), which is a modified versions of primerTree's primer_search() and primerTree's parse_primer, to query NCBI's [primer BLAST](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) tool, filters the results, and aggregates them into a single data.frame.
 
+It downgrades errors from primer_search and parse_primer_hits into warnings. This is useful when searching for a large number of different combinations, allowing the function to output successful results.
 
-### Expected Output
-#' It creates a directory `get_seeds_remote` in the `output_directory_path`.
-#' It creates three files inside that directory. One represents the unfiltered
-#' output and another represents the output after filtering with user modifiable
-#' parameters and with appended taxonomy. Also generated is a summary of unique
-#' taxonomic ranks after filtering.
+### Specific Output
+It creates a directory `get_seeds_remote` in the `output_directory_path`. It creates three files inside that directory. One represents the unfiltered output and another represents the output after filtering with user modifiable parameters and with appended taxonomy. Also generated is a summary of unique taxonomic ranks after filtering.
 
 
 ### Detailed Steps
-### Parameters
-### Example  
 
 
 
-
-
-
-
+not finished...
 
 get_seeds_remote uses modified versions of functions from the [primerTree](https://CRAN.R-project.org/package=primerTree) package to submit queries to NCBI's primer BLAST tool, then aggregates results into a single data.frame. primer_search (Modified from [primerTree](https://CRAN.R-project.org/package=primerTree)) expands degenerate primers into each possible non-degenerate primer and submits a query for each. get_seeds_remote further multiplies the number of queries by allowing the user to query the primers for each organism in a vector. get_seeds_remote collects all these results from primer_search, filters them based on product length, and adds taxonomic data using the taxonomizr package.
 
-#### Organism(s)
+**Organism(s)**
 primer BLAST defaults to homo sapiens, so it is important that you supply a specific organism or organisms. NCBI's taxids can be found [here](https://www.ncbi.nlm.nih.gov/taxonomy). You can specify multiple organism by passing a character vector containing each of the options, like in the example below.
 
 Often NCBI API will throttle higher taxonomic ranks (Domain, Phylum, etc.). One work around is to supply multiple lower level taxonomic ranks (Class, Family level, etc.) or use get_seeds_local.
 
-#### Search options
+### Parameters
+
+**forward_primer_seq**
++ passed to primer_search, which turns it into a list of
+        each primer it could be based on its degenerate primers, then passes
+        each one in turn to NCBI.
++       e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG"
+**reverse_primer_seq**
++ passed to primer_search, which turns it into a list of
+        each primer it could be based on its degenerate primers, then passes
+        each one in turn to NCBI.
++        e.g. reverse_primer_seq <-  "TTAGATACCCCACTATGC"
+**output_directory_path**
++ the parent directory to place the data in.
++        e.g. "/path/to/output/12S_V5F1_remote_111122"
+**metabarcode_name**
++ used to name the subdirectory and the files. If a
+        directory named metabarcode_name does not exist in output_directory_path, a
+        new directory will be created. get_seeds_remote appends
+        metabarcode_name to the beginning of each of the two files it generates.
++       e.g. metabarcode_name <- "12S_V5F1"
+**accession_taxa_sql_path**
++ the path to sql created by taxonomizr
++         e.g. accession_taxa_sql_path <- "/my/accessionTaxa.sql"
+**organism**
++ a vector of character vectors. Each character vector is
+        passed in turn to primer_search, which passes them to NCBI.
+        get_seeds_remote aggregates all of the results into a single file
++       e.g. organism = c("1476529", "7776"))
++       Note: increasing taxonomic
+        rank (e.g. increasing from order to class) for this parameter can
+        maximize primer hits, but can also lead to API run throttling due to
+        memory limitations
+**num_permutations**
++ the number of primer permutations to search, if the
+        degenerate bases cause more than this number of permutations to exist,
+        this number will be sampled from all possible permutations.
++        The default is num_permutations = 50  
++        Note for very degenerate bases,
+        searches may be empty due to poor mutual matches for a given forward
+        and reverse primer combination.
+**mismatch**
++ the highest acceptable mismatch value. parse_primer_hits
+        returns a table with a mismatch column. get_seeds_remote removes each
+        row with a mismatch greater than the specified value.
++       The default is mismatch = 3
++       Note: this is smaller than get_seeds_local because of differences in mismatch calculation between function.
+**minimum_length**
++ parse_primer_hits returns a table with a product_length
+        column. get_seeds_remote removes each row that has a value less than
+        minimum_length in the product_length column.
++       The default is minimum_length = 5
+**maximum_length**
++ parse_primer_hits returns a table with a
+        product_length column. get_seeds_remote removes each row that has a
+        value greater than maximum_length in the product_length column
++       The default is maximum_length = 500
+**primer_specificity_database**
++ passed to primer_search, which passes it to NCBI.  
++       The default is primer_specificity_database = 'nt'.
+**HITSIZE**
++ a primer BLAST search parameter set high to maximize the
+        number of observations returned.
++       The default HITSIZE = 50000
++       Note: increasing this parameter can
+        maximize primer hits, but can also lead to API run throttling due to
+        memory limitations
+**NUM_TARGETS_WITH_PRIMERS**
++ a primer BLAST search parameter set high to
+        maximize the number of observations returned.
++       The default is NCBI NUM_TARGETS_WITH_PRIMERS = 1000
++       Note: increasing
+        this parameter can maximize primer hits, but can also lead to API run
+        throttling due to memory limitations
+**...**
++ additional arguments passed to [modifiedPrimerTree_Functions](https://lunagal.github.io/modifiedPrimerTree_Functions). See
+        [NCBI primer-blast tool]](https://www.ncbi.nlm.nih.gov/tools/primer-blast/)
+        for more information.
+
+
+
+**Check NCBI's primer blast for additional search options**
 
 get_seeds_remote passes many parameters to NCBI's primer blast tool. You can match the parameters to the fields available in the GUI here. First, use your browser to view the page source. Search for the field you are interested in by searching for the title of the field. It should be enclosed in a tag. Inside the label tag, it says for = "<name_of_parameter>". Copy the string after for = and add it to get_seeds_remote as the name of a parameter, setting it equal to whatever you like.
+
+| Name                                   |       Default  |
+|----------------------------------------|----------------|
+| PRIMER_SPECIFICITY_DATABASE            | nt             |
+| EXCLUDE_ENV                            | unchecked      |
+| ORGANISM                               | Homo sapiens   |
+| TOTAL_PRIMER_SPECIFICITY_MISMATCH      | 1              |
+| PRIMER_3END_SPECIFICITY_MISMATCH       | 1              |
+| TOTAL_MISMATCH_IGNORE                  | 6              |
+| MAX_TARGET_SIZE                        | 4000           |
+| HITSIZE                                | 50000          |
+| EVALUE                                 | 30000          |
+| WORD_SIZE                              | 7              |
+| NUM_TARGETS_WITH_PRIMERS               | 1000           |
+| MAX_TARGET_PER_TEMPLATE                | 100            |
 
 As of 2022-08-16, the primer blast GUI contains some options that are not implemented by primer_search. The [table below](#Table-of-available-options) documents available options.
 
 **You can check [primerblast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) for more information on how to modify search options. For example, if want you to generate a larger hitsize, open the source of the primer designing tool and look for that string. You find the following:
 
 ```
-
 <label for="HITSIZE" class="m ">Max number of sequences returned by Blast</label>
          <div class="input ">
                       <span class="sel si">
@@ -454,17 +537,16 @@ As of 2022-08-16, the primer blast GUI contains some options that are not implem
 ```
 You can find the description and suggested values for this search option. HITSIZE ='1000000' is added to the search below along with several options that increase the number of entries returned from primer_search.
 
+
+### Example
 ```
-output_directory_path <- "/Users/limeybean/Dropbox/CRUX_2.0/12S_V5F1_modified_params"
-
-metabarcode_name <- "12S_V5F1"
-
-accession_taxa_sql_path <- "/Users/limeybean/Dropbox/CRUX_2.0/accession2taxid/accessionTaxa.sql"
-
-
 forward_primer_seq = "TAGAACAGGCTCCTCTAG"
-
 reverse_primer_seq =  "TTAGATACCCCACTATGC"
+output_directory_path <- "/my/directory/12S_V5F1_remote_111122_modified_params"
+metabarcode_name <- "12S_V5F1"
+accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql"
+blast_db_path <- "/my/directory/ncbi_nt/nt"
+accession_taxa_sql_path <- "/my/directory/accession2taxid/accessionTaxa.sql"
 
 get_seeds_remote(forward_primer_seq,
                 reverse_primer_seq,
@@ -478,31 +560,11 @@ get_seeds_remote(forward_primer_seq,
                 NUM_TARGETS_WITH_PRIMERS ='500000', minimum_length = 50,
                 MAX_TARGET_SIZE = 200,
                 organism = c("1476529", "7776"), return_table = FALSE)
+
+# This results in approximately 111500 blast seed returns (there is some variation due to database updates, etc.), note the default generated approximately 1047.
+# This assumes the user is not throttled by memory limitations.              
 ```
 
-This results in 111500 blast seed returns, note the default generated 1047. This of course assumes the user is not throttled by memory limitations.
-
-
-Example output can be found [here](/examples/12S_V5F1_generated_11-10-22).
-
-#### Table of available options
-
-**Need to check for accuracy and completeness**
-
-| Name                                   | rCrux Default  |
-|----------------------------------------|----------------|
-| PRIMER_SPECIFICITY_DATABASE            | nt             |
-| EXCLUDE_ENV                            | unchecked      |
-| ORGANISM                               | Homo sapiens   |
-| TOTAL_PRIMER_SPECIFICITY_MISMATCH      | 1              |
-| PRIMER_3END_SPECIFICITY_MISMATCH       | 1              |
-| TOTAL_MISMATCH_IGNORE                  | 6              |
-| MAX_TARGET_SIZE                        | 4000           |
-| HITSIZE                                | 50000          |
-| EVALUE                                 | 30000          |
-| WORD_SIZE                              | 7              |
-| NUM_TARGETS_WITH_PRIMERS               | 1000           |
-| MAX_TARGET_PER_TEMPLATE                | 100            |
 
 
 

@@ -60,24 +60,24 @@
 #'        The default is maximum_length = 500
 #' @param blast_db_path a directory with a blast-formatted database.
 #'        (e.g blast_db_path <- "/my/ncbi_nt/nt")
-#' @param task (passed to [rCRUX::run_primer_blastn()] the task for blastn to
+#' @param task (passed to [rCRUX::run_primer_blastn()]) the task for blastn to
 #'        perform - default here is "blastn_short", which is optimized
 #'        for searches with queries < 50 bp
-#' @param word_size (passed to [rCRUX::run_primer_blastn()] is the fragment size
+#' @param word_size (passed to [rCRUX::run_primer_blastn()]) is the fragment size
 #'        used for blastn search - smaller word sizes increase sensitivity and
 #'        time of the search. The default is word_size =  7
-#' @param evalue (passed to [rCRUX::run_primer_blastn()] is the number of
+#' @param evalue (passed to [rCRUX::run_primer_blastn()]) is the number of
 #'        expected hits with a similar quality score found by chance.
 #'        The default is evalue = 3e-7.
-#' @param coverage (passed to [rCRUX::run_primer_blastn()] is the minimum
+#' @param coverage (passed to [rCRUX::run_primer_blastn()]) is the minimum
 #'        percent of the query length recovered in the subject hits.
 #'        The default is coverage = 90.
-#' @param perID  (passed to [rCRUX::run_primer_blastn()] is the minimum percent
+#' @param perID  (passed to [rCRUX::run_primer_blastn()]) is the minimum percent
 #'        identity of the query relative to the subject hits.
 #'        The default is perID = 2.
-#' @param reward (passed to [rCRUX::run_primer_blastn()] is the reward for
+#' @param reward (passed to [rCRUX::run_primer_blastn()]) is the reward for
 #'        nucleotide match. The default is reward = 2.
-#' @param ncbi_bin passed to [rCRUX::run_primer_blastn()] is the path to blast+
+#' @param ncbi_bin passed to [rCRUX::run_primer_blastn()]) is the path to blast+
 #'        tools if not in the user's path.  Specify only if blastn and is not in
 #'        your path. The default is ncbi_bin = NULL - if not specified in path
 #'        do the following: ncbi_bin = "/my/local/blast+_folder".
@@ -85,12 +85,14 @@
 #' @export
 #'
 #' @example
+#'
 #' forward_primer_seq = "TAGAACAGGCTCCTCTAG"
 #' reverse_primer_seq =  "TTAGATACCCCACTATGC"
 #' output_directory_path <- "/my/directory/12S_V5F1_local_111122_species_750"
-#' metabarcode_name <- "12S_V5F1" # desired name of metabarcode locus
+#' metabarcode_name <- "12S_V5F1"
 #' accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql"
 #' blast_db_path <- "/my/directory/ncbi_nt/nt"
+#'
 #'
 #' get_seeds_local(forward_primer_seq,
 #'                 reverse_primer_seq,
@@ -99,9 +101,11 @@
 #'                 accession_taxa_sql_path,
 #'                 blast_db_path, rank = species, max_to_blast = 750)
 #'
+#'
 #' # using the rank of species will increase the number of total unique blast hits
 #' # modifying the max_to_blast submits fewer reads simultaneously and reduces overall RAM while extending the run
-
+#'
+#'
 
 
 get_seeds_local <- function(forward_primer_seq, reverse_primer_seq,
