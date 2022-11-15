@@ -12,6 +12,7 @@
 #' filtering with user modifiable parameters and with appended taxonomy. Also
 #' generated is a summary of unique taxonomic ranks after filtering.
 #'
+#' @details
 #' get_seeds_local passes the forward and reverse primer sequence for a given
 #' PCR product to blastn which individually queries them against a blast formatted
 #' database using the task "blastn_short". The returned blast hits for each

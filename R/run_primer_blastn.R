@@ -7,8 +7,17 @@
 #' if a file at the path specified by temp already exists,
 #' it will be overwritten then deleted.
 #'
+#' @details
+#' run_primer_blastn takes a fasta file containing primers, uses blastn-short to
+#' query them to a blast formatted database. The result is an output table with
+#' the following columns of data: qseqid (query subject id), sgi (subject gi),
+#' saccver (subject accession version), mismatch (number of mismatches between
+#' the subject a query), sstart (subject start), send (subject end), staxids
+#' (subject taxids).
+#'
+#' Note:
 #' The number of alignments returned for a given blast search is hardcoded at
-#' "-num_alignments", "10000000",
+#' "-num_alignments 10000000".
 #'
 #' @param primer_fasta path to the primer fasta file
 #' @param ncbi_bin if not null use it as the parent directory for blastn

@@ -2,8 +2,10 @@
 #' Call primer_search with several parameters and aggregate the results
 #'
 #' This function acts like [primerTree::primer_search()] and
-#' primerTree's parse_primer() hits all in one. It calls
-#' [rCRUX::modifiedPrimerTree_Functions()] to perform tasks. Its parameters
+#' primerTree's parse_primer() hits all in one.
+#'
+#' @details
+#' It calls [rCRUX::modifiedPrimerTree_Functions()] to perform tasks. Its parameters
 #' are very similar to [primerTree::primer_search()], but it takes vectors for
 #' organism and for database and performs a primer search for each combination.
 #' It downgrades errors from primer_search and parse_primer_hits into warnings.

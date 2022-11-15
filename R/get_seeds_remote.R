@@ -1,4 +1,4 @@
-#' Query primer_blast and generate a .csv to use for blast_seeds
+#' Query primer NCBI's Blast and generate a .csv to use for blast_seeds
 #'
 #' @description
 #' get_seeds_remote combines modified versions of [primerTree::primer_search()]
@@ -12,6 +12,7 @@
 #' parameters and with appended taxonomy. Also generated is a summary of unique
 #' taxonomic ranks after filtering.
 #'
+#' @details
 #' get_seeds_remote passes the forward and reverse primer sequence for a given
 #' PCR product to [rCRUX::iterative_primer_search()] along with the taxid(s) of
 #' the organism(s) to blast, the database to search, and many additional possible

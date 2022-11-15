@@ -13,8 +13,9 @@
 #'        database
 #' @param unsampled_indices the indices that need to be sampled
 #' @param output_table the table of results
-#' @param wildcards a character vector representing the number of wildcards to
-#'        discard
+#' @param wildcards is a character vector that represents the minimum number
+#'        of consecutive Ns the user will tolerate in a given seed or hit
+#'        sequence. The default is wildcards = "NNNN"
 #' @param num_rounds number of rounds of blast
 #' @param blastdbcmd_failed the indicies not found in your blast db
 #' @return NULL
