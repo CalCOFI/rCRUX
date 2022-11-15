@@ -293,9 +293,11 @@ Information about the blastn parameters can be found in run_primer_blast, and by
 #### Parameters
 
 **forward_primer_seq** passed to primer_to_fasta, which turns it into fasta
-        file to be past to get_seeds_local (e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG").
+        file to be past to get_seeds_local
+        (e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG").
 **reverse_primer_seq** passed to primer_to_fasta, which turns it into fasta
-        file to be past to get_seeds_local (e.g. reverse_primer_seq <-  "TTAGATACCCCACTATGC").
+        file to be past to get_seeds_local 
+        (e.g. reverse_primer_seq <-  "TTAGATACCCCACTATGC").
 **output_directory_path** the parent directory to place the data in
         (e.g. "/path/to/output/12S_V5F1_local_111122_e300_111122").
 **metabarcode_name** used to name the subdirectory and the files. If a
