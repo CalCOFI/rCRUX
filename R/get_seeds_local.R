@@ -77,6 +77,10 @@
 #'        The default is perID = 2.
 #' @param reward (passed to [rCRUX::run_primer_blastn()] is the reward for
 #'        nucleotide match. The default is reward = 2.
+#' @param ncbi_bin passed to [rCRUX::run_primer_blastn()] is the path to blast+
+#'        tools if not in the user's path.  Specify only if blastn and is not in
+#'        your path. The default is ncbi_bin = NULL - if not specified in path
+#'        do the following: ncbi_bin = "/my/local/blast+_folder".
 #' @return NULL
 #' @export
 

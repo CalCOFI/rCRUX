@@ -4,7 +4,11 @@
 #' @param save_dir a directory in which to create files representing the
 #'        current state
 #' @param blast_seeds_m blast seeds table but with blast status update
-#' @param ncbi_bin path to blast+ tools if not in path
+#' @param ncbi_bin passed to [rCRUX::run_blastdbcmd()] [rCRUX::run_blastn()] is
+#'        the path to blast+ tools if not in the user's path.  Specify only if
+#'        blastn and blastdbcmd  are not in your path.
+#'        The default is ncbi_bin = NULL - if not specified in path do the
+#'        following: ncbi_bin = "/my/local/blast+_folder".
 #' @param too_many_ns a vector of indices that result
 #'        in a fasta with too many Ns
 #' @param db the type of blast db - e.g. nt
@@ -18,6 +22,7 @@
 #'        sequence. The default is wildcards = "NNNN"
 #' @param num_rounds number of rounds of blast
 #' @param blastdbcmd_failed the indicies not found in your blast db
+#' @param ... additional arguments passed to [rCRUX::run_blastn()]
 #' @return NULL
 #' @export
 
@@ -25,7 +30,7 @@
 
 run_blastdbcmd_blastn_and_aggregate_resuts <- function(sample_indices = sample_indices,
         save_dir, blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir, blastdbcmd_failed,
-        unsampled_indices, output_table, wildcards, num_rounds) {
+        unsampled_indices, output_table, wildcards, num_rounds, ...) {
 
 
   # run blastdbcmd on each

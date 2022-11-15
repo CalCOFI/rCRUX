@@ -80,11 +80,21 @@
 #'        rank = genus - sampling a lower rank  (e.g. species) will generate
 #'        more total hits and take more time, conversely sampling a higher rank
 #'        (e.g. family) will generate fewer total hits and take less time.
-#' @param ... passed to [rCRUX::blast_datatable()]
-
-
-
-
+#' @param ncbi_bin passed to [rCRUX::run_blastdbcmd()] [rCRUX::run_blastn()] is
+#'        the path to blast+ tools if not in the user's path.  Specify only if
+#'        blastn and blastdbcmd  are not in your path.
+#'        The default is ncbi_bin = NULL - if not specified in path do the
+#'        following: ncbi_bin = "/my/local/blast+_folder".
+#' @param evalue passed to [rCRUX::run_blastn()] is the number of expected hits
+#'        with a similar quality score found by chance. The default is
+#'        evalue = 1e-6.
+#' @param coverage passed to [rCRUX::run_blastn()] is the minimum percent of the
+#'        query length recovered in the subject hits. The default is
+#'        coverage = 50.
+#' @param perID passed to [rCRUX::run_blastn()] is the minimum percent identity
+#'        of the query relative to the subject hits. The default is perID = 70.
+#' @param align passed to [rCRUX::run_blastn()] is the maximum number of subject
+#'        hits to return per query blasted. The default is align = 50000.
 #' @return NULL
 #' @export
 #'

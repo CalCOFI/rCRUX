@@ -5,9 +5,14 @@
 #'
 #' @param query_row a row from get_seeds_local or get_seeds_remote
 #' @param db a directory with a blast-formatted database
-#' @param ncbi_bin if not null use it as the parent directory for blastn
+#' @param ncbi_bin is the path to blast+ tools if not in the user's path.  
+#'        Specify only if blastn and blastdbcmd  are not in your path.
+#'        The default is ncbi_bin = NULL - if not specified in path do the
+#'        following: ncbi_bin = "/my/local/blast+_folder".
 #' @return a fasta-formatted character vector
 #' @export
+
+
 run_blastdbcmd <- function(query_row, db, ncbi_bin = NULL) {
     # Extract arguments
     accession <- query_row$accession

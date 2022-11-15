@@ -1,9 +1,17 @@
 Package: rCRUX
 Title: Generate CRUX metabarcoding reference libraries in R
-Version: 0.0.0.9000
+Version: 0.0.1.000
 Authors@R:
     person(given = "Luna",
            family = "Gal",
+           role = c("aut"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+    person(given = "Zack",
+           family = "Gold",
+           role = c("aut"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+    person(given = "Ramon",
+           family = "Gallego",
            role = c("aut"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
     person(given = "Emily",

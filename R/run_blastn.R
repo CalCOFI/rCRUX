@@ -6,8 +6,20 @@
 #' it will be overwritten then deleted.
 #'
 #' @param fasta a fasta-formatted string
-#' @param temp: a file path to write a temporary fasta to
-#' @param ncbi_bin: if not null use it as the parent directory for blastn
+#' @param temp: a file path to write a temporary fasta to. The default is
+#'        temp = NULL.
+#' @param ncbi_bin is the path to blast+ tools if not in the user's path.
+#'        Specify only if blastn and blastdbcmd  are not in your path.
+#'        The default is ncbi_bin = NULL - if not specified in path do the
+#'        following: ncbi_bin = "/my/local/blast+_folder".
+#' @param evalue is the number of expected hits with a similar quality score
+#'        found by chance. The default is evalue = 1e-6.
+#' @param coverage is the minimum percent of the query length recovered in the
+#'        subject hits. The default is coverage = 50.
+#' @param perID is the minimum percent identity of the query relative to the
+#'        subject hits. The default is perID = 70.
+#' @param align is the maximum number of subject hits to return per query
+#'        blasted. The default is align = 50000.
 #' @return a tibble representing the blastn results
 #' @export
 run_blastn <- function(fasta, db_dir, temp = NULL, ncbi_bin = NULL,

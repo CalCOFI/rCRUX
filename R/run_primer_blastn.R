@@ -20,7 +20,10 @@
 #' "-num_alignments 10000000".
 #'
 #' @param primer_fasta path to the primer fasta file
-#' @param ncbi_bin if not null use it as the parent directory for blastn
+#' @param ncbi_bin is the path to blast+ tools if not in the user's path.
+#'        Specify only if blastn and blastdbcmd  are not in your path.
+#'        The default is ncbi_bin = NULL - if not specified in path do the
+#'        following: ncbi_bin = "/my/local/blast+_folder".
 #' @param db path to blast formatted database
 #' @param task the task for blastn to perform - default here is "blastn_short",
 #'        which is optimized for searches with queries < 50 bp
@@ -32,7 +35,7 @@
 #' @param coverage is the minimum percent of the query length recovered in the
 #'        subject hits. The default is coverage = 90.
 #' @param perID is the minimum percent identity of the query relative to the
-#'        subject hits. The default is perID = 2.
+#'        subject hits. The default is perID = 50.
 #' @param reward is the reward for nucleotide match. The default is reward = 2.
 #' @return a tibble 'output_table' representing the blastn results
 #' @export
