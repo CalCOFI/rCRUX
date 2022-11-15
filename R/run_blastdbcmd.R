@@ -5,7 +5,7 @@
 #'
 #' @param query_row a row from get_seeds_local or get_seeds_remote
 #' @param db a directory with a blast-formatted database
-#' @param ncbi_bin is the path to blast+ tools if not in the user's path.  
+#' @param ncbi_bin is the path to blast+ tools if not in the user's path.
 #'        Specify only if blastn and blastdbcmd  are not in your path.
 #'        The default is ncbi_bin = NULL - if not specified in path do the
 #'        following: ncbi_bin = "/my/local/blast+_folder".
