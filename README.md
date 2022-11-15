@@ -293,67 +293,67 @@ Information about the blastn parameters can be found in run_primer_blast, and by
 #### Parameters
 
 **forward_primer_seq** passed to primer_to_fasta, which turns it into fasta
-        file to be past to get_seeds_local
-        (e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG").
++        file to be past to get_seeds_local
++        (e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG").
 
 **reverse_primer_seq** passed to primer_to_fasta, which turns it into fasta
-        file to be past to get_seeds_local
-        (e.g. reverse_primer_seq <-  "TTAGATACCCCACTATGC").
++        file to be past to get_seeds_local
++        (e.g. reverse_primer_seq <-  "TTAGATACCCCACTATGC").
 
 **output_directory_path** the parent directory to place the data in
-        (e.g. "/path/to/output/12S_V5F1_local_111122_e300_111122").
++        (e.g. "/path/to/output/12S_V5F1_local_111122_e300_111122").
 
 **metabarcode_name** used to name the subdirectory and the files. If a
-        directory named metabarcode_name does not exist in output_directory_path, a
-        new directory will be created. get_seeds_local appends
-        metabarcode_name to the beginning of each of the files it
-        generates (e.g. metabarcode_name <- "12S_V5F1").
++        directory named metabarcode_name does not exist in output_directory_path, a
++        new directory will be created. get_seeds_local appends
++        metabarcode_name to the beginning of each of the files it
++        generates (e.g. metabarcode_name <- "12S_V5F1").
 
 **accession_taxa_sql_path the path to sql** created by taxonomizr
-        (e.g. accession_taxa_sql_path <- "/my/accessionTaxa.sql")
++        (e.g. accession_taxa_sql_path <- "/my/accessionTaxa.sql")
 
 **mismatch** the highest acceptable mismatch value per hit. get_seeds_local removes each
-        row with a mismatch greater than the specified value.
-        The default is mismatch = 6
++        row with a mismatch greater than the specified value.
++        The default is mismatch = 6
 
 **minimum_length** get_seeds_local removes each row that has a value less than
-        minimum_length in the product_length column.
-        The default is minimum_length = 5
++        minimum_length in the product_length column.
++        The default is minimum_length = 5
 
 **maximum_length** get_seeds_local removes each row that has a
-        value greater than maximum_length in the product_length column
-        The default is maximum_length = 500
++        value greater than maximum_length in the product_length column.
++        The default is maximum_length = 500
 
 **blast_db_path** a directory with a blast-formatted database.
-        (e.g blast_db_path <- "/my/ncbi_nt/nt")
++        (e.g blast_db_path <- "/my/ncbi_nt/nt")
 
 **task** passed to [run_primer_blastn](https://lunagal.github.io/run_primer_blastn) the task for blastn to
-        perform - default here is "blastn_short", which is optimized
-        for searches with queries < 50 bp
++        perform - default here is "blastn_short", which is optimized
++        for searches with queries < 50 bp
 
 **word_size** passed to [run_primer_blastn](https://lunagal.github.io/run_primer_blastn) is the fragment size
-        used for blastn search - smaller word sizes increase sensitivity and
-        time of the search. The default is word_size =  7
++        used for blastn search - smaller word sizes increase sensitivity and
++        time of the search. The default is word_size =  7
 
 **evalue** passed to [run_primer_blastn](https://lunagal.github.io/run_primer_blastn) is the number of
-        expected hits with a similar quality score found by chance.
-        The default is evalue = 3e-7.
++        expected hits with a similar quality score found by chance.
++        The default is evalue = 3e-7.
 
 **coverage** passed to [run_primer_blastn](https://lunagal.github.io/run_primer_blastn) is the minimum
-        percent of the query length recovered in the subject hits.
-        The default is coverage = 90.
++        percent of the query length recovered in the subject hits.
++        The default is coverage = 90.
 
 **perID** passed to [run_primer_blastn](https://lunagal.github.io/run_primer_blastn) is the minimum percent
-        identity of the query relative to the subject hits.
-        The default is perID = 2.
++        identity of the query relative to the subject hits.
++        The default is perID = 2.
 
 **reward** passed to [run_primer_blastn](https://lunagal.github.io/run_primer_blastn) is the reward for
-        nucleotide match. The default is reward = 2.
++        nucleotide match. The default is reward = 2.
 
 **ncbi_bin** passed to [run_primer_blastn](https://lunagal.github.io/run_primer_blastn) is the path to blast+
-        tools if not in the user's path.  Specify only if blastn and is not in
-        your path. The default is ncbi_bin = NULL - if not specified in path
-        do the following: ncbi_bin = "/my/local/blast+_folder".
++        tools if not in the user's path.  Specify only if blastn and is not in
++        your path. The default is ncbi_bin = NULL - if not specified in path
++        do the following: ncbi_bin = "/my/local/blast+_folder".
 
 
 
