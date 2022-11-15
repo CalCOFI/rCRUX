@@ -32,8 +32,6 @@ run_blastdbcmd_blastn_and_aggregate_resuts <- function(sample_indices = sample_i
         save_dir, blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir, blastdbcmd_failed,
         unsampled_indices, output_table, wildcards, num_rounds, ...) {
 
-        print("align rbbbaa =")
-        print(align)
 
 
   # run blastdbcmd on each
@@ -81,7 +79,7 @@ run_blastdbcmd_blastn_and_aggregate_resuts <- function(sample_indices = sample_i
     else {
 
       # run blastn and aggregate results
-      blastn_output <- run_blastn(fasta=aggregate_fasta, db_dir=db, ncbi_bin=ncbi_bin)
+      blastn_output <- run_blastn(fasta=aggregate_fasta, db_dir=db, ncbi_bin=ncbi_bin, ...)
 
       if(nrow(blastn_output) == 0 && length(unsampled_indices) > 0) {
 

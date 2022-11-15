@@ -71,9 +71,6 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
                             sample_size = 1, wildcards = "NNNN", rank = 'genus', max_to_blast = 1000, ...) {
 
 
-  print("align bd=")
-  print(align)
-
 
   if (!(check_db(blast_db_path) || force_db)) {
     stop(blast_db_path, " is probably not a blast database.
@@ -217,7 +214,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
         run_blastdbcmd_blastn_and_aggregate_resuts(unsampled_indices, save_dir,
           blast_seeds_m, blast_db_path, ncbi_bin = NULL, too_many_ns, db_dir,
           blastdbcmd_failed, unsampled_indices, output_table, wildcards,
-          num_rounds)
+          num_rounds, ...)
 
 
 
@@ -232,7 +229,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
         run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices, save_dir,
             blast_seeds_m, blast_db_path, ncbi_bin = NULL, too_many_ns, db_dir,
             blastdbcmd_failed, unsampled_indices, output_table, wildcards,
-            num_rounds)
+            num_rounds, ...)
 
 
 
@@ -250,7 +247,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
         run_blastdbcmd_blastn_and_aggregate_resuts(subset, save_dir,
               blast_seeds_m, blast_db_path, ncbi_bin = NULL, too_many_ns, db_dir,
               blastdbcmd_failed, unsampled_indices, output_table, wildcards,
-              num_rounds)
+              num_rounds, ...)
 
         # update sample indices
         sample_indices <- sample_indices[!(sample_indices %in% subset)]

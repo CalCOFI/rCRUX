@@ -107,8 +107,6 @@ blast_seeds <- function(seeds_output_path, blast_db_path, accession_taxa_sql_pat
   # Possibly we should discard the warnings from blastdb as it's entirely
   # expected to encounter so values that are not in the database.
 
-  print("align bs = ")
-  print(align)
 
   if (!is.null(warnings)) {
     old_warnings <- getOption("warn")
