@@ -84,7 +84,7 @@
 #' @return NULL
 #' @export
 #'
-#' @example
+#' @examples
 #'
 #' forward_primer_seq = "TAGAACAGGCTCCTCTAG"
 #' reverse_primer_seq =  "TTAGATACCCCACTATGC"

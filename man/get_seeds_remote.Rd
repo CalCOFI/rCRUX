@@ -146,4 +146,61 @@ not be very time consuming.
 Note:
 See \code{\link[=iterative_primer_search]{iterative_primer_search()}} and \link{modifiedPrimerTree_Functions}
 for additional run parameters not included below.
+
+Check NCBI's primer blast for additional search options**
+
+get_seeds_remote passes many parameters to NCBI's primer blast tool. You can
+match the parameters to the fields available in the GUI here. First, use your
+browser to view the page source. Search for the field you are interested in
+by searching for the title of the field. It should be enclosed in a tag.
+Inside the label tag, it says for = "<name_of_parameter>". Copy the string
+after for = and add it to get_seeds_remote as the name of a parameter,
+setting it equal to whatever you like.\tabular{ll}{
+   Name \tab Default \cr
+   PRIMER_SPECIFICITY_DATABASE \tab nt \cr
+   EXCLUDE_ENV \tab unchecked \cr
+   ORGANISM \tab Homo sapiens \cr
+   TOTAL_PRIMER_SPECIFICITY_MISMATCH \tab 1 \cr
+   PRIMER_3END_SPECIFICITY_MISMATCH \tab 1 \cr
+   TOTAL_MISMATCH_IGNORE \tab 6 \cr
+   MAX_TARGET_SIZE \tab 4000 \cr
+   HITSIZE \tab 50000 \cr
+   EVALUE \tab 30000 \cr
+   WORD_SIZE \tab 7 \cr
+   NUM_TARGETS_WITH_PRIMERS \tab 1000 \cr
+   MAX_TARGET_PER_TEMPLATE \tab 100 \cr
+}
+
+
+As of 2022-08-16, the primer blast GUI contains some options that are not implemented by primer_search. The \href{#Table-of-available-options}{table below} documents available options.
+}
+\examples{
+
+forward_primer_seq = "TAGAACAGGCTCCTCTAG"
+reverse_primer_seq =  "TTAGATACCCCACTATGC"
+output_directory_path <- "/my/directory/12S_V5F1_remote_111122_modified_params"
+metabarcode_name <- "12S_V5F1"
+accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql"
+blast_db_path <- "/my/directory/ncbi_nt/nt"
+accession_taxa_sql_path <- "/my/directory/accession2taxid/accessionTaxa.sql"
+
+
+get_seeds_remote(forward_primer_seq,
+                reverse_primer_seq,
+                output_directory_path,
+                metabarcode_name,
+                accession_taxa_sql_path,
+                HITSIZE ='1000000',
+                evalue='100000',
+                word_size='6',
+                MAX_TARGET_PER_TEMPLATE = '5',
+                NUM_TARGETS_WITH_PRIMERS ='500000', minimum_length = 50,
+                MAX_TARGET_SIZE = 200,
+                organism = c("1476529", "7776"), return_table = FALSE)
+
+
+# This results in approximately 111500 blast seed returns (there is some variation due to database updates, etc.), note the default generated approximately 1047.
+# This assumes the user is not throttled by memory limitations.
+
+
 }

@@ -143,7 +143,7 @@
 #'
 #' @return a data.frame containing the same information as the .csv it generates
 #' @export
-#' @example
+#' @examples
 #'
 #' forward_primer_seq = "TAGAACAGGCTCCTCTAG"
 #' reverse_primer_seq =  "TTAGATACCCCACTATGC"
