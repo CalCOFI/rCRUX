@@ -41,6 +41,17 @@
 #' @return NULL
 #'
 #' @export
+#' @examples
+#'
+#' output_directory_path <- "/my/directory/12S_V5F1_remote_111122_modified_params"
+#' summary_path <- "/my/directory/12S_V5F1_remote_111122_modified_params/blast_seeds_output/summary.csv"
+#' metabarcode_name <- "12S_V5F1"
+#'
+#'
+#' derep_and_clean_db(output_directory_path, summary_path, metabarcode_name)
+#'
+#'
+
 
 # function to summarize the rcrux summary data by identical sequence and identify / collapse reads with multiple assignments for a given taxonomic rank.
 # "We ain't too pretty, we ain't too proud" - Billy Joel, "Only the good die young"
