@@ -71,7 +71,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
                             sample_size = 1, wildcards = "NNNN", rank = 'genus', max_to_blast = 1000, ...) {
 
 
-  print("align =")
+  print("align bd=")
   print(align)
 
 

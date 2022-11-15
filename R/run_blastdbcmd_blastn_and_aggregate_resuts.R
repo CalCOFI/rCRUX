@@ -32,7 +32,7 @@ run_blastdbcmd_blastn_and_aggregate_resuts <- function(sample_indices = sample_i
         save_dir, blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir, blastdbcmd_failed,
         unsampled_indices, output_table, wildcards, num_rounds, ...) {
 
-        print("align =")
+        print("align rbbbaa =")
         print(align)
 
 

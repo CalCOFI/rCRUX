@@ -37,7 +37,7 @@ run_blastn <- function(fasta, db_dir, temp = NULL, ncbi_bin = NULL,
   # the handoff
 
 
-  print("align =")
+  print("align rb=")
   print(align)
 
 
