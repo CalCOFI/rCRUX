@@ -182,7 +182,6 @@ output_directory_path <- "/my/directory/12S_V5F1_remote_111122_modified_params"
 metabarcode_name <- "12S_V5F1"
 accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql"
 blast_db_path <- "/my/directory/ncbi_nt/nt"
-accession_taxa_sql_path <- "/my/directory/accession2taxid/accessionTaxa.sql"
 
 
 get_seeds_remote(forward_primer_seq,

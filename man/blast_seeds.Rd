@@ -9,7 +9,7 @@ blast_seeds(
   seeds_output_path,
   blast_db_path,
   accession_taxa_sql_path,
-  working_dir,
+  output_directory_path,
   metabarcode_name,
   expand_vectors = TRUE,
   warnings = 0,
@@ -26,7 +26,7 @@ blast_seeds(
 \item{accession_taxa_sql_path}{a path to the accessionTaxa sql created by
 taxonomizr (e.g. accession_taxa_sql_path <- "/my/accessionTaxa.sql")}
 
-\item{working_dir}{a directory in which to save partial and complete output
+\item{output_directory_path}{a directory in which to save partial and complete output
 (e.g. "/path/to/output/12S_V5F1_local_111122_e300_111122").}
 
 \item{metabarcode_name}{a prefix for the output fasta, taxonomy, and count of
@@ -87,7 +87,7 @@ hits to return per query blasted. The default is align = 50000.}
 \description{
 blast_seeds uses \code{\link[=blast_datatable]{blast_datatable()}} to search against a blast
 formatted database. It creates a permanent directory \code{blast_seeds_output} and
-a temporary directory 'blast_seeds_save' in the \code{working_dir}. It saves from
+a temporary directory 'blast_seeds_save' in the \code{output_directory_path}. It saves from
 and passes files to \code{\link[=blast_datatable]{blast_datatable()}} while the run is in progress.
 During the final steps of the function the final data is saved in
 \code{rblast_seeds_output} recording the results of the blast.
@@ -124,4 +124,26 @@ consecutive Ns in a sequence than are acceptable (see parameter wildcards),
 blastdbcmd_failed.txt (tracks reads that are present in the seeds database,
 but not the local blast database. This is relevant for the results of
 \code{\link[=get_seeds_remote]{get_seeds_remote()}}).
+}
+\examples{
+
+seeds_output_path <- "/my/directory/12S_V5F1_remote_111122_modified_params/blast_seeds_output/summary.csv"
+output_directory_path <- "/my/directory/12S_V5F1_remote_111122_modified_params"
+metabarcode_name <- "12S_V5F1"
+accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql"
+blast_db_path <- "/my/directory/ncbi_nt/nt"
+
+
+blast_seeds(seeds_output_path,
+            blast_db_path,
+            accession_taxa_sql_path,
+            output_directory_path,
+            metabarcode_name,
+            rank = species,
+            max_to_blast = 750)
+
+# using the rank of species will increase the number of total unique blast hits
+# modifying the max_to_blast submits fewer reads simultaneously and reduces overall RAM while extending the run
+
+
 }

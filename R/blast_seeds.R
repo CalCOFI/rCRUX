@@ -99,7 +99,7 @@
 #'
 #' @examples
 #'
-#' seeds_output_path <- "/my/directory/12S_V5F1_remote_111122_modified_params/blast_seeds_output/summary.csv""
+#' seeds_output_path <- "/my/directory/12S_V5F1_remote_111122_modified_params/blast_seeds_output/summary.csv"
 #' output_directory_path <- "/my/directory/12S_V5F1_remote_111122_modified_params"
 #' metabarcode_name <- "12S_V5F1"
 #' accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql"

@@ -46,3 +46,14 @@ generate a fasta file and taxonomy file of representative NCBI accessions for
 each sequence.  The number of accessions identical to the representative
 accession is given.
 }
+\examples{
+
+output_directory_path <- "/my/directory/12S_V5F1_remote_111122_modified_params"
+summary_path <- "/my/directory/12S_V5F1_remote_111122_modified_params/blast_seeds_output/summary.csv"
+metabarcode_name <- "12S_V5F1"
+
+
+derep_and_clean_db(output_directory_path, summary_path, metabarcode_name)
+
+
+}

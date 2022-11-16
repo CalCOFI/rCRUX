@@ -131,11 +131,10 @@ get_seeds_local(forward_primer_seq,
                 output_directory_path,
                 metabarcode_name,
                 accession_taxa_sql_path,
-                blast_db_path, rank = species, max_to_blast = 750)
+                blast_db_path,
+                minimum_length = 80,
+                maximum_length = 150)
 
-
-# using the rank of species will increase the number of total unique blast hits
-# modifying the max_to_blast submits fewer reads simultaneously and reduces overall RAM while extending the run
-
+# reduces the number of total hits by removing reads that may have resulted from off target amplification
 
 }
