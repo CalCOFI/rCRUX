@@ -13,7 +13,7 @@ Support for the development of this tool was provided by [CalCOFI](<https://calc
 This work benefited from the amazing input of many including Lenore Pipes, Sarah Stinson, Gaurav Kandlikar, and Maura Palacios Mejia.
 
 
-eDNA metabarcoding is increasingly used to survey biological communities using common universal and novel genetic loci. There is a need for an easy to implement computational tool that can generate metabarcoding reference libraries for any locus, and are specific and comprehensive. We have reimagined CRUX [Curd et al. 2019](https://doi.org/10.1111/2041-210X.13214) and developed the rCRUX package to fit this need by generating taxonomy and fasta files for any user defined locus.  The typical workflow involves using get_seeds_local() or get_seeds_remote() to simulate *in silico* PCR to acquire a set of sequences analogous to PCR products containing metabarcode primer sequences.  The sequences or "seeds" recovered from the *in silico* PCR step are used to search databases for complementary sequence that lack one or both primers. This search step, blast_seeds() is used to iteratively align seed sequences against a local NCBI database for matches using a taxonomic rank based stratified random sampling approach.  This step results in a comprehensive database of primer specific reference barcode sequences from NCBI. Using derep_and_clean_db(), the database is de-replicated by DNA sequence where identical sequences are collapsed into a representative read. If there are multiple possible taxonomic paths for a read, the taxonomic path is collapsed to the lowest taxonomic agreement.
+eDNA metabarcoding is increasingly used to survey biological communities using common universal and novel genetic loci. There is a need for an easy to implement computational tool that can generate metabarcoding reference libraries for any locus, and are specific and comprehensive. We have reimagined CRUX ([Curd et al. 2019](https://doi.org/10.1111/2041-210X.13214)) and developed the rCRUX package to fit this need by generating taxonomy and fasta files for any user defined locus.  The typical workflow involves using get_seeds_local() or get_seeds_remote() to simulate *in silico* PCR to acquire a set of sequences analogous to PCR products containing metabarcode primer sequences.  The sequences or "seeds" recovered from the *in silico* PCR step are used to search databases for complementary sequence that lack one or both primers. This search step, blast_seeds() is used to iteratively align seed sequences against a local NCBI database for matches using a taxonomic rank based stratified random sampling approach.  This step results in a comprehensive database of primer specific reference barcode sequences from NCBI. Using derep_and_clean_db(), the database is de-replicated by DNA sequence where identical sequences are collapsed into a representative read. If there are multiple possible taxonomic paths for a read, the taxonomic path is collapsed to the lowest taxonomic agreement.
 
 
 ## Typical Workflow
@@ -815,6 +815,17 @@ derep_and_clean_db(output_directory_path, summary_path, metabarcode_name)
 
 <div id="refs" class="references csl-bib-body hanging-indent">
 
+</div>
+
+Altschul, S.F., Gish, W., Miller, W., Myers, E.W. & Lipman, D.J. (1990) "Basic local alignment search tool." J. Mol. Biol. 215:403-410.
+
+</div>
+
+Camacho C., Coulouris G., Avagyan V., Ma N., Papadopoulos J., Bealer K., & Madden T.L. (2008) "BLAST+: architecture and applications." BMC Bioinformatics 10:421.
+
+</div>
+
+
 <div id="ref-Curdetal.2019" class="csl-entry">
 
 Curd, E.E., Gold, Z., Kandlikar, G.S., Gomer, J., Ogden, M., O'Connell, T.,
@@ -825,9 +836,14 @@ metabarcode datasets. Methods in Ecology and Evolution, 10(9), pp.1469-1475.
 
 </div>
 
-<div id="ref-next" class="csl-entry">
-
+Hester, J., 2020. primerTree: Visually Assessing the Specificity and Informativeness of Primer Pairs.
 
 </div>
+
+Sherrill-Mix, S., 2019. taxonomizr: Functions to Work with NCBI Accessions and Taxonomy. R package version 0.5. 3.
+
+</div>
+
+Ye J, Coulouris G, Zaretskaya I, Cutcutache I, Rozen S, & Madden TL. (2012) "Primer-BLAST: a tool to design target-specific primers for polymerase chain reaction." BMC Bioinformatics 13:134.
 
 </div>
