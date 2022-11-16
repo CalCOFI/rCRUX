@@ -839,6 +839,7 @@ metabarcode datasets. Methods in Ecology and Evolution, 10(9), pp.1469-1475.
 Hester, J., 2020. primerTree: Visually Assessing the Specificity and Informativeness of Primer Pairs.
 
 </div>
+<div id="ref-R Core Team 2018" class="csl-entry">
 R Core Team, R., 2021. R: A language and environment for statistical computing.
 
 </div>
@@ -846,6 +847,7 @@ R Core Team, R., 2021. R: A language and environment for statistical computing.
 Sherrill-Mix, S., 2019. taxonomizr: Functions to Work with NCBI Accessions and Taxonomy. R package version 0.5. 3.
 
 </div>
+<div id="ref-Ye et al. 2012" class="csl-entry">
 
 Ye J, Coulouris G, Zaretskaya I, Cutcutache I, Rozen S, & Madden TL. (2012) "Primer-BLAST: a tool to design target-specific primers for polymerase chain reaction." BMC Bioinformatics 13:134.
 
