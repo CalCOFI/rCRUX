@@ -595,6 +595,76 @@ After each iteration, the accessions recovered through blastn are removed from t
 After all blast seeds are processed, taxonomizr is used to add taxonomic data to the data.frame based on the accession numbers. The final output is the aggregate of all blastn calls with the taxonomic data added.
 
 ### Parameters
+**seeds_output_path**
++ a path to a csv from get_seeds_local or get_seeds_remote
++         e.g. seeds_output_path <- '/my/rCRUX_output_directory/12S_V5F1_filtered_get_seeds_remote_output_with_taxonomy.csv'
+**blast_db_path**
++ a directory containing a blast-formatted database
++         e.g blast_db_path <- "/my/ncbi_nt/nt"
+**accession_taxa_sql_path**
++ a path to the accessionTaxa sql created by taxonomizr.
++         e.g. accession_taxa_sql_path <- "/my/accessionTaxa.sql"
+**working_dir**
++ a directory in which to save partial and complete output.
++         e.g. "/path/to/output/12S_V5F1_local_111122_e300_111122"
+**metabarcode_name**
++ a prefix for the output fasta, taxonomy, and count of unique ranks.
++         e.g. metabarcode_name <- "12S_V5F1"
+**expand_vectors**
++ logical, determines whether to expand too_many_Ns
+        and not_in db into real tables and write them in the output directory.
++        The default is expand_vectors = TRUE
+**warnings**
++ value to set the "warn" option to during the function call.
+        On exit it returns to the previous value. Setting this argument to
+        NULL will not change the option.
+**...**
++ additional arguments passed to [blast_datatable](https://lunagal.github.io/blast_datatable)
+**sample_size**
++ passed to [blast_datatable](https://lunagal.github.io/blast_datatable) is the the number of
+        entries to sample per rank.
++       The default sample_size = 1 - is recommended
++       Note: unless the user is sampling higher order taxonomy.  If there are not enough seeds to sample per rank the run will end in an error.
+**max_to_blast**
++ passed to [blast_datatable](https://lunagal.github.io/blast_datatable) and is the maximum
+        number of entries to accumulate into a fasta before calling blastn.
++        The default is max_to_blast = 1000
++        Note: the optimal number of reads to blast will depend on the user's environment (available RAM) and the number of possible hits (determined by marker and parameters)
+**wildcards**
++ passed to [blast_datatable](https://lunagal.github.io/blast_datatable) us a character vector
+#'        that represents the minimum number of consecutive Ns the user will
+#'        tolerate in a given seed or hit sequence. The default is
+#'        wildcards = "NNNN"
+**rank**
++ passed to [blast_datatable](https://lunagal.github.io/blast_datatable) is the data column
+#'        representing the taxonomic rank to randomly sample. The default is
+#'        rank = genus - sampling a lower rank  (e.g. species) will generate
+#'        more total hits and take more time, conversely sampling a higher rank
+#'        (e.g. family) will generate fewer total hits and take less time.
+**ncbi_bin**
++ passed to [run_blastdbcmd](https://lunagal.github.io/run_blastdbcmd)
+          and [run_blastn](https://lunagal.github.io/run_blastn)is
+        the path to blast+ tools if not in the user's path.  Specify only if
+        blastn and blastdbcmd  are not in your path.
++         The default is ncbi_bin = NULL
++         Note: if not specified in path do the following: ncbi_bin = "/my/local/blast+_folder".
+**evalue**
++ passed to [run_blastn](https://lunagal.github.io/run_blastn) is the number of expected hits
+       with a similar quality score found by chance.
++      The default is evalue = 1e-6
+**coverage****
++ passed to [run_blastn](https://lunagal.github.io/run_blastn) is the minimum percent of the
+        query length recovered in the subject hits.
++       The default is coverage = 50
+**perID**
++ passed to [run_blastn](https://lunagal.github.io/run_blastn) is the minimum percent identity
+        of the query relative to the subject hits.
++       The default is perID = 70
+**align**
++ passed to [run_blastn](https://lunagal.github.io/run_blastn) is the maximum number of subject
+        hits to return per query blasted.
++        The default is align = 50000
+
 
 ### Example
 ```

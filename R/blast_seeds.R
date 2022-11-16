@@ -97,6 +97,28 @@
 #' @return NULL
 #' @export
 #'
+#' @examples
+#'
+#' seeds_output_path <- "/my/directory/12S_V5F1_remote_111122_modified_params/blast_seeds_output/summary.csv""
+#' output_directory_path <- "/my/directory/12S_V5F1_remote_111122_modified_params"
+#' metabarcode_name <- "12S_V5F1"
+#' accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql"
+#' blast_db_path <- "/my/directory/ncbi_nt/nt"
+#'
+#'
+#' blast_seeds(seeds_output_path,
+#'             blast_db_path,
+#'             accession_taxa_sql_path,
+#'             output_directory_path,
+#'             metabarcode_name,
+#'             rank = species,
+#'             max_to_blast = 750)
+#'
+#' # using the rank of species will increase the number of total unique blast hits
+#' # modifying the max_to_blast submits fewer reads simultaneously and reduces overall RAM while extending the run
+#'
+#' 
+
 
 
 

@@ -99,9 +99,11 @@
 #'                 output_directory_path,
 #'                 metabarcode_name,
 #'                 accession_taxa_sql_path,
-#'                 blast_db_path)
+#'                 blast_db_path,
+#'                 minimum_length = 80,
+#'                 maximum_length = 150)
 #'
-#'
+#' # reduces the number of total hits by removing reads that may have resulted from off target amplification
 #'
 
 
