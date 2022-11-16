@@ -17,7 +17,7 @@ eDNA metabarcoding is increasingly used to survey biological communities using c
 
 
 ## Typical Workflow
-<img src="rCRUX_overview_flowchart.png" width = 10000 />
+<img src="/flowcharts/rCRUX_overview_flowchart.png" width = 10000 />
 
 
 ## Installation
@@ -272,7 +272,7 @@ Example output can be found [here](/examples/12S_V5F1_generated_11-10-22).
 # Detailed Explanation For The Major Functions
 ## [get_seeds_local](https://lunagal.github.io/get_seeds_local)
 
-<img src="get_seeds_local-flowchart.png" width = 10000 />
+<img src="/flowcharts/get_seeds_local-flowchart.png" width = 10000 />
 
 ### Overview
 [get_seeds_local](https://lunagal.github.io/get_seeds_local) takes a set of forward and reverse primer sequences and generates csv summaries of data returned from a locally run adaptation of [NCBI's primer blast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) to find possible full length barcode sequence containing forward and reverse primer matches. It also generates a count of unique instances of taxonomic ranks (Phylum, Class, Order, Family, Genus, and Species).
@@ -387,7 +387,7 @@ get_seeds_local(forward_primer_seq,
 
 ## [get_seeds_remote](https://lunagal.github.io/get_seeds_remote)
 
-<img src="get_seed_remote-flowchart.png" width = 10000 />
+<img src="/flowcharts/get_seed_remote-flowchart.png" width = 10000 />
 
 ### Overview
 
@@ -576,7 +576,7 @@ get_seeds_remote(forward_primer_seq,
 
 ## [blast_seeds](https://lunagal.github.io/blast_seeds)
 
-<img src="blast_seeds-flowchart.png" width = 10000 />
+<img src="/flowcharts/blast_seeds-flowchart.png" width = 10000 />
 
 ### Overview
 blast_seeds uses [blast_datatable](https://lunagal.github.io/blast_datable) to search against a blast
@@ -753,7 +753,7 @@ blast_seeds(seeds_output_path,
 
 ## [derep_and_clean_db](https://lunagal.github.io/derep_and_clean_db)
 
-<img src="derep_and_clean_db-flowchart.png" width = 10000 />
+<img src="/flowcharts/derep_and_clean_db-flowchart.png" width = 10000 />
 
 ### Overview
 derep_and_clean_db takes the output from [rCRUX::blast_seed()] and de-replicates the dataset to identify representative sequences.
