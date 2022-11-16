@@ -790,15 +790,18 @@ accession is given.
 
 ### Parameters
 **output_directory_path**
-+ the path to the output directory
-+        e.g. "/path/to/output/12S_V5F1_remote_111122"
+> the path to the output directory
+
+>> e.g. "/path/to/output/12S_V5F1_remote_111122"
 
 **summary_path**
-+ the path to the input file
-+        e.g. "/path/to/output/12S_V5F1_remote_111122/blast_seeds_output/summary.csv"
+> the path to the input file
+
+>>       e.g. "/path/to/output/12S_V5F1_remote_111122/blast_seeds_output/summary.csv"
+
 **metabarcode_name**
-+ used to name the subdirectory and the files.
-+        e.g. metabarcode_name <- "12S_V5F1"
+> used to name the subdirectory and the files.
+>>       e.g. metabarcode_name <- "12S_V5F1"
 
 ### Example
 ```
