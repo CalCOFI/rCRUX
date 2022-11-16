@@ -4,7 +4,7 @@
 #' @description
 #' blast_seeds uses [rCRUX::blast_datatable()] to search against a blast
 #' formatted database. It creates a permanent directory `blast_seeds_output` and
-#' a temporary directory 'blast_seeds_save' in the `working_dir`. It saves from
+#' a temporary directory 'blast_seeds_save' in the `output_directory_path`. It saves from
 #' and passes files to [rCRUX::blast_datatable()] while the run is in progress.
 #' During the final steps of the function the final data is saved in
 #' `rblast_seeds_output` recording the results of the blast.
@@ -50,7 +50,7 @@
 #'        (e.g blast_db_path <- "/my/ncbi_nt/nt")
 #' @param accession_taxa_sql_path a path to the accessionTaxa sql created by
 #'        taxonomizr (e.g. accession_taxa_sql_path <- "/my/accessionTaxa.sql")
-#' @param working_dir a directory in which to save partial and complete output
+#' @param output_directory_path a directory in which to save partial and complete output
 #'        (e.g. "/path/to/output/12S_V5F1_local_111122_e300_111122").
 #' @param metabarcode_name a prefix for the output fasta, taxonomy, and count of
 #'        unique ranks.(e.g. metabarcode_name <- "12S_V5F1").
@@ -117,12 +117,12 @@
 #' # using the rank of species will increase the number of total unique blast hits
 #' # modifying the max_to_blast submits fewer reads simultaneously and reduces overall RAM while extending the run
 #'
-#' 
+#'
 
 
 
 
-blast_seeds <- function(seeds_output_path, blast_db_path, accession_taxa_sql_path, working_dir,
+blast_seeds <- function(seeds_output_path, blast_db_path, accession_taxa_sql_path, output_directory_path,
                         metabarcode_name, expand_vectors = TRUE, warnings = 0, ...) {
   # So that run_blastdbcmd doesn't overwhelm the user with errors
   # Possibly we should discard the warnings from blastdb as it's entirely
@@ -135,9 +135,9 @@ blast_seeds <- function(seeds_output_path, blast_db_path, accession_taxa_sql_pat
     options(warn = warnings)
   }
 
-  output_dir <- paste(working_dir, "blast_seeds_output", sep = "/")
-  save_dir <- paste(working_dir, "blast_seeds_save", sep = "/")
-  suppressWarnings(dir.create(working_dir))
+  output_dir <- paste(output_directory_path, "blast_seeds_output", sep = "/")
+  save_dir <- paste(output_directory_path, "blast_seeds_save", sep = "/")
+  suppressWarnings(dir.create(output_directory_path))
   suppressWarnings(dir.create(save_dir))
   suppressWarnings(dir.create(output_dir))
   blast_seeds <- read.csv(seeds_output_path)
