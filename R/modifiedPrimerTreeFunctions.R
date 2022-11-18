@@ -243,7 +243,7 @@ parse_attributes = function(x){
   as.data.frame(t(xmlAttrs(x)))
 }
 parsable_html = function(response){
-  txt <- primerTree::content(response, as='text', encoding='UTF-8')
+  txt <- httr::content(response, as='text', encoding='UTF-8')
 
   # remove any unicode characters
   Encoding(txt) <- "UTF-8"
