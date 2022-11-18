@@ -224,7 +224,7 @@ get_defaults = function(set_options, options){
 }
 
 get_options = function(content){
-  options = rbind.fill(xpathApply(content, '//form//input | //form//select', parse_attributes))
+  options = dplyr::rbind.fill(xpathApply(content, '//form//input | //form//select', parse_attributes))
   options$type = as.character(options$type)
 
   #add dropdown type if they are NA
