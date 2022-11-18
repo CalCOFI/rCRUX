@@ -162,7 +162,7 @@ POST_retry = retry(POST)
 #' @noRd
 parse_primer_hits = function(response){
   content = parsable_html(response)
-  dplyr::rbind.fill(xpathApply(content, '//pre', parse_pre))
+  plyr::rbind.fill(xpathApply(content, '//pre', parse_pre))
 }
 parse_a = function(a){
   #links like entrez/viewer.fcgi?db=nucleotide&id=452085006
