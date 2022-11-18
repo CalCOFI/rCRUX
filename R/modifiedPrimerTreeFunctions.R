@@ -116,7 +116,7 @@ BLAST_primer = function(forward, reverse, ..., organism='',
 
   options = get_defaults(options, all_options)
 
-  start_time = now()
+  start_time = lubridate::now()
 
   message('Submitting Primer-BLAST query')
   response = POST_retry(paste(url, 'primertool.cgi', sep=''), body=options)
@@ -130,7 +130,7 @@ BLAST_primer = function(forward, reverse, ..., organism='',
 
     values = get_refresh_from_meta(response)
   }
-  total_time = start_time %--% now()
+  total_time = start_time %--% lubridate::now()
   message('BLAST alignment completed in ', total_time %/% seconds(1), ' seconds')
   response
 }
