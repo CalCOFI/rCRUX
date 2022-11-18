@@ -154,7 +154,7 @@ retry = function(fun, num_retry=5, ...){
 }
 
 GET_retry = retry(httr::GET)
-POST_retry = retry(POST)
+POST_retry = retry(httr::POST)
 
 #' Parse the primer hits
 #'
