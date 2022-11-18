@@ -130,7 +130,7 @@ BLAST_primer = function(forward, reverse, ..., organism='',
 
     values = get_refresh_from_meta(response)
   }
-  total_time = start_time %--% lubridate::now()
+  total_time = start_time - lubridate::now()
   message('BLAST alignment completed in ', total_time %/% seconds(1), ' seconds')
   response
 }
@@ -258,5 +258,3 @@ filter_duplicates = function(hits){
   location_columns = c('accession', 'forward_start', 'forward_stop', 'reverse_start', 'reverse_stop')
   hits[!duplicated(t(apply(hits[location_columns], 1, range))),]
 }
-
-`%--%` <- magrittr::`%--%`
