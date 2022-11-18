@@ -190,7 +190,7 @@ parse_pre = function(pre){
   template_regex = 'Template[^\\d]+(\\d+)[^.ACGT]+([.ACGT]+)[^\\d]+(\\d+)'
   full_regex = paste('[\\S\\W]*', product_length_regex, '[\\S\\W]*?',
                      template_regex, '[\\S\\W]*', template_regex, '[\\S\\W]*', sep='')
-  values = str_split(gsub(full_regex, paste('\\', 1:8, sep='', collapse='|'),
+  values = stringr::str_split(gsub(full_regex, paste('\\', 1:8, sep='', collapse='|'),
                            pre_text, perl=T), '[|]')[[1]]
   data.frame(ids,
              product_length=as.numeric(values[1]),
@@ -208,7 +208,7 @@ get_refresh_from_meta = function(response){
   content = parsable_html(response)
   meta = content['//meta[@http-equiv="Refresh"]']
   if(length(meta) > 0){
-    values = str_split(XML::xmlAttrs(meta[[1]])['content'], '; URL=')[[1]]
+    values = stringr::str_split(XML::xmlAttrs(meta[[1]])['content'], '; URL=')[[1]]
     return(values)
   }
   return()
