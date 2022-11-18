@@ -134,7 +134,7 @@ BLAST_primer = function(forward, reverse, ..., organism='',
   end_time <- lubridate::now()
   total_time = end_time - start_time
   message('BLAST alignment completed in ', total_time , ' seconds')
-  #response
+  return response
 }
 
 #modify a function to check the status and retry until success
