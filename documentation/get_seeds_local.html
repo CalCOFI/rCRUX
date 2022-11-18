@@ -1,10 +1,20 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Local blastn interpretation of querying primer_blast to and...</title>
+<!DOCTYPE html><html><head><title>R: Local blastn interpretation of querying primer_blast to and...</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 </head><body><div class="container">
 
-<table width="100%" summary="page for get_seeds_local {rCRUX}"><tr><td>get_seeds_local {rCRUX}</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table style="width: 100%;"><tr><td>get_seeds_local {rCRUX}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Local blastn interpretation of querying primer_blast to and generate a .csv to use for blast_seeds</h2>
 
@@ -25,8 +35,7 @@ generated is a summary of unique taxonomic ranks after filtering.
 
 <h3>Usage</h3>
 
-<pre>
-get_seeds_local(
+<pre><code class='language-R'>get_seeds_local(
   forward_primer_seq,
   reverse_primer_seq,
   output_directory_path,
@@ -40,28 +49,28 @@ get_seeds_local(
   ...,
   return_table = TRUE
 )
-</pre>
+</code></pre>
 
 
 <h3>Arguments</h3>
 
-<table summary="R argblock">
-<tr valign="top"><td><code>forward_primer_seq</code></td>
+<table>
+<tr style="vertical-align: top;"><td><code>forward_primer_seq</code></td>
 <td>
 <p>passed to primer_to_fasta, which turns it into fasta
 file to be past to get_seeds_local (e.g. forward_primer_seq &lt;- &quot;TAGAACAGGCTCCTCTAG&quot;).</p>
 </td></tr>
-<tr valign="top"><td><code>reverse_primer_seq</code></td>
+<tr style="vertical-align: top;"><td><code>reverse_primer_seq</code></td>
 <td>
 <p>passed to primer_to_fasta, which turns it into fasta
 file to be past to get_seeds_local (e.g. reverse_primer_seq &lt;-  &quot;TTAGATACCCCACTATGC&quot;).</p>
 </td></tr>
-<tr valign="top"><td><code>output_directory_path</code></td>
+<tr style="vertical-align: top;"><td><code>output_directory_path</code></td>
 <td>
 <p>the parent directory to place the data in
 (e.g. &quot;/path/to/output/12S_V5F1_local_111122_e300_111122&quot;).</p>
 </td></tr>
-<tr valign="top"><td><code>metabarcode_name</code></td>
+<tr style="vertical-align: top;"><td><code>metabarcode_name</code></td>
 <td>
 <p>used to name the subdirectory and the files. If a
 directory named metabarcode_name does not exist in output_directory_path, a
@@ -69,72 +78,72 @@ new directory will be created. get_seeds_local appends
 metabarcode_name to the beginning of each of the files it
 generates (e.g. metabarcode_name &lt;- &quot;12S_V5F1&quot;).</p>
 </td></tr>
-<tr valign="top"><td><code>accession_taxa_sql_path</code></td>
+<tr style="vertical-align: top;"><td><code>accession_taxa_sql_path</code></td>
 <td>
 <p>the path to sql created by taxonomizr
 (e.g. accession_taxa_sql_path &lt;- &quot;/my/accessionTaxa.sql&quot;)</p>
 </td></tr>
-<tr valign="top"><td><code>blast_db_path</code></td>
+<tr style="vertical-align: top;"><td><code>blast_db_path</code></td>
 <td>
 <p>a directory with a blast-formatted database.
 (e.g blast_db_path &lt;- &quot;/my/ncbi_nt/nt&quot;)</p>
 </td></tr>
-<tr valign="top"><td><code>mismatch</code></td>
+<tr style="vertical-align: top;"><td><code>mismatch</code></td>
 <td>
 <p>the highest acceptable mismatch value per hit. get_seeds_local removes each
 row with a mismatch greater than the specified value.
 The default is mismatch = 6</p>
 </td></tr>
-<tr valign="top"><td><code>minimum_length</code></td>
+<tr style="vertical-align: top;"><td><code>minimum_length</code></td>
 <td>
 <p>get_seeds_local removes each row that has a value less than
 minimum_length in the product_length column.
 The default is minimum_length = 5</p>
 </td></tr>
-<tr valign="top"><td><code>maximum_length</code></td>
+<tr style="vertical-align: top;"><td><code>maximum_length</code></td>
 <td>
 <p>get_seeds_local removes each row that has a
 value greater than maximum_length in the product_length column
 The default is maximum_length = 500</p>
 </td></tr>
-<tr valign="top"><td><code>task</code></td>
+<tr style="vertical-align: top;"><td><code>task</code></td>
 <td>
-<p>(passed to <code>run_primer_blastn()</code> the task for blastn to
+<p>(passed to <code>run_primer_blastn()</code>) the task for blastn to
 perform - default here is &quot;blastn_short&quot;, which is optimized
 for searches with queries &lt; 50 bp</p>
 </td></tr>
-<tr valign="top"><td><code>word_size</code></td>
+<tr style="vertical-align: top;"><td><code>word_size</code></td>
 <td>
-<p>(passed to <code>run_primer_blastn()</code> is the fragment size
+<p>(passed to <code>run_primer_blastn()</code>) is the fragment size
 used for blastn search - smaller word sizes increase sensitivity and
 time of the search. The default is word_size =  7</p>
 </td></tr>
-<tr valign="top"><td><code>evalue</code></td>
+<tr style="vertical-align: top;"><td><code>evalue</code></td>
 <td>
-<p>(passed to <code>run_primer_blastn()</code> is the number of
+<p>(passed to <code>run_primer_blastn()</code>) is the number of
 expected hits with a similar quality score found by chance.
 The default is evalue = 3e-7.</p>
 </td></tr>
-<tr valign="top"><td><code>coverage</code></td>
+<tr style="vertical-align: top;"><td><code>coverage</code></td>
 <td>
-<p>(passed to <code>run_primer_blastn()</code> is the minimum
+<p>(passed to <code>run_primer_blastn()</code>) is the minimum
 percent of the query length recovered in the subject hits.
 The default is coverage = 90.</p>
 </td></tr>
-<tr valign="top"><td><code>perID</code></td>
+<tr style="vertical-align: top;"><td><code>perID</code></td>
 <td>
-<p>(passed to <code>run_primer_blastn()</code> is the minimum percent
+<p>(passed to <code>run_primer_blastn()</code>) is the minimum percent
 identity of the query relative to the subject hits.
 The default is perID = 2.</p>
 </td></tr>
-<tr valign="top"><td><code>reward</code></td>
+<tr style="vertical-align: top;"><td><code>reward</code></td>
 <td>
-<p>(passed to <code>run_primer_blastn()</code> is the reward for
+<p>(passed to <code>run_primer_blastn()</code>) is the reward for
 nucleotide match. The default is reward = 2.</p>
 </td></tr>
-<tr valign="top"><td><code>ncbi_bin</code></td>
+<tr style="vertical-align: top;"><td><code>ncbi_bin</code></td>
 <td>
-<p>passed to <code>run_primer_blastn()</code> is the path to blast+
+<p>passed to <code>run_primer_blastn()</code>) is the path to blast+
 tools if not in the user's path.  Specify only if blastn and is not in
 your path. The default is ncbi_bin = NULL - if not specified in path
 do the following: ncbi_bin = &quot;/my/local/blast+_folder&quot;.</p>
@@ -150,13 +159,13 @@ database using the task &quot;blastn_short&quot;. The returned blast hits for ea
 sequence are matched and checked to see if they generate plausible amplicon
 (e.g. amplify the same accession and are in the correct orientation to produce
 a PCR product). These hits are written to a file with the suffix
-<code style="white-space: pre;">_unfiltered_get_seeds_local_output.csv</code>.  These hits are further filtered for
+<code style="white-space: pre;">&#8288;_unfiltered_get_seeds_local_output.csv&#8288;</code>.  These hits are further filtered for
 length and number of mismatches. Taxonomy is appended to these filtered hits
 using <code>get_taxonomizr_from_accession()</code>. The results are written to
-to file with the suffix <code style="white-space: pre;">_filtered_get_seeds_local_output_with_taxonomy.csv</code>.
+to file with the suffix <code style="white-space: pre;">&#8288;_filtered_get_seeds_local_output_with_taxonomy.csv&#8288;</code>.
 The number of unique instances for each rank in the taxonomic path for the
 filtered hits are tallied (NAs are counted once per rank) and written to a
-file with the suffix <code style="white-space: pre;">_filtered_get_seeds_local_unique_taxonomic_rank_counts.txt</code>
+file with the suffix <code style="white-space: pre;">&#8288;_filtered_get_seeds_local_unique_taxonomic_rank_counts.txt&#8288;</code>
 </p>
 <p>Note:
 Information about the blastn parameters can be found in run_primer_blast, and
@@ -170,24 +179,28 @@ The number of alignments returned for a given blast search is hardcoded at
 
 <h3>Examples</h3>
 
-<pre>
+<pre><code class='language-R'>
 forward_primer_seq = "TAGAACAGGCTCCTCTAG"
 reverse_primer_seq =  "TTAGATACCCCACTATGC"
-output_directory_path &lt;- "/my/directory/12S_V5F1_local_111122_species_750" #path to desired output directory
-metabarcode_name &lt;- "12S_V5F1" # desired name of metabarcode locus
+output_directory_path &lt;- "/my/directory/12S_V5F1_local_111122_species_750"
+metabarcode_name &lt;- "12S_V5F1"
 accession_taxa_sql_path &lt;- "/my/directory/accessionTaxa.sql"
 blast_db_path &lt;- "/my/directory/ncbi_nt/nt"
+
 
 get_seeds_local(forward_primer_seq,
                 reverse_primer_seq,
                 output_directory_path,
                 metabarcode_name,
                 accession_taxa_sql_path,
-                blast_db_path, rank = species, max_to_blast = 750)
+                blast_db_path,
+                minimum_length = 80,
+                maximum_length = 150)
 
-# using the rank of species will increase the number of total unique blast hitsize
-# modifying the max_to_blast submits fewer reads simultaneously and reduces overall RAM while extending the run.
-</pre>
+# reduces the number of total hits by removing reads that may have resulted from off target amplification
+
+</code></pre>
 
 <hr /><div style="text-align: center;">[Package <em>rCRUX</em> version 0.0.1.000 ]</div>
-</div></body></html>
+</div>
+</body></html>

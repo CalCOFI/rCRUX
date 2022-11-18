@@ -57,7 +57,7 @@ enumerate_primers = function(forward, reverse){
 }
 enumerate_ambiguity = function(sequence){
   search_regex = paste(names(iupac), collapse='|')
-  locs = str_locate_all(sequence, search_regex)
+  locs = stringr::str_locate_all(sequence, search_regex)
   sequences = list()
   count = 1
   for (i in seq_len(nrow(locs[[1]]))){

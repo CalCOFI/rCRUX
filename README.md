@@ -1,4 +1,4 @@
-# rCRUX: Generate CRUX metabarcoding reference libraries in R
+executables# rCRUX: Generate CRUX metabarcoding reference libraries in R
 
 
 
@@ -41,6 +41,17 @@ library(rCRUX)
 
 NCBI's [BLAST+](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/) suite must be locally installed and accessible in the user's path. NCBI provides installation instructions for [Windows](https://www.ncbi.nlm.nih.gov/books/NBK52637/), [Linux](https://www.ncbi.nlm.nih.gov/books/NBK52640/), and [Mac OS](https://www.ncbi.nlm.nih.gov/books/NBK569861/). Version 2.10.1+ is verified compatible with rCRUX.
 
+The following is example script to download blast executables and add them to your path:
+
+```
+cd /path/to/Applications
+
+wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.10.1/ncbi-blast-2.10.1+-x64-macosx.tar.gz
+
+export PATH=$PATH:/Applications/ncbi-blast-2.10.1+/bin
+
+```
+
 ### Blast-formatted database
 
 rCRUX requires a local blast-formatted nucleotide database. These can be user generated or download a pre-formatted database from [NCBI](https://ftp.ncbi.nlm.nih.gov/blast/db/).  NCBI provides a tool (perl script) for downloading databases as part of the blast+ package. A brief help page can be found [here](https://www.ncbi.nlm.nih.gov/books/NBK569850/).
@@ -48,10 +59,15 @@ rCRUX requires a local blast-formatted nucleotide database. These can be user ge
 The following shell script can be used to download the blast-formatted nucleotide database.
 
 ```
+
 mkdir NCBI_blast_nt
+
 cd NCBI_blast_nt
+
 wget ftp://ftp.ncbi.nlm.nih.gov/blast/db/nt\*
+
 time for file in *.tar.gz; do tar -zxvf $file; done
+
 cd ..
 
 ```
@@ -59,7 +75,7 @@ cd ..
 You can test your nt blast database using the following command:
 
 ```
-blastdbcmd -db '/Users/limeybean/Dropbox/CRUX_2.0/ncbi_nt/nt' -dbtype nucl -entry MN937193.1 -range 499-633
+blastdbcmd -db '/my/directory/ncbi_nt/nt' -dbtype nucl -entry MN937193.1 -range 499-633
 ```
 If you do not get the following, something went wrong in the build.
 
