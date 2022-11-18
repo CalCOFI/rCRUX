@@ -130,7 +130,7 @@ BLAST_primer = function(forward, reverse, ..., organism='',
 
     values = get_refresh_from_meta(response)
   }
-  total_time = start_time - lubridate::now()
+  total_time = as.POSIXct(start_time) - as.POSIXct(lubridate::now())
   message('BLAST alignment completed in ', total_time %/% lubridate::seconds(1), ' seconds')
   response
 }
