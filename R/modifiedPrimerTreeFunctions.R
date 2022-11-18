@@ -140,11 +140,11 @@ retry = function(fun, num_retry=5, ...){
   function(...){
     res = fun(...)
     itr = 0
-    status = http_status(res)
+    status = httr::http_status(res)
     while(itr < num_retry && inherits(res, 'response') && tolower(status$category) != 'success'){
       warning('request failed, retry attempt ', itr+1)
       res = fun(...)
-      status = http_status(res)
+      status = httr::http_status(res)
       itr = itr + 1
       #sleep to avoid hitting NCBI query rate limit :'-(
       Sys.sleep(0.4)
