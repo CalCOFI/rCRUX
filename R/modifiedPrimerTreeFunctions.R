@@ -162,7 +162,7 @@ POST_retry = retry(POST)
 #' @noRd
 parse_primer_hits = function(response){
   content = parsable_html(response)
-  plyr::rbind.fill(xpathApply(content, '//pre', parse_pre))
+  plyr::rbind.fill(XML::xpathApply(content, '//pre', parse_pre))
 }
 parse_a = function(a){
   #links like entrez/viewer.fcgi?db=nucleotide&id=452085006
@@ -224,7 +224,7 @@ get_defaults = function(set_options, options){
 }
 
 get_options = function(content){
-  options = plyr::rbind.fill(xpathApply(content, '//form//input | //form//select', parse_attributes))
+  options = plyr::rbind.fill(XML::xpathApply(content, '//form//input | //form//select', parse_attributes))
   options$type = as.character(options$type)
 
   #add dropdown type if they are NA
