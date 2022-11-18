@@ -166,12 +166,12 @@ parse_primer_hits = function(response){
 }
 parse_a = function(a){
   #links like entrez/viewer.fcgi?db=nucleotide&id=452085006
-  m = regexpr('id=\\d+', xmlAttrs(a)['href'])
-  gi = gsub('id=', '', unlist(regmatches(xmlAttrs(a)['href'], m)))
+  m = regexpr('id=\\d+', XML::xmlAttrs(a)['href'])
+  gi = gsub('id=', '', unlist(regmatches(XML::xmlAttrs(a)['href'], m)))
   if(length(gi) == 0L){
     #links like nucleotide/449036831?from=1107741&to=1107929&report=gbwithparts
-    m = regexpr('nucleotide/\\d+', xmlAttrs(a)['href'])
-    gi = gsub('nucleotide/', '', unlist(regmatches(xmlAttrs(a)['href'], m)))
+    m = regexpr('nucleotide/\\d+', XML::xmlAttrs(a)['href'])
+    gi = gsub('nucleotide/', '', unlist(regmatches(XML::xmlAttrs(a)['href'], m)))
   }
   if(length(gi) == 0L) gi = NA
   data.frame(gi=as.character(gi), accession=as.character(xmlValue(a)))
@@ -208,7 +208,7 @@ get_refresh_from_meta = function(response){
   content = parsable_html(response)
   meta = content['//meta[@http-equiv="Refresh"]']
   if(length(meta) > 0){
-    values = str_split(xmlAttrs(meta[[1]])['content'], '; URL=')[[1]]
+    values = str_split(XML::xmlAttrs(meta[[1]])['content'], '; URL=')[[1]]
     return(values)
   }
   return()
@@ -240,7 +240,7 @@ get_options = function(content){
 }
 
 parse_attributes = function(x){
-  as.data.frame(t(xmlAttrs(x)))
+  as.data.frame(t(XML::xmlAttrs(x)))
 }
 parsable_html = function(response){
   txt <- httr::content(response, as='text', encoding='UTF-8')
