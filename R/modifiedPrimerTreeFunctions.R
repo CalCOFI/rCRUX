@@ -32,7 +32,7 @@ primer_search = function(forward, reverse, num_permutations=25, ..., .parallel=F
   }
   message('BLASTing ', nrow(primers), ' primer combinations')
   #enumerate all combinations to handle ambiguity codes
-  alply(primers, .margins=1, .expand=F, .parallel=.parallel, .progress=.progress,
+  plyr::alply(primers, .margins=1, .expand=F, .parallel=.parallel, .progress=.progress,
         function(row) BLAST_primer(row$forward, row$reverse, ...))
 }
 iupac = list( "M" = list("A", "C"),
