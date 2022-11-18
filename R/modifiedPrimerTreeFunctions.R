@@ -181,9 +181,9 @@ parse_a = function(a){
 }
 
 parse_pre = function(pre){
-  pre_text = xmlValue(pre)
+  pre_text = XML::xmlValue(pre)
 
-  a = getNodeSet(pre, './preceding-sibling::a[1]')
+  a = XML::getNodeSet(pre, './preceding-sibling::a[1]')
   if(length(a) <= 0)
     stop('Parsing failed for ', pre_text)
 
