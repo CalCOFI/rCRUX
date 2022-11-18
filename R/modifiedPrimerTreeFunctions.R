@@ -153,7 +153,7 @@ retry = function(fun, num_retry=5, ...){
   }
 }
 
-GET_retry = retry(GET)
+GET_retry = retry(httr::GET)
 POST_retry = retry(POST)
 
 #' Parse the primer hits
