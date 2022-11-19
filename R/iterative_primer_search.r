@@ -33,8 +33,8 @@ iterative_primer_search <- function(forwar_primer_seq, reverse_primer_seq, organ
 
         if (class(response) == "try-error") {
             # To do: include useful metadata and messages
-            #msg <- conditionMessage(attr(response, "condition"))
-            #warning(msg)
+            msg <- conditionMessage(attr(response, "condition"))
+            warning(msg)
         }
         else {
             # Splice the parse onto the output
@@ -45,8 +45,8 @@ iterative_primer_search <- function(forwar_primer_seq, reverse_primer_seq, organ
                 )
                 if (class(parsed) == "try-error") {
                     # To do: include useful metadata and messages
-                    #msg <- conditionMessage(attr(response, "condition"))
-                    #warning(msg)
+                    msg <- conditionMessage(attr(response, "condition"))
+                    warning(msg)
                     message("This occurred while processing organism ", org,
                             ".")
                 }
