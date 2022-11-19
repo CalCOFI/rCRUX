@@ -10,7 +10,8 @@
 #' @details
 #' Before de-replicating the data set, all sequences with NA taxonomy for phylum,
 #' class, order, family, and genus are removed from the dataset because they
-#' typically represent environmental samples. These sequences are stored in a
+#' typically represent environmental samples with low value for taxonomic
+#' classification. These sequences are stored in a
 #' `Sequences_with_mostly_NA_taxonomic_paths.csv`
 #'
 #' All sequences with the same length and composition are collapsed to a single
@@ -22,15 +23,15 @@
 #' `Sequences_with_multiple_taxonomic_paths.cvs`. These sequences are processed
 #' further by removing NAs from rank instances with more than one entry
 #' (e.g. "Chordata, NA" will mutate to "Chordata"). Any remaining instances
-#' of taxonomic ranks more than one taxid will be reduced to NA
+#' of taxonomic ranks with more than one taxid will be reduced to NA
 #' (e.g. "Badis assamensis, Badis badis" will mutate to "NA"). These sequences,
-#' with a taxonomic paths shortened to the lowest taxonomic agreement are written
+#' with a taxonomic paths shortened to the lowest taxonomic agreement, are written
 #' to `Sequences_with_lowest_common_taxonomic_path_agreement.csv`.
 #'
 #' Lastly, the sequences from `Sequences_with_single_taxonomic_path.csv`
 #' and `Sequences_with_lowest_common_taxonomic_path_agreement.csv` are used to
 #' generate a fasta file and taxonomy file of representative NCBI accessions for
-#' each sequence.  The number of accessions identical to the representative
+#' each sequence. The number of accessions identical to the representative
 #' accession is given.
 #'
 #'

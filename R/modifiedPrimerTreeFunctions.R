@@ -3,6 +3,7 @@
 #Modified 2022-08-10 by Luna Gal
 #Removed num_aligns argument from primer_search
 #Instead num_targets_with_primers is determined by the user
+#Changed the calculation for duration of blast submission
 
 #' Query a pair of primers using ncbi's Primer-BLAST, if primers contain iupac
 #'

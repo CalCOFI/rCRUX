@@ -11,14 +11,17 @@
 #' This is useful when searching for a large number of different combinations,
 #' allowing the function to output successful results.
 #'
-#' @param forward_primer_seq the forward primer
-#' @param reverse_primer_seq the reverse primer
+#' @param forward_primer_seq the forward primer to search (e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG")
+#' @param reverse_primer_seq the reverse primer to search (e.g. reverse_primer_seq <-  "TTAGATACCCCACTATGC")
 #' @param organisms a character vector containing an id or name parseable by
 #'        NCBI as an organism. If it is a vector with multiple entries, each
 #'        entry will be queried separately.
-#' @param db which NCBI database to search. The default is db - 'nt' (e.g. nr).
+#'        (e.g. organism = c("1476529", "7776"))
+#' @param db which NCBI database to search. The default is db = 'nt' (e.g. nr).
 #' @return a data.table summarizing the results of several primer_searches
 #' @export
+#'
+
 iterative_primer_search <- function(forwar_primer_seq, reverse_primer_seq, organisms,
                                     db = "nt", ...) {
     output <- NULL
