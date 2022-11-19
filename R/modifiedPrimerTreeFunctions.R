@@ -135,7 +135,7 @@ BLAST_primer = function(forward, reverse, ..., organism='',
   total_time = end_time - start_time
   message('BLAST alignment completed in ', total_time , ' seconds')
   print(response)
-  response
+  #response
 }
 
 #modify a function to check the status and retry until success
@@ -177,7 +177,7 @@ parse_a = function(a){
     gi = gsub('nucleotide/', '', unlist(regmatches(XML::xmlAttrs(a)['href'], m)))
   }
   if(length(gi) == 0L) gi = NA
-  data.frame(gi=as.character(gi), accession=as.character(xmlValue(a)))
+  data.frame(gi=as.character(gi), accession=as.character(XML::xmlValue(a)))
 }
 
 parse_pre = function(pre){
