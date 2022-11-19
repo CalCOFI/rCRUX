@@ -21,7 +21,7 @@
 #' number of primer combinations is passed to to the API. Multiple taxids are
 #' searched independently, as are multiple database searches (e.g. nt and
 #' refseq_representative_genomes). The data are parsed and stored in a dataframe,
-#' which are also written to a file with the suffix
+#' which is also written to a file with the suffix
 #' `_unfiltered_get_seeds_remote_output.csv`.
 #'
 #' These hits are further filtered using [rCRUX::filter_primer_hits()] to
@@ -66,6 +66,7 @@
 #' after for = and add it to get_seeds_remote as the name of a parameter,
 #' setting it equal to whatever you like.
 #'
+#' As of 2022-08-16, the primer blast GUI contains some options that are not implemented by primer_search. The table below documents some of the available options.
 #'
 #' | Name                                   |       Default  |
 #' |----------------------------------------|----------------|
@@ -82,20 +83,17 @@
 #' | NUM_TARGETS_WITH_PRIMERS               | 1000           |
 #' | MAX_TARGET_PER_TEMPLATE                | 100            |
 #'
-#' As of 2022-08-16, the primer blast GUI contains some options that are not implemented by primer_search. The [table below](#Table-of-available-options) documents available options.
 #'
 #'
-#' @param forward_primer_seq passed to primer_search, which turns it into a list of
+#' @param forward_primer_seq passed to [rCRUX::primer_search()], which turns it into a list of
 #'        each primer it could be based on its degenerate primers, then passes
 #'        each one in turn to NCBI (e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG")
-#' @param reverse_primer_seq passed to primer_search, which turns it into a list of
+#' @param reverse_primer_seq passed to [rCRUX::primer_search()], which turns it into a list of
 #'        each primer it could be based on its degenerate primers, then passes
 #'        each one in turn to NCBI (e.g. reverse_primer_seq <-  "TTAGATACCCCACTATGC")
 #' @param output_directory_path the parent directory to place the data in.
 #'        (e.g. "/path/to/output/12S_V5F1_remote_111122")
-#' @param metabarcode_name used to name the subdirectory and the files. If a
-#'        directory named metabarcode_name does not exist in output_directory_path, a
-#'        new directory will be created. get_seeds_remote appends
+#' @param metabarcode_name is passed to [rCRUX::get_seeds_remote()] which appends
 #'        metabarcode_name to the beginning of each of the two files it
 #'        generates (e.g. metabarcode_name <- "12S_V5F1").
 #' @param accession_taxa_sql_path the path to sql created by taxonomizr
@@ -116,16 +114,16 @@
 #' @param mismatch the highest acceptable mismatch value. parse_primer_hits
 #'        returns a table with a mismatch column. get_seeds_remote removes each
 #'        row with a mismatch greater than the specified value.
-#'        The default is mismatch = 3 - Note this is smaller than get_seeds_local
-#' @param minimum_length parse_primer_hits returns a table with a product_length
+#'        The default is mismatch = 3 - Note this is smaller than [rCRUX::get_seeds_local()]
+#' @param minimum_length [rCRUX::parse_primer_hits()] returns a table with a product_length
 #'        column. get_seeds_remote removes each row that has a value less than
 #'        minimum_length in the product_length column.
 #'        The default is minimum_length = 5
-#' @param maximum_length parse_primer_hits returns a table with a
+#' @param maximum_length [rCRUX::parse_primer_hits()] returns a table with a
 #'        product_length column. get_seeds_remote removes each row that has a
 #'        value greater than maximum_length in the product_length column
 #'        The default is maximum_length = 500
-#' @param primer_specificity_database passed to primer_search, which passes it
+#' @param primer_specificity_database passed to [rCRUX::primer_search()], which passes it
 #'        to NCBI.  The default is primer_specificity_database = 'nt'.
 #' @param HITSIZE a primer BLAST search parameter set high to maximize the
 #'        number of observations returned.

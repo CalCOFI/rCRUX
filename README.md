@@ -41,16 +41,17 @@ library(rCRUX)
 
 NCBI's [BLAST+](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/) suite must be locally installed and accessible in the user's path. NCBI provides installation instructions for [Windows](https://www.ncbi.nlm.nih.gov/books/NBK52637/), [Linux](https://www.ncbi.nlm.nih.gov/books/NBK52640/), and [Mac OS](https://www.ncbi.nlm.nih.gov/books/NBK569861/). Version 2.10.1+ is verified compatible with rCRUX.
 
-The following is example script to download blast executables and add them to your path:
+The following is example script to download blast executables:
 
 ```
 cd /path/to/Applications
 
 wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.10.1/ncbi-blast-2.10.1+-x64-macosx.tar.gz
 
-export PATH=$PATH:/Applications/ncbi-blast-2.10.1+/bin
-
 ```
+
+This [link](https://community.rstudio.com/t/adding-to-the-path-variable/12066) may help if you are using RStudio and having trouble adding blast+ to your path.
+
 
 ### Blast-formatted database
 
@@ -166,7 +167,7 @@ get_seeds_local(forward_primer_seq,
                  metabarcode_name,
                  accession_taxa_sql_path,
                  blast_db_path, evalue = 300,
-                 ncbi_bin = "/my/directory/blast+_folder")
+                 ncbi_bin = "/my/directory/blast+_folder/bin")
 
 ```
 
@@ -257,7 +258,7 @@ blast_seeds(seeds_output_path,
             accession_taxa_sql_path,
             output_directory_path,
             metabarcode_name,
-            ncbi_bin = "/my/directory/blast+_folder")
+            ncbi_bin = "/my/directory/blast+_folder/bin")
 
 ```
 
@@ -382,7 +383,7 @@ Information about the blastn parameters can be found in run_primer_blast, and by
 + passed to [run_primer_blastn](https://limey-bean.github.io/run_primer_blastn) is the path to blast+
         tools if not in the user's path. Specify only if blastn and is not in
         your path.
-+       The default is ncbi_bin = NULL - if not specified in path do the following: ncbi_bin = "/my/local/blast+_folder".
++       The default is ncbi_bin = NULL - if not specified in path do the following: ncbi_bin = "/my/local/blast+_folder/bin".
 
 ### Example
 
@@ -415,7 +416,7 @@ get_seeds_local(forward_primer_seq,
 
 ### Overview
 
-[get_seeds_remote](https://limey-bean.github.io/get_seeds_remote) takes a set of forward and reverse primer sequences and generates csv summaries of [NCBI's primer blast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) data returns. Only full length barcode sequences containing primer matches are captured. It also generates a count of unique instances of taxonomic ranks (Phylum, Class, Order, Family, Genus, and Species) captured in the seed library.
+[get_seeds_remote](https://limey-bean.github.io/get_seeds_remote) takes a set of forward and reverse primer sequences and generates .csv summaries of [NCBI's primer blast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) data returns. Only full length barcode sequences containing primer matches are captured. It also generates a count of unique instances of taxonomic ranks (Phylum, Class, Order, Family, Genus, and Species) captured in the seed library.
 
 This script uses [iterative_primer_search](https://limey-bean.github.io/iterative_primer_search) to perform tasks. Its parameters are very similar to primerTree's primer_search(), but it takes vectors for organism and for database and performs a primer search for each combination. For each combination it calls [modifiedPrimerTree_Functions](https://limey-bean.github.io/modifiedPrimerTree_Functions), which is a modified versions of primerTree's primer_search() and primerTree's parse_primer, to query NCBI's [primer BLAST](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) tool, filters the results, and aggregates them into a single data.frame.
 
@@ -432,9 +433,7 @@ PCR product to [iterative_primer_search](https://limey-bean.github.io/iterative_
 the organism(s) to blast, the database to search, and many additional possible
 parameters to NCBI's primer blast tool (see Note below). Degenerate primers
 are converted into all possible non degenerate sets and a user defined maximum
-number of primer combinations is passed to to the API using [modifiedPrimerTree_Functions](https://limey-bean.github.io/modifiedPrimerTree_Functions). Multiple taxids are
-searched independently, as are multiple database searches (e.g. c('nt', 'refseq_representative_genomes'). The data are parsed and stored in a dataframe, which are also written to a file with the suffix
-`_unfiltered_get_seeds_remote_output.csv`.
+number of primer combinations is passed to to the API using [modifiedPrimerTree_Functions](https://limey-bean.github.io/modifiedPrimerTree_Functions). Multiple taxids are searched independently, as are multiple databases (e.g. c('nt', 'refseq_representative_genomes'). The data are parsed and stored in a dataframe, which is also written to a file with the suffix `_unfiltered_get_seeds_remote_output.csv`.
 
 These hits are further filtered using [filter_primer_hits](https://limey-bean.github.io/filter_primer_hits) to
 calculate and append amplicon size to the dataframe. Only hits that pass with default
@@ -470,9 +469,7 @@ Often NCBI API will throttle higher taxonomic ranks (Domain, Phylum, etc.). One 
 + the parent directory to place the data in.
 +        e.g. "/path/to/output/12S_V5F1_remote_111122"
 **metabarcode_name**
-+ used to name the subdirectory and the files. If a
-        directory named metabarcode_name does not exist in output_directory_path, a
-        new directory will be created. get_seeds_remote appends
++ used to name output files. get_seeds_remote appends
         metabarcode_name to the beginning of each of the two files it generates.
 +       e.g. metabarcode_name <- "12S_V5F1"
 **accession_taxa_sql_path**
@@ -510,7 +507,7 @@ Often NCBI API will throttle higher taxonomic ranks (Domain, Phylum, etc.). One 
 + passed to primer_search, which passes it to NCBI.  
 +       The default is primer_specificity_database = 'nt'.
 **HITSIZE**
-+ a primer BLAST search parameter set high to maximize the
++ a primer BLAST search parameter. Set to a high vlaue to maximize the
         number of observations returned.
 +       The default HITSIZE = 50000
 +       Note: increasing this parameter can maximize primer hits, but can also lead to API run throttling due to memory limitations
@@ -527,6 +524,8 @@ Often NCBI API will throttle higher taxonomic ranks (Domain, Phylum, etc.). One 
 
 get_seeds_remote passes many parameters to NCBI's primer blast tool. You can match the parameters to the fields available in the GUI here. First, use your browser to view the page source. Search for the field you are interested in by searching for the title of the field. It should be enclosed in a tag. Inside the label tag, it says for = "<name_of_parameter>". Copy the string after for = and add it to get_seeds_remote as the name of a parameter, setting it equal to whatever you like.
 
+As of 2022-08-16, the primer blast GUI contains some options that are not implemented by primer_search. The [table below] documents some of the available options.
+
 | Name                                   |       Default  |
 |----------------------------------------|----------------|
 | PRIMER_SPECIFICITY_DATABASE            | nt             |
@@ -542,7 +541,7 @@ get_seeds_remote passes many parameters to NCBI's primer blast tool. You can mat
 | NUM_TARGETS_WITH_PRIMERS               | 1000           |
 | MAX_TARGET_PER_TEMPLATE                | 100            |
 
-As of 2022-08-16, the primer blast GUI contains some options that are not implemented by primer_search. The [table below](#Table-of-available-options) documents available options.
+
 
 You can check [primerblast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) for more information on how to modify search options. For example, if want you to generate a larger hitsize, open the source of the primer designing tool and look for that string. You find the following:
 
@@ -733,7 +732,7 @@ be used to make [blast_datatable](https://limey-bean.github.io/blast_datable) sa
         the path to blast+ tools if not in the user's path.  Specify only if
         blastn and blastdbcmd  are not in your path.
 +         The default is ncbi_bin = NULL
-+         Note: if not specified in path do the following: ncbi_bin = "/my/local/blast+_folder".
++         Note: if not specified in path do the following: ncbi_bin = "/my/local/blast+_folder/bin".
 **evalue**
 + passed to [run_blastn](https://limey-bean.github.io/run_blastn) is the number of expected hits
        with a similar quality score found by chance.
