@@ -1,38 +1,61 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Attach taxonomy data to an input table</title>
+<!DOCTYPE html><html><head><title>R: Attach taxonomy data to an input table</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 </head><body><div class="container">
 
-<table width="100%" summary="page for get_taxonomizr_from_accession"><tr><td>get_taxonomizr_from_accession</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table style="width: 100%;"><tr><td>get_taxonomizr_from_accession {rCRUX}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Attach taxonomy data to an input table</h2>
 
 <h3>Description</h3>
 
-<p>Attach taxonomy data to an input table
+<p>This function will append taxids and taxonomy to any dataframe with a column
+named accession that contains NCBI accessions (technically accession versions).
 </p>
 
 
 <h3>Usage</h3>
 
-<pre>
-get_taxonomizr_from_accession(input, accessionTaxa_path, organize = TRUE)
-</pre>
+<pre><code class='language-R'>get_taxonomizr_from_accession(input, accession_taxa_sql_path, organize = TRUE)
+</code></pre>
 
 
 <h3>Arguments</h3>
 
-<table summary="R argblock">
-<tr valign="top"><td><code>input</code></td>
+<table>
+<tr style="vertical-align: top;"><td><code>input</code></td>
 <td>
 <p>a data.frame</p>
 </td></tr>
-<tr valign="top"><td><code>accessionTaxa_path</code></td>
+<tr style="vertical-align: top;"><td><code>accession_taxa_sql_path</code></td>
 <td>
 <p>the path to an accessionTaxa sql</p>
 </td></tr>
 </table>
+
+
+<h3>Details</h3>
+
+<p>It takes a dataframe and searches for a column called accession.  If present,
+the column data is passed to <code>taxonomizr::accessionToTaxa()</code> to find the
+corresponding taxids. The taxids are passed to <code>taxonomizr::getTaxonomy()</code>
+and the following taxonomic information is retrieved for each of the following
+ranks: species, superkingdom, kingdom, phylum, subphylum, superclass, class,
+subclass, order, family, subfamily, genus, infraorder, subcohort, superorder,
+superfamily, tribe, subspecies, subgenus, species group, parvorder, varietas.
+New columns for taxid and each rank are appended to the dataframe.
+</p>
 
 
 <h3>Value</h3>
@@ -40,5 +63,6 @@ get_taxonomizr_from_accession(input, accessionTaxa_path, organize = TRUE)
 <p>the data.frame with taxonomy data
 </p>
 
-
-</div></body></html>
+<hr /><div style="text-align: center;">[Package <em>rCRUX</em> version 0.0.1.000 ]</div>
+</div>
+</body></html>

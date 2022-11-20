@@ -20,20 +20,18 @@ get_seeds_remote(
 )
 }
 \arguments{
-\item{forward_primer_seq}{passed to primer_search, which turns it into a list of
+\item{forward_primer_seq}{passed to \code{\link[=primer_search]{primer_search()}}, which turns it into a list of
 each primer it could be based on its degenerate primers, then passes
 each one in turn to NCBI (e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG")}
 
-\item{reverse_primer_seq}{passed to primer_search, which turns it into a list of
+\item{reverse_primer_seq}{passed to \code{\link[=primer_search]{primer_search()}}, which turns it into a list of
 each primer it could be based on its degenerate primers, then passes
 each one in turn to NCBI (e.g. reverse_primer_seq <-  "TTAGATACCCCACTATGC")}
 
 \item{output_directory_path}{the parent directory to place the data in.
 (e.g. "/path/to/output/12S_V5F1_remote_111122")}
 
-\item{metabarcode_name}{used to name the subdirectory and the files. If a
-directory named metabarcode_name does not exist in output_directory_path, a
-new directory will be created. get_seeds_remote appends
+\item{metabarcode_name}{is passed to \code{\link[=get_seeds_remote]{get_seeds_remote()}} which appends
 metabarcode_name to the beginning of each of the two files it
 generates (e.g. metabarcode_name <- "12S_V5F1").}
 
@@ -51,19 +49,19 @@ memory limitations}
 \item{mismatch}{the highest acceptable mismatch value. parse_primer_hits
 returns a table with a mismatch column. get_seeds_remote removes each
 row with a mismatch greater than the specified value.
-The default is mismatch = 3 - Note this is smaller than get_seeds_local}
+The default is mismatch = 3 - Note this is smaller than \code{\link[=get_seeds_local]{get_seeds_local()}}}
 
-\item{minimum_length}{parse_primer_hits returns a table with a product_length
+\item{minimum_length}{\code{\link[=parse_primer_hits]{parse_primer_hits()}} returns a table with a product_length
 column. get_seeds_remote removes each row that has a value less than
 minimum_length in the product_length column.
 The default is minimum_length = 5}
 
-\item{maximum_length}{parse_primer_hits returns a table with a
+\item{maximum_length}{\code{\link[=parse_primer_hits]{parse_primer_hits()}} returns a table with a
 product_length column. get_seeds_remote removes each row that has a
 value greater than maximum_length in the product_length column
 The default is maximum_length = 500}
 
-\item{primer_specificity_database}{passed to primer_search, which passes it
+\item{primer_specificity_database}{passed to \code{\link[=primer_search]{primer_search()}}, which passes it
 to NCBI.  The default is primer_specificity_database = 'nt'.}
 
 \item{...}{additional arguments passed to primer_search, see
@@ -113,7 +111,7 @@ are converted into all possible non degenerate sets and a user defined maximum
 number of primer combinations is passed to to the API. Multiple taxids are
 searched independently, as are multiple database searches (e.g. nt and
 refseq_representative_genomes). The data are parsed and stored in a dataframe,
-which are also written to a file with the suffix
+which is also written to a file with the suffix
 \verb{_unfiltered_get_seeds_remote_output.csv}.
 
 These hits are further filtered using \code{\link[=filter_primer_hits]{filter_primer_hits()}} to
@@ -155,7 +153,9 @@ browser to view the page source. Search for the field you are interested in
 by searching for the title of the field. It should be enclosed in a tag.
 Inside the label tag, it says for = "<name_of_parameter>". Copy the string
 after for = and add it to get_seeds_remote as the name of a parameter,
-setting it equal to whatever you like.\tabular{ll}{
+setting it equal to whatever you like.
+
+As of 2022-08-16, the primer blast GUI contains some options that are not implemented by primer_search. The table below documents some of the available options.\tabular{ll}{
    Name \tab Default \cr
    PRIMER_SPECIFICITY_DATABASE \tab nt \cr
    EXCLUDE_ENV \tab unchecked \cr
@@ -170,9 +170,6 @@ setting it equal to whatever you like.\tabular{ll}{
    NUM_TARGETS_WITH_PRIMERS \tab 1000 \cr
    MAX_TARGET_PER_TEMPLATE \tab 100 \cr
 }
-
-
-As of 2022-08-16, the primer blast GUI contains some options that are not implemented by primer_search. The \href{#Table-of-available-options}{table below} documents available options.
 }
 \examples{
 

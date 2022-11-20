@@ -19,7 +19,7 @@ This function will append taxids and taxonomy to any dataframe with a column
 named accession that contains NCBI accessions (technically accession versions).
 }
 \details{
-It takes a dataframe and searches for column called accession.  If present,
+It takes a dataframe and searches for a column called accession.  If present,
 the column data is passed to \code{\link[taxonomizr:accessionToTaxa]{taxonomizr::accessionToTaxa()}} to find the
 corresponding taxids. The taxids are passed to \code{\link[taxonomizr:getTaxonomy]{taxonomizr::getTaxonomy()}}
 and the following taxonomic information is retrieved for each of the following

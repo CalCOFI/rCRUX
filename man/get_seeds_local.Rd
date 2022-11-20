@@ -29,16 +29,14 @@ file to be past to get_seeds_local (e.g. reverse_primer_seq <-  "TTAGATACCCCACTA
 \item{output_directory_path}{the parent directory to place the data in
 (e.g. "/path/to/output/12S_V5F1_local_111122_e300_111122").}
 
-\item{metabarcode_name}{used to name the subdirectory and the files. If a
-directory named metabarcode_name does not exist in output_directory_path, a
-new directory will be created. get_seeds_local appends
+\item{metabarcode_name}{used to name the files. get_seeds_local appends
 metabarcode_name to the beginning of each of the files it
 generates (e.g. metabarcode_name <- "12S_V5F1").}
 
 \item{accession_taxa_sql_path}{the path to sql created by taxonomizr
 (e.g. accession_taxa_sql_path <- "/my/accessionTaxa.sql")}
 
-\item{blast_db_path}{a directory with a blast-formatted database.
+\item{blast_db_path}{path to a directory containing a blast-formatted database.
 (e.g blast_db_path <- "/my/ncbi_nt/nt")}
 
 \item{mismatch}{the highest acceptable mismatch value per hit. get_seeds_local removes each
@@ -71,7 +69,7 @@ The default is coverage = 90.}
 
 \item{perID}{(passed to \code{\link[=run_primer_blastn]{run_primer_blastn()}}) is the minimum percent
 identity of the query relative to the subject hits.
-The default is perID = 2.}
+The default is perID = 50.}
 
 \item{reward}{(passed to \code{\link[=run_primer_blastn]{run_primer_blastn()}}) is the reward for
 nucleotide match. The default is reward = 2.}
@@ -95,7 +93,7 @@ generated is a summary of unique taxonomic ranks after filtering.
 }
 \details{
 get_seeds_local passes the forward and reverse primer sequence for a given
-PCR product to blastn which individually queries them against a blast formatted
+PCR product to \code{\link[=run_primer_blastn]{run_primer_blastn()}} which individually blastn queries them against a blast formatted
 database using the task "blastn_short". The returned blast hits for each
 sequence are matched and checked to see if they generate plausible amplicon
 (e.g. amplify the same accession and are in the correct orientation to produce
@@ -103,14 +101,14 @@ a PCR product). These hits are written to a file with the suffix
 \verb{_unfiltered_get_seeds_local_output.csv}.  These hits are further filtered for
 length and number of mismatches. Taxonomy is appended to these filtered hits
 using \code{\link[=get_taxonomizr_from_accession]{get_taxonomizr_from_accession()}}. The results are written to
-to file with the suffix \verb{_filtered_get_seeds_local_output_with_taxonomy.csv}.
+to a file with the suffix \verb{_filtered_get_seeds_local_output_with_taxonomy.csv}.
 The number of unique instances for each rank in the taxonomic path for the
 filtered hits are tallied (NAs are counted once per rank) and written to a
 file with the suffix \verb{_filtered_get_seeds_local_unique_taxonomic_rank_counts.txt}
 
 Note:
 Information about the blastn parameters can be found in run_primer_blast, and
-by accessing blastn -help.  Default parameters were optimized to provide
+by accessing blastn -help. Default parameters are optimized to provide
 results similar to that generated through remote blast via primer-blast as
 implemented in \code{\link[=iterative_primer_search]{iterative_primer_search()}}.
 The number of alignments returned for a given blast search is hardcoded at
@@ -135,6 +133,6 @@ get_seeds_local(forward_primer_seq,
                 minimum_length = 80,
                 maximum_length = 150)
 
-# reduces the number of total hits by removing reads that may have resulted from off target amplification
+# adjusting the minimum_length and maximum_length parameters reduces the number of total hits by removing reads that could result from off target amplification
 
 }

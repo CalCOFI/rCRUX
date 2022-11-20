@@ -1,0 +1,176 @@
+<!DOCTYPE html><html><head><title>R: Controls the iterative blast search implemented by...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table style="width: 100%;"><tr><td>blast_datatable {rCRUX}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Controls the iterative blast search implemented by
+run_blastdbcmd_blastn_and_aggregate_resuts, cleans the output, and
+adds taxonomy</h2>
+
+<h3>Description</h3>
+
+<p>Given a datatable with the column names of the datatable returned by
+<code>get_seeds_remote()</code>, or <code>get_seeds_local()</code>, uses a random
+stratified sample based on taxonomic rank to iteratively process the data
+The random sample entires are sent to
+<code>run_blastdbcmd_blastn_and_aggregate_resuts()</code>, which uses blastdbcmd
+to convert entries into fasta files, passes them to blastn to query local
+blast formatted databases with those sequences. It compiles the results
+of blastn into a data.frame that it cleans and returns with taxonomy added
+using get_taxonomizr_from_accession. Additionally, it saves its
+state as text files in a specified directory with each iteration, allowing
+the user to restart an interrupted run of <code>blast_seeds()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class='language-R'>blast_datatable(
+  blast_seeds,
+  save_dir,
+  blast_db_path,
+  accession_taxa_sql_path,
+  ncbi_bin = NULL,
+  force_db = FALSE,
+  sample_size = 1,
+  wildcards = "NNNN",
+  rank = "genus",
+  max_to_blast = 1000,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;"><td><code>blast_seeds</code></td>
+<td>
+<p>a data.frame formatted like the output from
+get_seeds_remote or get_seeds_local</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>save_dir</code></td>
+<td>
+<p>a directory in which to create files representing the
+current state</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>blast_db_path</code></td>
+<td>
+<p>a directory with a blast-formatted database</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>accession_taxa_sql_path</code></td>
+<td>
+<p>a path to an sql created by
+<code>taxonomizr::prepareDatabase()</code></p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>ncbi_bin</code></td>
+<td>
+<p>the directory that the blast+ suite is in. If NULL, the
+program will use your PATH environmental variable to locate them</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>force_db</code></td>
+<td>
+<p>if true, try to use blast databases that don't appear to
+be blast databases</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>sample_size</code></td>
+<td>
+<p>the number of entries to sample per rank
+before calling blastn - errors if not enough entries per rank (default = 1)</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>wildcards</code></td>
+<td>
+<p>a character vector representing the number of wildcards to
+discard (default = &quot;NNNN&quot;)</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>rank</code></td>
+<td>
+<p>the column representing the taxonomic rank to randomly sample (default = genus)</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>max_to_blast</code></td>
+<td>
+<p>is the maximum number of entries to accumulate into a
+fasta before calling blastn (default = 1000)</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>...</code></td>
+<td>
+<p>additional arguments passed to <code>run_blastdbcmd_blastn_and_aggregate_resuts()</code></p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>blast_datatable uses <code>run_blastdbcmd_blastn_and_aggregate_resuts()</code> to
+run blastdbcmd and blastn to find sequences. It randomly samples rows of the
+seed table based on the taxonomic rank supplied by the user. The user can
+specify how many sequences can be blasted simultaneously using max_to_blast.
+The random sample will be subset for blasting. Once all of the seeds of the
+random sample are processed, they are removed from the dataframe as are the
+seeds found as blast hits. blast-datatable repeats this process or stratified
+random sampling until there are fewer reads remaining than max_to_blast, at
+which point it blasts all remaining seeds. The final aggregated results are
+cleaned for multiple blast taxids, hyphens, and wildcards.
+</p>
+<p>Note:
+The blast db downloaded from NCBIs FTP site has representative
+accessions meaning identical sequences have been collapsed across multiple
+accessions even if they have different taxid. Here we identify representative
+accessions with multiple taxids, and unpack all of the accessions that were
+collapsed into that representative accessions.
+</p>
+<p>We are not identifying or unpacking the representative accessions
+that report a single taxid
+</p>
+<p>Saving data:
+blast_datatable uses files generated in
+<code>run_blastdbcmd_blastn_and_aggregate_resuts()</code> that store intermediate
+results and metadata about the search to local files as it goes. This allows
+the function to resume a partially completed blast, partially mitigating
+the consequences of encountering an error or experiencing other interruptions.
+Interruptions while blasting a subset of a random stratified sample will
+result in a loss of the remaining reads of the subsample, and may decrease
+overall blast returns. The local files are written to <code>save_dir</code> by
+<code>save_state()</code>. Manually changing these files is not suggested as
+it can change the behavior of blast_datatable.
+</p>
+<p>Restarting an interrupted <code>blast_seed()</code> run:
+To restart from an incomplete blast_datatable, submit the previous command
+again. Do not modify the paths specified in the previous command, however
+parameter arguments (e.g. rank, max_to_blast) can be modified. blast_datable
+will automatically detect save files and resume from where it left off.
+</p>
+<p>Warning: If you are resuming from an interrupted blast, make sure you supply
+the same data.frame for <code>blast_seeds</code>. If you intend to start a new blast,
+make sure that there is not existing blast save data in the directory you
+supply for <code>save_dir</code>.
+</p>
+<p>Note: blast_datatable does not save intermediate data
+from blastdbcmd, so if it is interupted while getting building the fasta to
+submit to blastn it will need to repeat some work when resumed. The argument
+<code>max_to_blast</code> controls the frequency with which it calls blastn, so it can
+be used to make blast_datatable save more frequently.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data.frame representing the output of blastn
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>rCRUX</em> version 0.0.1.000 ]</div>
+</div>
+</body></html>

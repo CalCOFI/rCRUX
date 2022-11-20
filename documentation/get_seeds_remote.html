@@ -1,0 +1,313 @@
+<!DOCTYPE html><html><head><title>R: Query primer NCBI's Blast and generate a .csv to use for...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table style="width: 100%;"><tr><td>get_seeds_remote {rCRUX}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Query primer NCBI's Blast and generate a .csv to use for blast_seeds</h2>
+
+<h3>Description</h3>
+
+<p>get_seeds_remote combines modified versions of <code>primerTree::primer_search()</code>
+and primerTree's parse_primer to make <code>iterative_primer_search()</code>
+which is called to query NCBI's
+<a href="https://www.ncbi.nlm.nih.gov/tools/primer-blast/">primer BLAST</a>
+tool, filters the results, then aggregates them into a single data.frame.
+It creates a directory <code>get_seeds_remote</code> in the <code>output_directory_path</code>.
+It creates three files inside that directory. One represents the unfiltered
+output and another represents the output after filtering with user modifiable
+parameters and with appended taxonomy. Also generated is a summary of unique
+taxonomic ranks after filtering.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class='language-R'>get_seeds_remote(
+  forward_primer_seq,
+  reverse_primer_seq,
+  output_directory_path,
+  metabarcode_name,
+  accession_taxa_sql_path,
+  organism,
+  mismatch = 3,
+  minimum_length = 5,
+  maximum_length = 500,
+  primer_specificity_database = "nt",
+  ...,
+  return_table = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;"><td><code>forward_primer_seq</code></td>
+<td>
+<p>passed to <code>primer_search()</code>, which turns it into a list of
+each primer it could be based on its degenerate primers, then passes
+each one in turn to NCBI (e.g. forward_primer_seq &lt;- &quot;TAGAACAGGCTCCTCTAG&quot;)</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>reverse_primer_seq</code></td>
+<td>
+<p>passed to <code>primer_search()</code>, which turns it into a list of
+each primer it could be based on its degenerate primers, then passes
+each one in turn to NCBI (e.g. reverse_primer_seq &lt;-  &quot;TTAGATACCCCACTATGC&quot;)</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>output_directory_path</code></td>
+<td>
+<p>the parent directory to place the data in.
+(e.g. &quot;/path/to/output/12S_V5F1_remote_111122&quot;)</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>metabarcode_name</code></td>
+<td>
+<p>is passed to <code>get_seeds_remote()</code> which appends
+metabarcode_name to the beginning of each of the two files it
+generates (e.g. metabarcode_name &lt;- &quot;12S_V5F1&quot;).</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>accession_taxa_sql_path</code></td>
+<td>
+<p>the path to sql created by taxonomizr
+(e.g. accession_taxa_sql_path &lt;- &quot;/my/accessionTaxa.sql&quot;)</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>organism</code></td>
+<td>
+<p>a vector of character vectors. Each character vector is
+passed in turn to primer_search, which passes them to NCBI.
+get_seeds_remote aggregates all of the results into a single file.
+(e.g. organism = c(&quot;1476529&quot;, &quot;7776&quot;)) - note increasing taxonomic
+rank (e.g. increasing from order to class) for this parameter can
+maximize primer hits, but can also lead to API run throttling due to
+memory limitations</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>mismatch</code></td>
+<td>
+<p>the highest acceptable mismatch value. parse_primer_hits
+returns a table with a mismatch column. get_seeds_remote removes each
+row with a mismatch greater than the specified value.
+The default is mismatch = 3 - Note this is smaller than <code>get_seeds_local()</code></p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>minimum_length</code></td>
+<td>
+<p><code>parse_primer_hits()</code> returns a table with a product_length
+column. get_seeds_remote removes each row that has a value less than
+minimum_length in the product_length column.
+The default is minimum_length = 5</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>maximum_length</code></td>
+<td>
+<p><code>parse_primer_hits()</code> returns a table with a
+product_length column. get_seeds_remote removes each row that has a
+value greater than maximum_length in the product_length column
+The default is maximum_length = 500</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>primer_specificity_database</code></td>
+<td>
+<p>passed to <code>primer_search()</code>, which passes it
+to NCBI.  The default is primer_specificity_database = 'nt'.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>...</code></td>
+<td>
+<p>additional arguments passed to primer_search, see
+<code>primerTree::primer_search()</code> and NCBI primer-blast tool](https://www.ncbi.nlm.nih.gov/tools/primer-blast/)
+for more information.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>num_permutations</code></td>
+<td>
+<p>the number of primer permutations to search, if the
+degenerate bases cause more than this number of permutations to exist,
+this number will be sampled from all possible permutations.
+The default is num_permutations = 50 - Note for very degenerate bases,
+searches may be empty due to poor mutual matches for a given forward
+and reverse primer combination.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>HITSIZE</code></td>
+<td>
+<p>a primer BLAST search parameter set high to maximize the
+number of observations returned.
+The default HITSIZE = 50000 - note increasing this parameter can
+maximize primer hits, but can also lead to API run throttling due to
+memory limitations</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>NUM_TARGETS_WITH_PRIMERS</code></td>
+<td>
+<p>a primer BLAST search parameter set high to
+maximize the number of observations returned.
+The default is NCBI NUM_TARGETS_WITH_PRIMERS = 1000 - - note increasing
+this parameter can maximize primer hits, but can also lead to API run
+throttling due to memory limitations</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>get_seeds_remote passes the forward and reverse primer sequence for a given
+PCR product to <code>iterative_primer_search()</code> along with the taxid(s) of
+the organism(s) to blast, the database to search, and many additional possible
+parameters to NCBI's primer blast tool (see Note below). Degenerate primers
+are converted into all possible non degenerate sets and a user defined maximum
+number of primer combinations is passed to to the API. Multiple taxids are
+searched independently, as are multiple database searches (e.g. nt and
+refseq_representative_genomes). The data are parsed and stored in a dataframe,
+which is also written to a file with the suffix
+<code style="white-space: pre;">&#8288;_unfiltered_get_seeds_remote_output.csv&#8288;</code>.
+</p>
+<p>These hits are further filtered using <code>filter_primer_hits()</code> to
+calculate and append amplicon size to the dataframe. Only hits that pass with default
+or user modified length and number of mismatches parameters are retained.
+</p>
+<p>Taxonomy is appended to these filtered hits using
+<code>get_taxonomizr_from_accession()</code>. The results are written to
+to file with the suffix <code style="white-space: pre;">&#8288;_filtered_get_seeds_remote_output_with_taxonomy.csv&#8288;</code>.
+The number of unique instances for each rank in the taxonomic path for the
+filtered hits are tallied (NAs are counted once per rank) and written to a
+file with the suffix <code style="white-space: pre;">&#8288;_filtered_get_seeds_local_remote_taxonomic_rank_counts.txt&#8288;</code>
+</p>
+<p>Note:
+get_seeds_remote passes many parameters to NCBI's primer blast tool.
+You can match the parameters to the fields available in the GUI
+<a href="https://www.ncbi.nlm.nih.gov/tools/primer-blast/">here</a>. First, use your
+browser to view the page source. Search for the field you are interested in
+by searching for the title of the field. It should be enclosed in a tag.
+Inside the label tag, it says <code style="white-space: pre;">&#8288;for = "&lt;name_of_parameter&gt;"&#8288;</code>. Copy the string
+after for = and add it to get_seeds_remote as the name of a parameter, setting
+it equal to whatever you like.
+</p>
+<p>As of 2022-08-16, the primer blast GUI contains some options that are not
+implemented by <code>primerTree::primer_search()</code> and by extension <code>iterative_primer_search()</code>
+primer_search doesn't include explicit documentation of allowed options, but
+it will quickly report if an option isn't allowed, so trial and error will
+not be very time consuming.
+</p>
+<p>Note:
+See <code>iterative_primer_search()</code> and modifiedPrimerTree_Functions
+for additional run parameters not included below.
+</p>
+<p>Check NCBI's primer blast for additional search options**
+</p>
+<p>get_seeds_remote passes many parameters to NCBI's primer blast tool. You can
+match the parameters to the fields available in the GUI here. First, use your
+browser to view the page source. Search for the field you are interested in
+by searching for the title of the field. It should be enclosed in a tag.
+Inside the label tag, it says for = &quot;&lt;name_of_parameter&gt;&quot;. Copy the string
+after for = and add it to get_seeds_remote as the name of a parameter,
+setting it equal to whatever you like.
+</p>
+<p>As of 2022-08-16, the primer blast GUI contains some options that are not implemented by primer_search. The table below documents some of the available options.</p>
+
+<table>
+<tr>
+ <td style="text-align: left;">
+   Name </td><td style="text-align: left;"> Default </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+   PRIMER_SPECIFICITY_DATABASE </td><td style="text-align: left;"> nt </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+   EXCLUDE_ENV </td><td style="text-align: left;"> unchecked </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+   ORGANISM </td><td style="text-align: left;"> Homo sapiens </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+   TOTAL_PRIMER_SPECIFICITY_MISMATCH </td><td style="text-align: left;"> 1 </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+   PRIMER_3END_SPECIFICITY_MISMATCH </td><td style="text-align: left;"> 1 </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+   TOTAL_MISMATCH_IGNORE </td><td style="text-align: left;"> 6 </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+   MAX_TARGET_SIZE </td><td style="text-align: left;"> 4000 </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+   HITSIZE </td><td style="text-align: left;"> 50000 </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+   EVALUE </td><td style="text-align: left;"> 30000 </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+   WORD_SIZE </td><td style="text-align: left;"> 7 </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+   NUM_TARGETS_WITH_PRIMERS </td><td style="text-align: left;"> 1000 </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+   MAX_TARGET_PER_TEMPLATE </td><td style="text-align: left;"> 100 </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+</td>
+</tr>
+
+</table>
+
+
+
+<h3>Value</h3>
+
+<p>a data.frame containing the same information as the .csv it generates
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class='language-R'>
+forward_primer_seq = "TAGAACAGGCTCCTCTAG"
+reverse_primer_seq =  "TTAGATACCCCACTATGC"
+output_directory_path &lt;- "/my/directory/12S_V5F1_remote_111122_modified_params"
+metabarcode_name &lt;- "12S_V5F1"
+accession_taxa_sql_path &lt;- "/my/directory/accessionTaxa.sql"
+blast_db_path &lt;- "/my/directory/ncbi_nt/nt"
+
+
+get_seeds_remote(forward_primer_seq,
+                reverse_primer_seq,
+                output_directory_path,
+                metabarcode_name,
+                accession_taxa_sql_path,
+                HITSIZE ='1000000',
+                evalue='100000',
+                word_size='6',
+                MAX_TARGET_PER_TEMPLATE = '5',
+                NUM_TARGETS_WITH_PRIMERS ='500000', minimum_length = 50,
+                MAX_TARGET_SIZE = 200,
+                organism = c("1476529", "7776"), return_table = FALSE)
+
+
+# This results in approximately 111500 blast seed returns (there is some variation due to database updates, etc.), note the default generated approximately 1047.
+# This assumes the user is not throttled by memory limitations.
+
+
+</code></pre>
+
+<hr /><div style="text-align: center;">[Package <em>rCRUX</em> version 0.0.1.000 ]</div>
+</div>
+</body></html>

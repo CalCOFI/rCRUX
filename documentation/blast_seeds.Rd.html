@@ -1,0 +1,217 @@
+<!DOCTYPE html><html><head><title>R: Generate a metabarcode database by blasting a stratified...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table style="width: 100%;"><tr><td>blast_seeds {rCRUX}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Generate a metabarcode database by blasting a stratified random sample of
+seed sequences</h2>
+
+<h3>Description</h3>
+
+<p>blast_seeds uses <code>blast_datatable()</code> to search against a blast
+formatted database. It creates a permanent directory <code>blast_seeds_output</code> and
+a temporary directory 'blast_seeds_save' in the <code>output_directory_path</code>. It saves from
+and passes files to <code>blast_datatable()</code> while the run is in progress.
+During the final steps of the function the final data is saved in
+<code>rblast_seeds_output</code> recording the results of the blast.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class='language-R'>blast_seeds(
+  seeds_output_path,
+  blast_db_path,
+  accession_taxa_sql_path,
+  output_directory_path,
+  metabarcode_name,
+  expand_vectors = TRUE,
+  warnings = 0,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;"><td><code>seeds_output_path</code></td>
+<td>
+<p>a path to a csv from get_seeds_local or get_seeds_remote
+(e.g. seeds_output_path &lt;- '/my/rCRUX_output_directory/12S_V5F1_filtered_get_seeds_remote_output_with_taxonomy.csv')</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>blast_db_path</code></td>
+<td>
+<p>a directory containing a blast-formatted database
+(e.g blast_db_path &lt;- &quot;/my/ncbi_nt/nt&quot;)</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>accession_taxa_sql_path</code></td>
+<td>
+<p>a path to the accessionTaxa sql created by
+taxonomizr (e.g. accession_taxa_sql_path &lt;- &quot;/my/accessionTaxa.sql&quot;)</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>output_directory_path</code></td>
+<td>
+<p>a directory in which to save partial and complete output
+(e.g. &quot;/path/to/output/12S_V5F1_local_111122_e300_111122&quot;).</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>metabarcode_name</code></td>
+<td>
+<p>a prefix for the output fasta, taxonomy, and count of
+unique ranks.(e.g. metabarcode_name &lt;- &quot;12S_V5F1&quot;).</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>expand_vectors</code></td>
+<td>
+<p>logical, determines whether to expand too_many_Ns
+and not_in db into real tables and write them in the output directory.
+the default is expand_vectors = TRUE.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>warnings</code></td>
+<td>
+<p>value to set the &quot;warn&quot; option to during the function call.
+On exit it returns to the previous value. Setting this argument to
+NULL will not change the option.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>...</code></td>
+<td>
+<p>additional arguments passed to <code>blast_datatable()</code></p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>sample_size</code></td>
+<td>
+<p>passed to <code>blast_datatable()</code> is the the number of
+entries to sample per rank. The default sample_size = 1 - is recommended
+unless the user is sampling higher order taxonomy.  If there are not
+enough seeds to sample per rank the run will end in an error.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>max_to_blast</code></td>
+<td>
+<p>passed to <code>blast_datatable()</code> and is the maximum
+number of entries to accumulate into a fasta before calling blastn.
+The default is max_to_blast = 1000 - the optimal number of reads to
+blast will depend on the user's environment (available RAM) and the
+number of possible hits (determined by marker and parameters)</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>wildcards</code></td>
+<td>
+<p>passed to <code>blast_datatable()</code> us a character vector
+that represents the minimum number of consecutive Ns the user will
+tolerate in a given seed or hit sequence. The default is
+wildcards = &quot;NNNN&quot;</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>rank</code></td>
+<td>
+<p>passed to <code>blast_datatable()</code> is the data column
+representing the taxonomic rank to randomly sample. The default is
+rank = genus - sampling a lower rank  (e.g. species) will generate
+more total hits and take more time, conversely sampling a higher rank
+(e.g. family) will generate fewer total hits and take less time.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>ncbi_bin</code></td>
+<td>
+<p>passed to <code>run_blastdbcmd()</code> <code>run_blastn()</code> is
+the path to blast+ tools if not in the user's path.  Specify only if
+blastn and blastdbcmd  are not in your path.
+The default is ncbi_bin = NULL - if not specified in path do the
+following: ncbi_bin = &quot;/my/local/blast+_folder&quot;.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>evalue</code></td>
+<td>
+<p>passed to <code>run_blastn()</code> is the number of expected hits
+with a similar quality score found by chance. The default is
+evalue = 1e-6.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>coverage</code></td>
+<td>
+<p>passed to <code>run_blastn()</code> is the minimum percent of the
+query length recovered in the subject hits. The default is
+coverage = 50.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>perID</code></td>
+<td>
+<p>passed to <code>run_blastn()</code> is the minimum percent identity
+of the query relative to the subject hits. The default is perID = 70.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>align</code></td>
+<td>
+<p>passed to <code>run_blastn()</code> is the maximum number of subject
+hits to return per query blasted. The default is align = 50000.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The <code>blast_datatable()</code> call saves intermediate results and
+metadata about the search as local files in the save directory generated by
+blast_seeds. This allows the function to resume a partially
+completed blast, mitigating the consequences of encountering an
+error or experiencing other interruptions. To resume a partially completed
+blast, supply the same seeds and working directory. See the documentation
+of <code>blast_datatable()</code> for more information.
+</p>
+<p>During the blast_seeds the following data are cashed as files and passed into
+<code>blast_datatable()</code>: output_table.txt (most recent updates from the
+blast run), blast_seeds_passed_filter.txt (seed table that tracks the blast
+status of seeds), unsampled_indices.txt (list of seed indices that need to
+be blasted), too_many_ns.txt (tracks seeds that have been removed due to more
+consecutive Ns in a sequence than are acceptable (see parameter wildcards),
+blastdbcmd_failed.txt (tracks reads that are present in the seeds database,
+but not the local blast database. This is relevant for the results of
+<code>get_seeds_remote()</code>), and lastly num_rounds.txt (tracks the number of
+completed blast round for a given seed file).
+</p>
+<p>The final output of blast_seeds, stored in <code>blast_seeds_output</code>, are the
+following: summary.csv (blast output with appended taxonomy),
+metabarcode_name_.fasta (contains the sequence for all accessions recovered
+during the blast search), metabarcode_name.taxonomy (contains the taxonomy
+for all accessions recovered during the blast search),
+metabarcode_name_blast_seeds_summary_unique_taxonomic_rank_counts.txt
+(provides a count of all unique instances within a taxonomic rank),
+too_many_ns.txt (tracks seeds that have been removed due to more
+consecutive Ns in a sequence than are acceptable (see parameter wildcards),
+blastdbcmd_failed.txt (tracks reads that are present in the seeds database,
+but not the local blast database. This is relevant for the results of
+<code>get_seeds_remote()</code>).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class='language-R'>
+seeds_output_path &lt;- "/my/directory/12S_V5F1_remote_111122_modified_params/blast_seeds_output/summary.csv"
+output_directory_path &lt;- "/my/directory/12S_V5F1_remote_111122_modified_params"
+metabarcode_name &lt;- "12S_V5F1"
+accession_taxa_sql_path &lt;- "/my/directory/accessionTaxa.sql"
+blast_db_path &lt;- "/my/directory/ncbi_nt/nt"
+
+
+blast_seeds(seeds_output_path,
+            blast_db_path,
+            accession_taxa_sql_path,
+            output_directory_path,
+            metabarcode_name,
+            rank = species,
+            max_to_blast = 750)
+
+# using the rank of species will increase the number of total unique blast hits
+# modifying the max_to_blast submits fewer reads simultaneously and reduces overall RAM while extending the run
+
+
+</code></pre>
+
+<hr /><div style="text-align: center;">[Package <em>rCRUX</em> version 0.0.1.000 ]</div>
+</div>
+</body></html>

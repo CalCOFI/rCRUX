@@ -72,9 +72,7 @@ file to be past to get_seeds_local (e.g. reverse_primer_seq &lt;-  &quot;TTAGATA
 </td></tr>
 <tr style="vertical-align: top;"><td><code>metabarcode_name</code></td>
 <td>
-<p>used to name the subdirectory and the files. If a
-directory named metabarcode_name does not exist in output_directory_path, a
-new directory will be created. get_seeds_local appends
+<p>used to name the files. get_seeds_local appends
 metabarcode_name to the beginning of each of the files it
 generates (e.g. metabarcode_name &lt;- &quot;12S_V5F1&quot;).</p>
 </td></tr>
@@ -85,7 +83,7 @@ generates (e.g. metabarcode_name &lt;- &quot;12S_V5F1&quot;).</p>
 </td></tr>
 <tr style="vertical-align: top;"><td><code>blast_db_path</code></td>
 <td>
-<p>a directory with a blast-formatted database.
+<p>path to a directory containing a blast-formatted database.
 (e.g blast_db_path &lt;- &quot;/my/ncbi_nt/nt&quot;)</p>
 </td></tr>
 <tr style="vertical-align: top;"><td><code>mismatch</code></td>
@@ -134,7 +132,7 @@ The default is coverage = 90.</p>
 <td>
 <p>(passed to <code>run_primer_blastn()</code>) is the minimum percent
 identity of the query relative to the subject hits.
-The default is perID = 2.</p>
+The default is perID = 50.</p>
 </td></tr>
 <tr style="vertical-align: top;"><td><code>reward</code></td>
 <td>
@@ -154,7 +152,7 @@ do the following: ncbi_bin = &quot;/my/local/blast+_folder&quot;.</p>
 <h3>Details</h3>
 
 <p>get_seeds_local passes the forward and reverse primer sequence for a given
-PCR product to blastn which individually queries them against a blast formatted
+PCR product to <code>run_primer_blastn()</code> which individually blastn queries them against a blast formatted
 database using the task &quot;blastn_short&quot;. The returned blast hits for each
 sequence are matched and checked to see if they generate plausible amplicon
 (e.g. amplify the same accession and are in the correct orientation to produce
@@ -162,14 +160,14 @@ a PCR product). These hits are written to a file with the suffix
 <code style="white-space: pre;">&#8288;_unfiltered_get_seeds_local_output.csv&#8288;</code>.  These hits are further filtered for
 length and number of mismatches. Taxonomy is appended to these filtered hits
 using <code>get_taxonomizr_from_accession()</code>. The results are written to
-to file with the suffix <code style="white-space: pre;">&#8288;_filtered_get_seeds_local_output_with_taxonomy.csv&#8288;</code>.
+to a file with the suffix <code style="white-space: pre;">&#8288;_filtered_get_seeds_local_output_with_taxonomy.csv&#8288;</code>.
 The number of unique instances for each rank in the taxonomic path for the
 filtered hits are tallied (NAs are counted once per rank) and written to a
 file with the suffix <code style="white-space: pre;">&#8288;_filtered_get_seeds_local_unique_taxonomic_rank_counts.txt&#8288;</code>
 </p>
 <p>Note:
 Information about the blastn parameters can be found in run_primer_blast, and
-by accessing blastn -help.  Default parameters were optimized to provide
+by accessing blastn -help. Default parameters are optimized to provide
 results similar to that generated through remote blast via primer-blast as
 implemented in <code>iterative_primer_search()</code>.
 The number of alignments returned for a given blast search is hardcoded at
@@ -197,7 +195,7 @@ get_seeds_local(forward_primer_seq,
                 minimum_length = 80,
                 maximum_length = 150)
 
-# reduces the number of total hits by removing reads that may have resulted from off target amplification
+# adjusting the minimum_length and maximum_length parameters reduces the number of total hits by removing reads that could result from off target amplification
 
 </code></pre>
 

@@ -1,0 +1,122 @@
+<!DOCTYPE html><html><head><title>R: Runs 'run_blastdbcmd()', 'run_blastn()', and aggregates and...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table style="width: 100%;"><tr><td>run_blastdbcmd_blastn_and_aggregate_resuts {rCRUX}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Runs <code>run_blastdbcmd()</code>, <code>run_blastn()</code>, and aggregates and
+saves the results</h2>
+
+<h3>Description</h3>
+
+<p>It uses <code>run_blastdbcmd()</code> to find a seed sequence that corresponds to
+the accession number and forward and reverse stops recorded in the seeds table.
+<code>run_blastdbcmd()</code> outputs sequences as .fasta-formatted strings, which
+run_blastdbcmd_blastn_and_aggregate_resuts concatenates into a multi-line
+fasta, then passes to <code>run_blastn()</code> as an argument. The output of
+<code>run_blastn()</code> is de-replicated by accession, and only the longest
+read per replicates is retained in the output table. The run state is saved
+and passed back to <code>blast_datatable()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class='language-R'>run_blastdbcmd_blastn_and_aggregate_resuts(
+  sample_indices = sample_indices,
+  save_dir,
+  blast_seeds_m,
+  db,
+  ncbi_bin = NULL,
+  too_many_ns,
+  db_dir,
+  blastdbcmd_failed,
+  unsampled_indices,
+  output_table,
+  wildcards,
+  num_rounds,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;"><td><code>sample_indices</code></td>
+<td>
+<p>the indices to sample</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>save_dir</code></td>
+<td>
+<p>a directory in which to create files representing the
+current state</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>blast_seeds_m</code></td>
+<td>
+<p>blast seeds table but with blast status update</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>db</code></td>
+<td>
+<p>the type of blast db - e.g. nt</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>ncbi_bin</code></td>
+<td>
+<p>passed to <code>run_blastdbcmd()</code> <code>run_blastn()</code> is
+the path to blast+ tools if not in the user's path.  Specify only if
+blastn and blastdbcmd  are not in your path.
+The default is ncbi_bin = NULL - if not specified in path do the
+following: ncbi_bin = &quot;/my/local/blast+_folder&quot;.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>too_many_ns</code></td>
+<td>
+<p>a vector of indices that result
+in a fasta with too many Ns</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>db_dir</code></td>
+<td>
+<p>path to the blast db</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>blastdbcmd_failed</code></td>
+<td>
+<p>the indicies not found in your blast db</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>unsampled_indices</code></td>
+<td>
+<p>the indices that need to be sampled</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>output_table</code></td>
+<td>
+<p>the table of results</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>wildcards</code></td>
+<td>
+<p>is a character vector that represents the minimum number
+of consecutive Ns the user will tolerate in a given seed or hit
+sequence. The default is wildcards = &quot;NNNN&quot;</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>num_rounds</code></td>
+<td>
+<p>number of rounds of blast</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>...</code></td>
+<td>
+<p>additional arguments passed to <code>run_blastn()</code></p>
+</td></tr>
+</table>
+
+<hr /><div style="text-align: center;">[Package <em>rCRUX</em> version 0.0.1.000 ]</div>
+</div>
+</body></html>
