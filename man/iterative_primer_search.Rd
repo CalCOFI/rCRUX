@@ -13,15 +13,16 @@ iterative_primer_search(
 )
 }
 \arguments{
-\item{reverse_primer_seq}{the reverse primer}
+\item{reverse_primer_seq}{the reverse primer to search (e.g. reverse_primer_seq <-  "TTAGATACCCCACTATGC")}
 
 \item{organisms}{a character vector containing an id or name parseable by
 NCBI as an organism. If it is a vector with multiple entries, each
-entry will be queried separately.}
+entry will be queried separately.
+(e.g. organism = c("1476529", "7776"))}
 
-\item{db}{which NCBI database to search. The default is db - 'nt' (e.g. nr).}
+\item{db}{which NCBI database to search. The default is db = 'nt' (e.g. nr).}
 
-\item{forward_primer_seq}{the forward primer}
+\item{forward_primer_seq}{the forward primer to search (e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG")}
 }
 \value{
 a data.table summarizing the results of several primer_searches
