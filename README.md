@@ -26,7 +26,7 @@ Install from GitHub:
 
 ``` r
 # install.packages(devtools)
-devtools::install_github("LunaGal/rCRUX")
+devtools::install_github("LunaGal/rCRUX", build_vignettes = TRUE)
 ```
 
 ``` r
