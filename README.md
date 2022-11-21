@@ -121,7 +121,7 @@ The following example shows a simple rCRUX pipeline from start to finish. Note t
 
 There are two options to generate seeds for the database generating blast step blast_seeds_local() or blast_seeds_remote(). The local option is slower, however it is not subject to the memory limitations of using the NCBI primer_blast API. The local option is recommended if the user is building a large database, wants to include any [taxid](https://www.ncbi.nlm.nih.gov/taxonomy) in the search, and has many degenerate sites in their primer set.
 
-## get_seeds_local()
+## [get_seeds_local](https://limey-bean.github.io/get_seeds_local)
 
 This example uses default parameters, with the exception of evalue to minimize run time.
 
@@ -172,7 +172,7 @@ get_seeds_local(forward_primer_seq,
 ```
 
 
-## get_seeds_remote()
+## [get_seeds_remote](https://limey-bean.github.io/get_seeds_remote)
 
 This example uses default parameters to minimize run time.
 
@@ -214,7 +214,7 @@ Sequence availability in NCBI for a given taxid is a limiting factor, as are deg
 
 Example output can be found [here](/examples/12S_V5F1_generated_11-11-22).
 
-## blast_seeds()
+## [blast_seeds](https://limey-bean.github.io/blast_seeds)
 
 
 Iterative searches are based on a stratified random sampling unique taxonomic groups for a given rank from the get_seeds_local or get_seeds_remote output table. For example, the default is to randomly sample one read from each genus.  The user can select any taxonomic rank present in the get_seeds_local output table. The number of seeds selected may cause blastn to exceed the users available RAM, and for that reason the user can choose the maximum number of reads to blast at one time (max_to_blast, default = 1000). blast_seeds will subsample each set of seeds based on max_to_blast and process all seeds before starting a new search for seeds to blast. It saves the output from each round of blastn.  
@@ -266,7 +266,7 @@ Example output can be found [here](/examples/12S_V5F1_generated_11-11-22).
 
 **Note:** There will be variability between runs due to primer blast return parameters and random sampling of the blast seeds table that occurs during blast_seeds. However, variability can be decreased by changing parameters (e.g. randomly sampling species rather than genus will decrease run to run variability).
 
-## derep_and_clean_db()
+## [derep_and_clean_db](https://limey-bean.github.io/derep_and_clean_db)
 
 
 This function takes the output of blast_seeds and de-replicates identical sequences and collapses ambiguous taxonomy to generate a clean reference database.
@@ -316,7 +316,7 @@ The returned blast hits for each sequence are matched and checked to see if they
 Taxonomy is appended to these filtered hits using [get_taxonomizr_from_accession](https://limey-bean.github.io/get_taxonomizr_from_accession). The results are written to to file with the suffix `_filtered_get_seeds_local_output_with_taxonomy.csv`. The number of unique instances for each rank in the taxonomic path for the filtered hits are tallied (NAs are counted once per rank) and written to a file with the suffix `_filtered_get_seeds_local_unique_taxonomic_rank_counts.txt`.
 
 **Note:**
-Information about the blastn parameters can be found in run_primer_blast, and by accessing blastn -help in your terminal.  Default parameters were optimized to provide results similar to those generated through remote blast via primer-blast as implemented in [iterative_primer_search](https://limey-bean.github.io/iterative_primer_search) and [modifiedPrimerTree_Functions](https://limey-bean.github.io/modifiedPrimerTree_Functions). The number of alignments returned for a given blast search is hardcoded at "-num_alignments", "10000000",
+Information about the blastn parameters can be found in run_primer_blast, and by accessing blastn -help in your terminal.  Default parameters were optimized to provide results similar to those generated through remote blast via primer-blast as implemented in [iterative_primer_search](https://limey-bean.github.io/iterative_primer_search) and modifiedPrimerTree_Functions. The number of alignments returned for a given blast search is hardcoded at "-num_alignments", "10000000",
 
 
 ### Parameters
@@ -418,7 +418,7 @@ get_seeds_local(forward_primer_seq,
 
 [get_seeds_remote](https://limey-bean.github.io/get_seeds_remote) takes a set of forward and reverse primer sequences and generates .csv summaries of [NCBI's primer blast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) data returns. Only full length barcode sequences containing primer matches are captured. It also generates a count of unique instances of taxonomic ranks (Phylum, Class, Order, Family, Genus, and Species) captured in the seed library.
 
-This script uses [iterative_primer_search](https://limey-bean.github.io/iterative_primer_search) to perform tasks. Its parameters are very similar to primerTree's primer_search(), but it takes vectors for organism and for database and performs a primer search for each combination. For each combination it calls [modifiedPrimerTree_Functions](https://limey-bean.github.io/modifiedPrimerTree_Functions), which is a modified versions of primerTree's primer_search() and primerTree's parse_primer, to query NCBI's [primer BLAST](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) tool, filters the results, and aggregates them into a single data.frame.
+This script uses [iterative_primer_search](https://limey-bean.github.io/iterative_primer_search) to perform tasks. Its parameters are very similar to primerTree's primer_search(), but it takes vectors for organism and for database and performs a primer search for each combination. For each combination it calls modifiedPrimerTree_Functions, which is a modified versions of primerTree's primer_search() and primerTree's parse_primer, to query NCBI's [primer BLAST](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) tool, filters the results, and aggregates them into a single data.frame.
 
 It downgrades errors from primer_search and parse_primer_hits into warnings. This is useful when searching for a large number of different combinations, allowing the function to output successful results.
 
@@ -433,7 +433,7 @@ PCR product to [iterative_primer_search](https://limey-bean.github.io/iterative_
 the organism(s) to blast, the database to search, and many additional possible
 parameters to NCBI's primer blast tool (see Note below). Degenerate primers
 are converted into all possible non degenerate sets and a user defined maximum
-number of primer combinations is passed to to the API using [modifiedPrimerTree_Functions](https://limey-bean.github.io/modifiedPrimerTree_Functions). Multiple taxids are searched independently, as are multiple databases (e.g. c('nt', 'refseq_representative_genomes'). The data are parsed and stored in a dataframe, which is also written to a file with the suffix `_unfiltered_get_seeds_remote_output.csv`.
+number of primer combinations is passed to to the API using modifiedPrimerTree_Functions. Multiple taxids are searched independently, as are multiple databases (e.g. c('nt', 'refseq_representative_genomes'). The data are parsed and stored in a dataframe, which is also written to a file with the suffix `_unfiltered_get_seeds_remote_output.csv`.
 
 These hits are further filtered using [filter_primer_hits](https://limey-bean.github.io/filter_primer_hits) to
 calculate and append amplicon size to the dataframe. Only hits that pass with default
@@ -512,7 +512,7 @@ Often NCBI API will throttle higher taxonomic ranks (Domain, Phylum, etc.). One 
         maximize the number of observations returned.
 +       The default is NCBI NUM_TARGETS_WITH_PRIMERS = 1000 - Note: increasing this parameter can maximize primer hits, but can also lead to API run throttling due to memory limitations
 **...**
-+ additional arguments passed to [modifiedPrimerTree_Functions](https://limey-bean.github.io/modifiedPrimerTree_Functions). See [NCBI primer-blast tool]](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) for more information.
++ additional arguments passed to modifiedPrimerTree_Functions. See [NCBI primer-blast tool](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) for more information.
 
 
 **Check NCBI's primer blast for additional search options**

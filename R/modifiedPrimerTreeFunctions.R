@@ -1,14 +1,15 @@
-#PrimerTree
-#Copyright (C) 2013 Jim Hester
-#Modified 2022-08-10 by Luna Gal
-#Removed num_aligns argument from primer_search
-#Instead num_targets_with_primers is determined by the user
-#Changed the calculation for duration of blast submission
 
 #' Query a pair of primers using ncbi's Primer-BLAST, if primers contain iupac
 #'
+#' #PrimerTree
+#' #Modified 2022-08-10 by Luna Gal
+#' #Removed num_aligns argument from primer_search
+#' #Instead num_targets_with_primers is determined by the user
+#' #Changed the calculation for duration of blast submission
+#'
 #' ambiguity codes, enumerate all possible combinations and combine the
 #' results.
+#'
 #' @param forward forward primer to search by 5'-3' on plus strand
 #' @param reverse reverse primer to search by 5'-3' on minus strand
 #' @param num_permutations the number of primer permutations to search, if the degenerate bases
