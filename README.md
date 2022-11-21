@@ -602,11 +602,11 @@ get_seeds_remote(forward_primer_seq,
 
 The intermediate results and metadata associated with a search in progress are saved as local files in the save directory `blast_seeds_save`. This allows the function to resume a partially completed blast, mitigating the consequences of encountering an
 error or experiencing other interruptions. To resume a partially completed blast, supply the same seeds and working directory. See the documentation
-of [blast_datatable](https://limey-bean.github.io/blast_datable) for more information.
+of [blast_datatable](https://limey-bean.github.io/blast_datatable) for more information.
 
 ### Expected Output
 
-During the blast_seeds the following data are cashed as files in a temporary directory `blast_seeds_save` in the `output_directory_path`. These files are passed to and updated by [blast_datatable](https://limey-bean.github.io/blast_datable): output_table.txt (most recent updates from the
+During the blast_seeds the following data are cashed as files in a temporary directory `blast_seeds_save` in the `output_directory_path`. These files are passed to and updated by [blast_datatable](https://limey-bean.github.io/blast_datatable): output_table.txt (most recent updates from the
 blast run), blast_seeds_passed_filter.txt (seed table that tracks the blast
 status of seeds), unsampled_indices.txt (list of seed indices that need to
 be blasted), too_many_ns.txt (tracks seeds that have been removed due to more
@@ -625,9 +625,9 @@ too_many_ns.txt, blastdbcmd_failed.txt.
 
 ### Detailed Steps
 
-[blast_seeds](https://limey-bean.github.io/blast_seeds) passes a datatable returned by [get_seeds_remote](https://limey-bean.github.io/get_seeds_remote) or [get_seeds_local](https://limey-bean.github.io/get_seeds_local) to [blast_datatable](https://limey-bean.github.io/blast_datable), which uses a random stratified sample based on taxonomic rank to iteratively blast and process the seeds in the datatable. The user can specify how many sequences can be blasted simultaneously using max_to_blast. The randomly sampled seeds (or subsets of seeds) are sent to [run_blastdbcmd_blastn_and_aggregate_resuts](https://limey-bean.github.io/run_blastdbcmd_blastn_and_aggregate_resuts), which uses [run_blastdbcmd](https://limey-bean.github.io/run_blastdbcmd) to find a seed sequence that corresponds to the accession number and forward and reverse stops recorded in the seeds table. [run_blastdbcmd](https://limey-bean.github.io/run_blastdbcmd) outputs sequences as .fasta-formatted strings, which
+[blast_seeds](https://limey-bean.github.io/blast_seeds) passes a datatable returned by [get_seeds_remote](https://limey-bean.github.io/get_seeds_remote) or [get_seeds_local](https://limey-bean.github.io/get_seeds_local) to [blast_datatable](https://limey-bean.github.io/blast_datatable), which uses a random stratified sample based on taxonomic rank to iteratively blast and process the seeds in the datatable. The user can specify how many sequences can be blasted simultaneously using max_to_blast. The randomly sampled seeds (or subsets of seeds) are sent to [run_blastdbcmd_blastn_and_aggregate_resuts](https://limey-bean.github.io/run_blastdbcmd_blastn_and_aggregate_resuts), which uses [run_blastdbcmd](https://limey-bean.github.io/run_blastdbcmd) to find a seed sequence that corresponds to the accession number and forward and reverse stops recorded in the seeds table. [run_blastdbcmd](https://limey-bean.github.io/run_blastdbcmd) outputs sequences as .fasta-formatted strings, which
 [run_blastdbcmd_blastn_and_aggregate_resuts](https://limey-bean.github.io/run_blastdbcmd_blastn_and_aggregate_resuts) concatenates into a multi-line fasta, then passes to [run_blastn](https://limey-bean.github.io/run_blastn) as an argument. The output of
-[run_blastn](https://limey-bean.github.io/run_blastn) is de-replicated by accession, and only the longest read per replicates is retained in the output table. The run state is saved and passed back to [blast_datatable](https://limey-bean.github.io/blast_datable).
+[run_blastn](https://limey-bean.github.io/run_blastn) is de-replicated by accession, and only the longest read per replicates is retained in the output table. The run state is saved and passed back to [blast_datatable](https://limey-bean.github.io/blast_datatable).
 
 For each blast iteration, once all of the seeds of the random sample are processed, they are removed from the seeds dataframe as are the seeds recovered through blast. blast-datatable repeats this process or stratified random sampling until there are fewer seed sequences remaining than max_to_blast, at which point it blasts all remaining seeds. The final aggregated results are cleaned for multiple blast taxids, hyphens, and wildcards and returned with taxonomy added using [get_taxonomizr_from_accession](https://limey-bean.github.io/get_taxonomizr_from_accession).
 
@@ -661,11 +661,11 @@ the same data.frame for [blast_seeds](https://limey-bean.github.io/blast_seeds).
 make sure that there is not existing blast save data in the directory `output_directory_path\blast_seeds_save`.
 
 **Note:**
-[blast_datatable](https://limey-bean.github.io/blast_datable) does not save intermediate data
+[blast_datatable](https://limey-bean.github.io/blast_datatable) does not save intermediate data
 from [run_blastdbcmd](https://limey-bean.github.io/run_blastdbcmd), so if it is interrupted while getting building the fasta to
 submit to [run_blastn](https://limey-bean.github.io/run_blastn) it will need to repeat some work when resumed. The argument
 `max_to_blast` controls the frequency with which it calls blastn, so it can
-be used to make [blast_datatable](https://limey-bean.github.io/blast_datable) save more frequently.
+be used to make [blast_datatable](https://limey-bean.github.io/blast_datatable) save more frequently.
 
 ### Parameters
 **seeds_output_path**
