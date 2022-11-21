@@ -71,8 +71,8 @@ run_primer_blastn <- function(primer_fasta, db, ncbi_bin = NULL, task = "blastn-
                              wait = TRUE,
                              stdout = TRUE)
   } else {
-    blastn <- paste0(ncbi_bin, "blastn")
-    blastn_output <- system2(command = "blastn",
+    blastn_name <- paste0(ncbi_bin, "blastn")
+    blastn_output <- system2(command = blastn_name,
                              args = c("-db", db,
                                       "-task", task,
                                       "-query", primer_fasta,
