@@ -42,7 +42,7 @@
 
 
 run_blastdbcmd_blastn_and_aggregate_resuts <- function(sample_indices = sample_indices,
-        save_dir, blast_seeds_m, db, ncbi_bin = NULL, too_many_ns, db_dir, blastdbcmd_failed,
+        save_dir, blast_seeds_m, db, too_many_ns, db_dir, blastdbcmd_failed,
         unsampled_indices, output_table, wildcards, num_rounds, ...) {
 
 
@@ -56,7 +56,7 @@ run_blastdbcmd_blastn_and_aggregate_resuts <- function(sample_indices = sample_i
 
 
   for (index in sample_indices) {
-    fasta <- suppressWarnings(run_blastdbcmd(blast_seeds_m[index, ], db, ncbi_bin))
+    fasta <- suppressWarnings(run_blastdbcmd(blast_seeds_m[index, ], db, ncbi_bin = ncbi_bin))
 
     # Maybe in these cases we can just append directly to output?
     # room for improvement here...
