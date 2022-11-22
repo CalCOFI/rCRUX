@@ -42,11 +42,12 @@
 
 
 run_blastdbcmd_blastn_and_aggregate_resuts <- function(sample_indices = sample_indices,
-        save_dir, blast_seeds_m, ncbi_bin=NULL, db, too_many_ns, db_dir, blastdbcmd_failed,
+        save_dir, blast_seeds_m, ncbi_bin, db, too_many_ns, db_dir, blastdbcmd_failed,
         unsampled_indices, output_table, wildcards, num_rounds, ...) {
 
 
   print(ncbi_bin)
+
   # run blastdbcmd on each
   # sort results into appropriate buckets
   aggregate_fasta <- NULL
