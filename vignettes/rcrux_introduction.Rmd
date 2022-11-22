@@ -141,7 +141,7 @@ get_seeds_local(forward_primer_seq,
                  metabarcode_name,
                  accession_taxa_sql_path,
                  blast_db_path, evalue = 300,
-                 ncbi_bin = "/my/directory/blast+_folder/bin")
+                 ncbi_bin = "/my/directory/ncbi-blast-2.10.1+/bin/")
 
 ```
 
@@ -233,7 +233,7 @@ blast_seeds(seeds_output_path,
             accession_taxa_sql_path,
             output_directory_path,
             metabarcode_name,
-            ncbi_bin = "/my/directory/blast+_folder/bin")
+            ncbi_bin = "/my/directory/ncbi-blast-2.10.1+/bin/")
 
 ```
 

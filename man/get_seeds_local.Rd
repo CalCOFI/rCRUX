@@ -77,7 +77,7 @@ nucleotide match. The default is reward = 2.}
 \item{ncbi_bin}{passed to \code{\link[=run_primer_blastn]{run_primer_blastn()}}) is the path to blast+
 tools if not in the user's path.  Specify only if blastn and is not in
 your path. The default is ncbi_bin = NULL - if not specified in path
-do the following: ncbi_bin = "/my/local/blast+_folder".}
+do the following: ncbi_bin = "/my/local/ncbi-blast-2.10.1+/bin".}
 }
 \description{
 get_seeds_local is a local interpretation of \code{\link[=get_seeds_remote]{get_seeds_remote()}} that avoids

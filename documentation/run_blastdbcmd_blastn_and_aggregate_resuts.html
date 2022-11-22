@@ -38,8 +38,8 @@ and passed back to <code>blast_datatable()</code>.
   sample_indices = sample_indices,
   save_dir,
   blast_seeds_m,
+  ncbi_bin,
   db,
-  ncbi_bin = NULL,
   too_many_ns,
   db_dir,
   blastdbcmd_failed,
@@ -68,17 +68,17 @@ current state</p>
 <td>
 <p>blast seeds table but with blast status update</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>db</code></td>
-<td>
-<p>the type of blast db - e.g. nt</p>
-</td></tr>
 <tr style="vertical-align: top;"><td><code>ncbi_bin</code></td>
 <td>
 <p>passed to <code>run_blastdbcmd()</code> <code>run_blastn()</code> is
 the path to blast+ tools if not in the user's path.  Specify only if
 blastn and blastdbcmd  are not in your path.
 The default is ncbi_bin = NULL - if not specified in path do the
-following: ncbi_bin = &quot;/my/local/blast+_folder&quot;.</p>
+following: ncbi_bin = &quot;/my/local/ncbi-blast-2.10.1+/bin/&quot;.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>db</code></td>
+<td>
+<p>the type of blast db - e.g. nt</p>
 </td></tr>
 <tr style="vertical-align: top;"><td><code>too_many_ns</code></td>
 <td>

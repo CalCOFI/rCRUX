@@ -9,8 +9,8 @@ run_blastdbcmd_blastn_and_aggregate_resuts(
   sample_indices = sample_indices,
   save_dir,
   blast_seeds_m,
+  ncbi_bin,
   db,
-  ncbi_bin = NULL,
   too_many_ns,
   db_dir,
   blastdbcmd_failed,
@@ -29,13 +29,13 @@ current state}
 
 \item{blast_seeds_m}{blast seeds table but with blast status update}
 
-\item{db}{the type of blast db - e.g. nt}
-
 \item{ncbi_bin}{passed to \code{\link[=run_blastdbcmd]{run_blastdbcmd()}} \code{\link[=run_blastn]{run_blastn()}} is
 the path to blast+ tools if not in the user's path.  Specify only if
 blastn and blastdbcmd  are not in your path.
 The default is ncbi_bin = NULL - if not specified in path do the
-following: ncbi_bin = "/my/local/blast+_folder".}
+following: ncbi_bin = "/my/local/ncbi-blast-2.10.1+/bin/".}
+
+\item{db}{the type of blast db - e.g. nt}
 
 \item{too_many_ns}{a vector of indices that result
 in a fasta with too many Ns}

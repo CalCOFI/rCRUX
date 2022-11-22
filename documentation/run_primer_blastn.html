@@ -1,10 +1,20 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Runs blastn with the input primer sequences converted to a...</title>
+<!DOCTYPE html><html><head><title>R: Runs blastn with the input primer sequences converted to a...</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 </head><body><div class="container">
 
-<table width="100%" summary="page for run_primer_blastn {tools}"><tr><td>run_primer_blastn {tools}</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table style="width: 100%;"><tr><td>run_primer_blastn {rCRUX}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Runs blastn with the input primer sequences converted to a primer_fasta file
 as a query</h2>
@@ -18,8 +28,7 @@ as a query
 
 <h3>Usage</h3>
 
-<pre>
-run_primer_blastn(
+<pre><code class='language-R'>run_primer_blastn(
   primer_fasta,
   db,
   ncbi_bin = NULL,
@@ -30,54 +39,54 @@ run_primer_blastn(
   perID = 50,
   reward = 2
 )
-</pre>
+</code></pre>
 
 
 <h3>Arguments</h3>
 
-<table summary="R argblock">
-<tr valign="top"><td><code>primer_fasta</code></td>
+<table>
+<tr style="vertical-align: top;"><td><code>primer_fasta</code></td>
 <td>
 <p>path to the primer fasta file</p>
 </td></tr>
-<tr valign="top"><td><code>db</code></td>
+<tr style="vertical-align: top;"><td><code>db</code></td>
 <td>
 <p>path to blast formatted database</p>
 </td></tr>
-<tr valign="top"><td><code>ncbi_bin</code></td>
+<tr style="vertical-align: top;"><td><code>ncbi_bin</code></td>
 <td>
 <p>is the path to blast+ tools if not in the user's path.
 Specify only if blastn and blastdbcmd  are not in your path.
 The default is ncbi_bin = NULL - if not specified in path do the
-following: ncbi_bin = &quot;/my/local/blast+_folder&quot;.</p>
+following: ncbi_bin = &quot;/my/local/ncbi-blast-2.10.1+/bin/&quot;.</p>
 </td></tr>
-<tr valign="top"><td><code>task</code></td>
+<tr style="vertical-align: top;"><td><code>task</code></td>
 <td>
 <p>the task for blastn to perform - default here is &quot;blastn_short&quot;,
 which is optimized for searches with queries &lt; 50 bp</p>
 </td></tr>
-<tr valign="top"><td><code>word_size</code></td>
+<tr style="vertical-align: top;"><td><code>word_size</code></td>
 <td>
 <p>is the fragment size used for blastn search - smaller word
 sizes increase sensitivity and time of the search.
 The default is word_size =  7</p>
 </td></tr>
-<tr valign="top"><td><code>evalue</code></td>
+<tr style="vertical-align: top;"><td><code>evalue</code></td>
 <td>
 <p>is the number of expected hits with a similar quality score
 found by chance. The default is evalue = 3e-7.</p>
 </td></tr>
-<tr valign="top"><td><code>coverage</code></td>
+<tr style="vertical-align: top;"><td><code>coverage</code></td>
 <td>
 <p>is the minimum percent of the query length recovered in the
 subject hits. The default is coverage = 90.</p>
 </td></tr>
-<tr valign="top"><td><code>perID</code></td>
+<tr style="vertical-align: top;"><td><code>perID</code></td>
 <td>
 <p>is the minimum percent identity of the query relative to the
 subject hits. The default is perID = 50.</p>
 </td></tr>
-<tr valign="top"><td><code>reward</code></td>
+<tr style="vertical-align: top;"><td><code>reward</code></td>
 <td>
 <p>is the reward for nucleotide match. The default is reward = 2.</p>
 </td></tr>
@@ -110,5 +119,6 @@ The number of alignments returned for a given blast search is hardcoded at
 <p>a tibble 'output_table' representing the blastn results
 </p>
 
-<hr /><div style="text-align: center;">[Package <em>tools</em> version 4.1.2 ]</div>
-</div></body></html>
+<hr /><div style="text-align: center;">[Package <em>rCRUX</em> version 0.0.1.000 ]</div>
+</div>
+</body></html>

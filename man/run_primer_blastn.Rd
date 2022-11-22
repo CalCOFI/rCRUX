@@ -25,7 +25,7 @@ run_primer_blastn(
 \item{ncbi_bin}{is the path to blast+ tools if not in the user's path.
 Specify only if blastn and blastdbcmd  are not in your path.
 The default is ncbi_bin = NULL - if not specified in path do the
-following: ncbi_bin = "/my/local/blast+_folder".}
+following: ncbi_bin = "/my/local/ncbi-blast-2.10.1+/bin/".}
 
 \item{task}{the task for blastn to perform - default here is "blastn_short",
 which is optimized for searches with queries < 50 bp}

@@ -68,7 +68,7 @@ more total hits and take more time, conversely sampling a higher rank
 the path to blast+ tools if not in the user's path.  Specify only if
 blastn and blastdbcmd  are not in your path.
 The default is ncbi_bin = NULL - if not specified in path do the
-following: ncbi_bin = "/my/local/blast+_folder".}
+following: ncbi_bin = "/my/local/ncbi-blast-2.10.1+/bin".}
 
 \item{evalue}{passed to \code{\link[=run_blastn]{run_blastn()}} is the number of expected hits
 with a similar quality score found by chance. The default is
