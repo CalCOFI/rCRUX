@@ -83,7 +83,7 @@
 #'        the path to blast+ tools if not in the user's path.  Specify only if
 #'        blastn and blastdbcmd  are not in your path.
 #'        The default is ncbi_bin = NULL - if not specified in path do the
-#'        following: ncbi_bin = "/my/local/blast+_folder".
+#'        following: ncbi_bin = "/my/local/ncbi-blast-2.10.1+/bin".
 #' @param evalue passed to [rCRUX::run_blastn()] is the number of expected hits
 #'        with a similar quality score found by chance. The default is
 #'        evalue = 1e-6.
@@ -137,12 +137,24 @@ blast_seeds <- function(seeds_output_path, blast_db_path, accession_taxa_sql_pat
 
   output_dir <- paste(output_directory_path, "blast_seeds_output", sep = "/")
   save_dir <- paste(output_directory_path, "blast_seeds_save", sep = "/")
+
+  # if run failed before any blast output delete save_dir
+  output_table_path <- paste(save_dir, "output_table.txt", sep = "/")
+  if (file.exists(output_table_path) & file.size(output_table_path) < 5){
+     unlink(save_dir, recursive=TRUE)
+  }
+
+  # create directories if they do not exist
   suppressWarnings(dir.create(output_directory_path))
   suppressWarnings(dir.create(save_dir))
   suppressWarnings(dir.create(output_dir))
+
   blast_seeds <- read.csv(seeds_output_path)
   output_table <- blast_datatable(blast_seeds, save_dir, blast_db_path,
                                   accession_taxa_sql_path, ...)
+
+  # keep only hits with acceptable product length
+  output_table <- dplyr::filter(output_table, dplyr::between(product_length, minimum_length, maximum_length))
 
   # Write output_table to dir/blast_seeds_output/summary.csv
   summary_csv_path <- paste(output_dir, "summary.csv", sep = "/")

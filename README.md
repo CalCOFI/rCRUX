@@ -167,7 +167,7 @@ get_seeds_local(forward_primer_seq,
                  metabarcode_name,
                  accession_taxa_sql_path,
                  blast_db_path, evalue = 300,
-                 ncbi_bin = "/my/directory/blast+_folder/bin/")
+                 ncbi_bin = "/my/directory/ncbi-blast-2.10.1+/bin/")
 
 ```
 
@@ -258,7 +258,7 @@ blast_seeds(seeds_output_path,
             accession_taxa_sql_path,
             output_directory_path,
             metabarcode_name,
-            ncbi_bin = "/my/directory/blast+_folder/bin/")
+            ncbi_bin = "/my/directory/ncbi-blast-2.10.1+/bin/")
 
 ```
 
@@ -383,7 +383,7 @@ Information about the blastn parameters can be found in run_primer_blast, and by
 + passed to [run_primer_blastn](https://limey-bean.github.io/run_primer_blastn) is the path to blast+
         tools if not in the user's path. Specify only if blastn and is not in
         your path.
-+       The default is ncbi_bin = NULL - if not specified in path do the following: ncbi_bin = "/my/local/blast+_folder/bin/".
++       The default is ncbi_bin = NULL - if not specified in path do the following: ncbi_bin = "/my/local/ncbi-blast-2.10.1+/bin/".
 
 ### Example
 
@@ -715,7 +715,7 @@ be used to make [blast_datatable](https://limey-bean.github.io/blast_datatable) 
         and [run_blastn](https://limey-bean.github.io/run_blastn)is
         the path to blast+ tools if not in the user's path.  Specify only if
         blastn and blastdbcmd  are not in your path.
-+       The default is ncbi_bin = NULL - Note: if not specified in path do the following: ncbi_bin = "/my/local/blast+_folder/bin".
++       The default is ncbi_bin = NULL - Note: if not specified in path do the following: ncbi_bin = "/my/local/ncbi-blast-2.10.1+/bin".
 **evalue**
 + passed to [run_blastn](https://limey-bean.github.io/run_blastn) is the number of expected hits
        with a similar quality score found by chance.
