@@ -1,0 +1,272 @@
+---
+title: "Introduction to rCRUX"
+output: rmarkdown::html_vignette
+vignette: >
+ %\VignetteIndexEntry{Introduction to rCRUX}
+ %\VignetteEngine{knitr::rmarkdown}
+ %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+
+library(rCRUX)
+
+```
+
+rCRUX is a suite of tools for querying NCBI databases and filtering and formatting the resulting
+data. The typical workflow involves using get_seeds_local() or get_seeds_remote() to simulate *in
+silico* PCR to acquire a set of sequences analogous to PCR products containing metabarcode primer
+sequences.  The sequences or "seeds" recovered from the *in silico* PCR step are used to search
+databases for complementary sequence that lack one or both primers. This search step,
+blast_seeds() is used to iteratively align seed sequences against a local NCBI database for
+matches using a taxonomic rank based stratified random sampling approach.  This step results in a
+comprehensive database of primer specific reference barcode sequences from NCBI. Using
+derep_and_clean_db(), the database is de-replicated by DNA sequence where identical sequences are
+collapsed into a representative read. If there are multiple possible taxonomic paths for a read,
+the taxonomic path is collapsed to the lowest taxonomic agreement.
+
+# Installation
+
+RCRUX can be installed using the following R code:
+
+```{devtools installation}
+
+devtools::install_github("LunaGal/rCRUX")
+
+```
+
+## Dependencies
+
+**NOTE:** These only need to be downloaded once or as NCBI updates databases. rCRUX can access and
+successfully build metabarcode references using databases stored on external drives. </br>
+
+### BLAST+
+
+NCBI's [BLAST+](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/) suite must be locally
+installed and accessible in the user's path. NCBI provides installation instructions for
+[Windows](https://www.ncbi.nlm.nih.gov/books/NBK52637/),
+[Linux](https://www.ncbi.nlm.nih.gov/books/NBK52640/), and [Mac
+OS](https://www.ncbi.nlm.nih.gov/books/NBK569861/). Version 2.10.1+ is verified compatible with
+rCRUX.
+
+
+### Blast-formatted database
+
+rCRUX requires a local blast-formatted nucleotide database. These can be user generated or download a pre-formatted database from [NCBI](https://ftp.ncbi.nlm.nih.gov/blast/db/).  NCBI provides a tool (perl script) for downloading databases as part of the blast+ package. A brief help page can be found [here](https://www.ncbi.nlm.nih.gov/books/NBK569850/).
+
+#### Possible error include but are not limited to:
+
+1. Partial downloads of database files. Extracting each TAR archive (e.g. nt.00.tar.gz.md5) should result in 8 files with the following extensions(.nhd, .nhi, .nhr, .nin, .nnd, .nni, .nog, and .nsq).  If a few archives fail during download, you can re-download and unpack only those that failed. You do not have to re-download all archives.  
+
+2. You downloaded and built a blast database from ncbi fasta files but did not specify -parse_seqids
+
+The nt database is **~242 GB** (as of 8/31/22) and can take several hours (overnight) to build. Loss of internet connection can lead to partially downloaded files and blastn errors (see above).
+
+
+### Taxonomizr
+
+rCRUX uses the [taxonomizr](https://cran.r-project.org/web/packages/taxonomizr/vignettes/usage.html) package for taxonomic assignment based on NCBI [Taxonomy id's \(taxids\)](https://www.ncbi.nlm.nih.gov/taxonomy). Many rCRUX functions require a path to a local taxonomizr readable sqlite database. This database can be built using taxonomizr's [prepareDatabase](https://www.rdocumentation.org/packages/taxonomizr/versions/0.8.0/topics/prepareDatabase) function.
+This database is **~72 GB** (as of 8/31/22) and can take several hours (overnight) to build. Loss
+of internet connection can lead to partially downloaded files and taxonomizr run errors.
+
+The following code can be used to build this database:
+
+
+```{set up taxonomizer database}
+
+library(taxonomizr)
+
+accession_taxa_sql_path <- "/my/accessionTaxa.sql"
+prepareDatabase(accession_taxa_sql_path)
+
+```
+
+#### Note:
+For poor bandwidth connections, please see the [taxononmizr readme for manual installation](https://cran.r-project.org/web/packages/taxonomizr/readme/README.html) of the accessionTaxa.sql database. If built manually, make sure to delete any files other than the accessionTaxa.sql database (e.g. keeping nucl_gb.accession2taxid.gz leads to a warning message).
+
+# Example pipeline
+
+The following example shows a simple rCRUX pipeline from start to finish. Note that this example will require internet access and considerable database storage (~**314 GB**, see section above), run time (mainly for blastn), and system resources to execute.
+
+##Note:
+Blast databases and the taxonomic assignment databases (accessionTaxa.sql) can be stored on external hard drive. It increases run time, but is a good option if computer storage capacity is limited.
+
+There are two options to generate seeds for the database generating blast step blast_seeds_local() or blast_seeds_remote(). The local option is slower, however it is not subject to the memory limitations of using the NCBI primer_blast API. The local option is recommended if the user is building a large database, wants to include any [taxid](https://www.ncbi.nlm.nih.gov/taxonomy) in the search, and has many degenerate sites in their primer set.
+
+## get_seeds_local()
+This example uses default parameters, with the exception of evalue to minimize run time.
+
+```{run get_seeds_local()}
+
+forward_primer_seq = "TAGAACAGGCTCCTCTAG"
+reverse_primer_seq =  "TTAGATACCCCACTATGC"
+output_directory_path <- "/my/directory/12S_V5F1_local_111122_e300" # path to desired output directory
+metabarcode_name <- "12S_V5F1" # desired name of metabarcode locus
+accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql" # path to taxonomizr sql database
+blast_db_path <- "/my/directory/ncbi_nt/nt"  # path to blast formatted database
+
+
+get_seeds_local(forward_primer_seq,
+     reverse_primer_seq,
+     output_directory_path,
+     metabarcode_name,
+     accession_taxa_sql_path,
+     blast_db_path, evalue = 300)
+
+```
+
+#### Note:
+Two output .csv files are automatically created at this path based on the arguments passed to get_seeds_local.  One includes all unfiltered output the other is filtered based on user defined parameters and includes taxonomy.
+
+A unique taxonomic rank summary file is also generated (e.g. the number of unique phyla, class, etc in the blast hits). If a taxonomic rank category contains NA's, they will be counted as a single unique rank. Sequence availability in NCBI for a given taxid is a limiting factor.
+
+Example output can be found [here](https://github.com/LunaGal/rCRUX/tree/main/examples/12S_V5F1_generated_11-11-22).
+
+
+#### If BLAST+ is not in your path do the following:
+
+
+```{add blast path to get_seeds_local()}
+
+get_seeds_local(forward_primer_seq,
+                 reverse_primer_seq,
+                 output_directory_path,
+                 metabarcode_name,
+                 accession_taxa_sql_path,
+                 blast_db_path, evalue = 300,
+                 ncbi_bin = "/my/directory/blast+_folder/bin")
+
+```
+
+
+## get_seeds_remote()
+
+This example uses default parameters to minimize run time.
+
+Searching jawless vertebrates (taxid: "1476529") and jawed vertebrates (taxid: "7776").
+
+```{run get_seeds_remote()}
+
+forward_primer_seq = "TAGAACAGGCTCCTCTAG"
+
+reverse_primer_seq =  "TTAGATACCCCACTATGC"
+
+output_directory_path <- "/my/directory/12S_V5F1_remote_111122" # path to desired output directory
+
+metabarcode_name <- "12S_V5F1" # desired name of metabarcode locus
+
+accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql" # path to taxonomizr sql database
+
+
+
+get_seeds_remote(forward_primer_seq,
+          reverse_primer_seq,
+          output_directory_path,
+          metabarcode_name,
+          accession_taxa_sql_path,
+          organism = c("1476529", "7776"),
+          return_table = FALSE)
+
+```
+
+#### Note:
+When using default parameters only 1047 hits are returned from NCBI's primer blast (run 11-11-22). Returns hit sizes and contents are variable depending on parameters, random blast sampling, and database updates.
+
+Two output .csv files are automatically created at this path based on the arguments passed to get_seeds_remote.  One includes all unfiltered output the other is filtered based on user defined parameters and includes taxonomy.
+
+A unique taxonomic rank summary file is also generated (e.g. the number of unique superkingdon, phyla, class, etc in the blast hits). If a taxonomic rank category contains NA's, they will be counted as a single unique rank.
+
+Sequence availability in NCBI for a given taxid is a limiting factor, as are degenerate bases and API memory allocation.
+
+**Modifying defaults** can increase the number of returns by orders of magnitude.
+
+Example output can be found [here](https://github.com/LunaGal/rCRUX/tree/main/examples/12S_V5F1_generated_11-11-22).
+
+## blast_seeds()
+
+Iterative searches are based on a stratified random sampling unique taxonomic groups for a given rank from the get_seeds_local or get_seeds_remote output table. For example, the default is to randomly sample one read from each genus.  The user can select any taxonomic rank present in the get_seeds_local output table. The number of seeds selected may cause blastn to exceed the users available RAM, and for that reason the user can choose the maximum number of reads to blast at one time (max_to_blast, default = 1000). blast_seeds will subsample each set of seeds based on max_to_blast and process all seeds before starting a new search for seeds to blast. It saves the output from each round of blastn.  
+
+
+```{run blast_seeds()}
+
+seeds_output_path <- '/my/directory/12S_V5F1_remote_111122/12S_V5F1_filtered_get_seeds_remote_output_with_taxonomy.csv' # this is output from get_seeds_local or get_seeds_remote
+
+blast_db_path <- "/my/directory/blast_database/nt"  # path to blast formatted database
+
+accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql"  # path to taxonomizr sql database
+
+output_directory_path <- '/my/directory/12S_V5F1_remote_111122/' # path to desired output directory
+
+metabarcode_name <- "12S_V5F1"  # desired name of metabarcode locus
+
+
+blast_seeds(seeds_output_path,
+            blast_db_path,
+            accession_taxa_sql_path,
+            output_directory_path,
+            metabarcode_name)    
+
+```
+
+
+#### Note:
+After each round of blast, the system state is saved. If the script is terminated after a full round of blast, the user can pick up where they left off. The user can also change parameters at this point (e.g. change the max_to_blast or rank)
+
+The output includes a summary table of all unique blast hits (summary.csv), a multi fasta file of all unique hits (metabarcode_name_.fasta), a taxonomy file of all unique hits (metabarcode_name_taxonomy.txt), a unique taxonomic rank summary file (metabarcode_name_taxonomic_rank_counts.txt), a list of all of the accessions not present in your blast database (e.g. relevant if you ran get_seeds_remote; blastdbcmd_failed.csv), and a list of accessions with 4 or more Ns in a row (default for that parameter is wildcards = "NNNN"; too_many_ns.csv). The default number of reads to blast per rank is 1 (default for that parameter is sample_size = 1). The script will error out if the user asks for more reads per rank than exist in the blast seeds table.     
+
+
+
+**If BLAST+ is not in your path do the following**
+
+
+```{specify blast path for blast_seeds()}
+
+blast_seeds(seeds_output_path,
+            blast_db_path,
+            accession_taxa_sql_path,
+            output_directory_path,
+            metabarcode_name,
+            ncbi_bin = "/my/directory/blast+_folder/bin")
+
+```
+
+#### Note:
+
+Example output can be found [here](https://github.com/LunaGal/rCRUX/tree/main/examples/12S_V5F1_generated_11-11-22).
+
+There will be variability between runs due to primer blast return parameters and random sampling of the blast seeds table that occurs during blast_seeds. However, variability can be decreased by changing parameters (e.g. randomly sampling species rather than genus will decrease run to run variability).
+
+## derep_and_clean_db()
+
+This function takes the output of blast_seeds and de-replicates identical sequences and collapses ambiguous taxonomy to generate a clean reference database.
+
+```{run derep_and_clean_db()}
+
+output_directory_path <- '/my/directory/12S_V5F1_remote_111122/' # path to desired output directory
+
+summary_path <- "/my/directory/12S_V5F1_remote_111122/blast_seeds_output/summary.csv" # this is the path to the output from blast_seeds
+
+derep_and_clean_db(output_directory_path, summary_path, metabarcode_name)
+
+
+```
+
+#### Note:
+
+Accessions with the same sequence are collapsed into a representative sequence. If those accessions have different taxids (taxonomic paths), we determine the lowest taxonomic agreement across the multiple accessions with an identical sequence. For example, for the MiFish 12S locus, nearly all rockfishes in the genus *Sebastes* have identical sequences. Instead of including ~110 identical reference sequences, one for each individual species, we report a single representative sequence with a lowest common taxonomic agreement of the genus *Sebastes*. This prevents classification bias for taxa with more sequences and also provides accurate taxonomic resolution within the reference database.
+
+We exclude all sequences with taxids that are NA. Such sequences are not immediately useful for classification of metabarcoding sequences. However, we caution that such results can be indicative of off target amplification of a given primer set. For example, the MiFish 12S primer set amplifies uncultured marine bacteria among other taxa (taxid = NA) indicating off target amplification of non-fish taxa. These sequences are saved in the References_with_NA_for_taxonomic_ranks.csv file.
+
+The result of this function is a final clean reference database file set composed of a paired metabarcode_name_derep_and_clean.fasta and metabarcode_name_derep_and_clean_taxonomy.txt. A summary file of the number of unique taxonomic ranks is also generated: metabarcode_name_derep_and_clean_unique_taxonomic_rank_counts.txt. In addition, all representative sequences and associated accessions are saved in Sequences_with_lowest_common_taxonomic_path_agreement.csv, Sequences_with_mostly_NA_taxonomic_paths.csv,
+Sequences_with_multiple_taxonomic_paths.csv, and
+Sequences_with_single_taxonomic_path.csv files. These files allow for the traceback of representative sequences to multiple accessions.
+
+
+Example output can be found [here](https://github.com/LunaGal/rCRUX/tree/main/examples/12S_V5F1_generated_11-11-22).
