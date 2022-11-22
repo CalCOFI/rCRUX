@@ -41,7 +41,7 @@ run_blastdbcmd <- function(query_row, db, ncbi_bin = NULL) {
     seq_range <- paste0(forward, "-", reverse)
 
     # System call
-    if (any(is.null(ncbi_bin))) {
+    if (is.null(ncbi_bin)) {
         fasta <- system2("blastdbcmd", args = c("-db", db,
                                                 "-dbtype", "nucl",
                                                 "-entry", accession,
