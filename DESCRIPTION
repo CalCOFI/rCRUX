@@ -4,14 +4,14 @@ Version: 0.0.1.000
 Authors@R:
     person(given = "Luna",
            family = "Gal",
-           role = c("aut"),
+           role = c("aut"))
     person(given = "Zack",
            family = "Gold",
            role = c("aut"),
-           comment = c(ORCID = "0000-0003-0490-7630"),
+           comment = c(ORCID = "0000-0003-0490-7630"))
     person(given = "Ramon",
            family = "Gallego",
-           role = c("aut"),
+           role = c("aut"))
     person(given = "Emily",
            family = "Curd",
            role = c("aut", "cre"),
