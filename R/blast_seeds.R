@@ -161,7 +161,7 @@ blast_seeds <- function(seeds_output_path, blast_db_path, accession_taxa_sql_pat
                                   accession_taxa_sql_path, ...)
 
   # keep only hits with acceptable product length
-  output_table <- dplyr::filter(output_table, dplyr::between(product_length, minimum_length, maximum_length))
+  output_table <- dplyr::filter(output_table, dplyr::between(amplicon_length, minimum_length, maximum_length))
 
   # Write output_table to dir/blast_seeds_output/summary.csv
   summary_csv_path <- paste(output_dir, "summary.csv", sep = "/")
