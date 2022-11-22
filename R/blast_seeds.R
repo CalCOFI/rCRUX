@@ -129,7 +129,7 @@
 
 
 blast_seeds <- function(seeds_output_path, blast_db_path, accession_taxa_sql_path, output_directory_path,
-                        metabarcode_name, ncbi_bin = NULL, expand_vectors = TRUE, minimum_length = 5, maximum_length = 500, warnings = 0, ...) {
+                        metabarcode_name, expand_vectors = TRUE, minimum_length = 5, maximum_length = 500, warnings = 0, ...) {
 
   # So that run_blastdbcmd doesn't overwhelm the user with errors
   # Possibly we should discard the warnings from blastdb as it's entirely
