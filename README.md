@@ -732,6 +732,12 @@ be used to make [blast_datatable](https://limey-bean.github.io/blast_datatable) 
 + passed to [run_blastn](https://limey-bean.github.io/run_blastn) is the maximum number of subject
         hits to return per query blasted.
 +        The default is align = 50000
+**minimum_length** removes each row that has a value less than
++ minimum_length in the product_length column.
++        The default is minimum_length = 5
+**maximum_length** removes each row that has a
++ value greater than maximum_length in the product_length column
++        The default is maximum_length = 500
 
 
 ### Example

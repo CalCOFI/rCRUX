@@ -12,6 +12,8 @@ blast_seeds(
   output_directory_path,
   metabarcode_name,
   expand_vectors = TRUE,
+  minimum_length = 5,
+  maximum_length = 500,
   warnings = 0,
   ...
 )
@@ -35,6 +37,14 @@ unique ranks.(e.g. metabarcode_name <- "12S_V5F1").}
 \item{expand_vectors}{logical, determines whether to expand too_many_Ns
 and not_in db into real tables and write them in the output directory.
 the default is expand_vectors = TRUE.}
+
+\item{minimum_length}{removes each row that has a value less than
+minimum_length in the product_length column.
+The default is minimum_length = 5}
+
+\item{maximum_length}{removes each row that has a
+value greater than maximum_length in the product_length column
+The default is maximum_length = 500}
 
 \item{warnings}{value to set the "warn" option to during the function call.
 On exit it returns to the previous value. Setting this argument to

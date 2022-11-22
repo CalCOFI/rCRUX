@@ -94,6 +94,12 @@
 #'        of the query relative to the subject hits. The default is perID = 70.
 #' @param align passed to [rCRUX::run_blastn()] is the maximum number of subject
 #'        hits to return per query blasted. The default is align = 50000.
+#' @param minimum_length removes each row that has a value less than
+#'        minimum_length in the product_length column.
+#'        The default is minimum_length = 5
+#' @param maximum_length removes each row that has a
+#'        value greater than maximum_length in the product_length column
+#'        The default is maximum_length = 500
 #' @return NULL
 #' @export
 #'
@@ -123,7 +129,8 @@
 
 
 blast_seeds <- function(seeds_output_path, blast_db_path, accession_taxa_sql_path, output_directory_path,
-                        metabarcode_name, expand_vectors = TRUE, warnings = 0, ...) {
+                        metabarcode_name, expand_vectors = TRUE, minimum_length = 5, maximum_length = 500, warnings = 0, ...) {
+
   # So that run_blastdbcmd doesn't overwhelm the user with errors
   # Possibly we should discard the warnings from blastdb as it's entirely
   # expected to encounter so values that are not in the database.

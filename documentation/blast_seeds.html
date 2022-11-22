@@ -39,6 +39,8 @@ During the final steps of the function the final data is saved in
   output_directory_path,
   metabarcode_name,
   expand_vectors = TRUE,
+  minimum_length = 5,
+  maximum_length = 500,
   warnings = 0,
   ...
 )
@@ -78,6 +80,18 @@ unique ranks.(e.g. metabarcode_name &lt;- &quot;12S_V5F1&quot;).</p>
 <p>logical, determines whether to expand too_many_Ns
 and not_in db into real tables and write them in the output directory.
 the default is expand_vectors = TRUE.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>minimum_length</code></td>
+<td>
+<p>removes each row that has a value less than
+minimum_length in the product_length column.
+The default is minimum_length = 5</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>maximum_length</code></td>
+<td>
+<p>removes each row that has a
+value greater than maximum_length in the product_length column
+The default is maximum_length = 500</p>
 </td></tr>
 <tr style="vertical-align: top;"><td><code>warnings</code></td>
 <td>
