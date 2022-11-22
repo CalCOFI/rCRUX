@@ -377,7 +377,7 @@ check_db <- function(blast_db_path, ncbi_bin) {
   if (is.null(ncbi_bin)) {
     try(system2("blastdbcmd", args = c("-db", blast_db_path, "-info"), stdout = FALSE)) == 0
   } else {
-    blastdbcmd_path <- paste0(ncbi_bin, "blastdbcmd", sep = "/")
+    blastdbcmd_path <- paste0(ncbi_bin, "/blastdbcmd")
     try(system2(command = blastdbcmd_path, args = c("-db", blast_db_path, "-info"), stdout = FALSE)) == 0
   }
 }
