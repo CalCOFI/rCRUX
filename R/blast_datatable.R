@@ -97,7 +97,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
 
 
-  if (!(check_db(blast_db_path) || force_db)) {
+  if (!(check_db(blast_db_path,ncbi_bin) || force_db)) {
     stop(blast_db_path, " is probably not a blast database.
          Use force_db = TRUE to try it anyway.")
   }
