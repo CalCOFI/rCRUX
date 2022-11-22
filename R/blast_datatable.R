@@ -111,7 +111,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
   unsampled_indices <- seq_along(blast_seeds_m$accession)
 
 
-  print(ncbi_bin)
+
 
   while (length(unsampled_indices) > 0) {
 
@@ -237,7 +237,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
       if (length(sample_indices) == length(unsampled_indices)) {
 
         run_blastdbcmd_blastn_and_aggregate_resuts(unsampled_indices, save_dir,
-          blast_seeds_m, blast_db_path, ncbi_bin, too_many_ns, db_dir,
+          blast_seeds_m, blast_db_path, ncbi_bin = NULL, too_many_ns, db_dir,
           blastdbcmd_failed, unsampled_indices, output_table, wildcards,
           num_rounds, ...)
 
@@ -252,7 +252,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
 
         run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices, save_dir,
-            blast_seeds_m, blast_db_path, ncbi_bin, too_many_ns, db_dir,
+            blast_seeds_m, blast_db_path, ncbi_bin = NULL, too_many_ns, db_dir,
             blastdbcmd_failed, unsampled_indices, output_table, wildcards,
             num_rounds, ...)
 
@@ -270,7 +270,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
 
         run_blastdbcmd_blastn_and_aggregate_resuts(subset, save_dir,
-              blast_seeds_m, blast_db_path, ncbi_bin, too_many_ns, db_dir,
+              blast_seeds_m, blast_db_path, ncbi_bin = NULL, too_many_ns, db_dir,
               blastdbcmd_failed, unsampled_indices, output_table, wildcards,
               num_rounds, ...)
 
