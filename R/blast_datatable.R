@@ -111,7 +111,6 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
   unsampled_indices <- seq_along(blast_seeds_m$accession)
 
 
-  print(ncbi_bin)
 
   while (length(unsampled_indices) > 0) {
 
