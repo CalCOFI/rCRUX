@@ -237,7 +237,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
       if (length(sample_indices) == length(unsampled_indices)) {
 
         run_blastdbcmd_blastn_and_aggregate_resuts(unsampled_indices, save_dir,
-          blast_seeds_m, ncbi_bin = NULL, blast_db_path, too_many_ns, db_dir,
+          blast_seeds_m, ncbi_bin, blast_db_path, too_many_ns, db_dir,
           blastdbcmd_failed, unsampled_indices, output_table, wildcards,
           num_rounds, ...)
 
@@ -252,7 +252,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
 
         run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices, save_dir,
-            blast_seeds_m, ncbi_bin = NULL, blast_db_path, too_many_ns, db_dir,
+            blast_seeds_m, ncbi_bin, blast_db_path, too_many_ns, db_dir,
             blastdbcmd_failed, unsampled_indices, output_table, wildcards,
             num_rounds, ...)
 
@@ -270,7 +270,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
 
         run_blastdbcmd_blastn_and_aggregate_resuts(subset, save_dir,
-              blast_seeds_m, ncbi_bin = NULL, blast_db_path, too_many_ns, db_dir,
+              blast_seeds_m, ncbi_bin, blast_db_path, too_many_ns, db_dir,
               blastdbcmd_failed, unsampled_indices, output_table, wildcards,
               num_rounds, ...)
 
@@ -374,7 +374,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 # True if the blast_db_path is a blast database, false if it's not
 
 
-check_db <- function(blast_db_path, ncbi_bin = NULL) {
+check_db <- function(blast_db_path, ncbi_bin) {
   if (is.null(ncbi_bin)) {
     try(system2("blastdbcmd", args = c("-db", blast_db_path, "-info"), stdout = FALSE)) == 0
   } else {
