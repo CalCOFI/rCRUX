@@ -50,7 +50,7 @@ run_blastdbcmd <- function(query_row, db, ncbi_bin = NULL) {
         return(fasta)
     }
     else {
-        blastdbcmd_path <- paste0(ncbi_bin, "blastdbcmd")
+        blastdbcmd_path <- paste0(ncbi_bin, "blastdbcmd", sep = "/")
         fasta <- system2(command= blastdbcmd_path, args = c("-db", db,
                                                 "-dbtype", "nucl",
                                                 "-entry", accession,
