@@ -123,7 +123,7 @@
 
 
 blast_seeds <- function(seeds_output_path, blast_db_path, accession_taxa_sql_path, output_directory_path,
-                        metabarcode_name, expand_vectors = TRUE, warnings = 0, ...) {
+                        metabarcode_name, expand_vectors = TRUE, warnings = 0,ncbi_bin = NULL, ...) {
   # So that run_blastdbcmd doesn't overwhelm the user with errors
   # Possibly we should discard the warnings from blastdb as it's entirely
   # expected to encounter so values that are not in the database.
@@ -142,7 +142,7 @@ blast_seeds <- function(seeds_output_path, blast_db_path, accession_taxa_sql_pat
   suppressWarnings(dir.create(output_dir))
   blast_seeds <- read.csv(seeds_output_path)
   output_table <- blast_datatable(blast_seeds, save_dir, blast_db_path,
-                                  accession_taxa_sql_path, ...)
+                                  accession_taxa_sql_path,ncbi_bin = NULL, ...)
 
   # Write output_table to dir/blast_seeds_output/summary.csv
   summary_csv_path <- paste(output_dir, "summary.csv", sep = "/")
