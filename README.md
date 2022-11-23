@@ -1,6 +1,6 @@
 # rCRUX: Generate CRUX metabarcoding reference libraries in R
 
-
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7349493.svg)](https://doi.org/10.5281/zenodo.7349493)
 
 **Authors:** [Luna Gal](<https://github.com/LunaGal>), [Zachary Gold](<https://github.com/zjgold>), [Ramon Gallego](https://github.com/ramongallego), [Emily Curd](<https://github.com/limey-bean>)<br/>
 **Inspiration:**

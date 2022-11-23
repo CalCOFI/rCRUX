@@ -35,7 +35,7 @@ affiliations:
 date: 22 November 2022
 bibliography: paper.bib
 
-Zenodo-doi: 10.3847/xxxxx
+Zenodo-doi: 10.5281/zenodo.7349493
 ---
 
 # Summary
