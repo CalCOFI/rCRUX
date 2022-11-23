@@ -10,10 +10,10 @@ tags:
   - reference libraries
 authors:
   - name: Luna Gal
-    affiliation: 1
+    affiliation: "1, 2"
   - name: Zack Gold
     orcid: 0000-0003-0490-7630
-    affiliation: "1, 2"
+    affiliation: "2, 3"
   - name: Ramon Gallego
     affiliation: 4
   - name: Emily Curd
@@ -32,7 +32,7 @@ affiliations:
  - name: Vermont Biomedical Research Network, University of Vermont, USA
     index: 5
 
-date: 16 November 2022
+date: 22 November 2022
 bibliography: paper.bib
 
 Zenodo-doi: 10.3847/xxxxx
