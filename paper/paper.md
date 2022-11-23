@@ -30,7 +30,7 @@ affiliations:
  - name: Universidad Autónoma de Madrid, Spain
    index: 4
  - name: Vermont Biomedical Research Network, University of Vermont, USA
-    index: 5
+   index: 5
 
 date: 22 November 2022
 bibliography: paper.bib
