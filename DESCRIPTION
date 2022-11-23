@@ -29,7 +29,8 @@ Imports:
     stringr,
     lubridate,
     primerTree,
-    progress
+    progress,
+    zoo
 Encoding: UTF-8
 #LazyData: true
 Roxygen: list(markdown = TRUE)
