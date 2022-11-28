@@ -33,8 +33,6 @@
 #' by accessing blastn -help. Default parameters are optimized to provide
 #' results similar to that generated through remote blast via primer-blast as
 #' implemented in [rCRUX::iterative_primer_search()].
-#' The number of alignments returned for a given blast search is hardcoded at
-#' "-num_alignments", "10000000",
 #'
 #' @param forward_primer_seq passed to primer_to_fasta, which turns it into fasta
 #'        file to be past to get_seeds_local (e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG").
@@ -75,6 +73,10 @@
 #'        The default is perID = 50.
 #' @param reward (passed to [rCRUX::run_primer_blastn()]) is the reward for
 #'        nucleotide match. The default is reward = 2.
+#' @param align is the maximum number of subject hits to return per query
+#'        blasted. The default is align = '10000000'. - to few alignments will
+#'        result in no matching pairs of forward and reverse primers.  To many
+#'        alignments can result in an error due to RAM limitations.
 #' @param ncbi_bin passed to [rCRUX::run_primer_blastn()]) is the path to blast+
 #'        tools if not in the user's path.  Specify only if blastn and is not in
 #'        your path. The default is ncbi_bin = NULL - if not specified in path

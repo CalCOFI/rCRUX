@@ -316,8 +316,7 @@ The returned blast hits for each sequence are matched and checked to see if they
 Taxonomy is appended to these filtered hits using [get_taxonomizr_from_accession](https://limey-bean.github.io/get_taxonomizr_from_accession). The results are written to to file with the suffix `_filtered_get_seeds_local_output_with_taxonomy.csv`. The number of unique instances for each rank in the taxonomic path for the filtered hits are tallied (NAs are counted once per rank) and written to a file with the suffix `_filtered_get_seeds_local_unique_taxonomic_rank_counts.txt`.
 
 **Note:**
-Information about the blastn parameters can be found in run_primer_blast, and by accessing blastn -help in your terminal.  Default parameters were optimized to provide results similar to those generated through remote blast via primer-blast as implemented in [iterative_primer_search](https://limey-bean.github.io/iterative_primer_search) and modifiedPrimerTree_Functions. The number of alignments returned for a given blast search is hardcoded at "-num_alignments", "10000000",
-
+Information about the blastn parameters can be found in run_primer_blast, and by accessing blastn -help in your terminal.  Default parameters were optimized to provide results similar to those generated through remote blast via primer-blast as implemented in [iterative_primer_search](https://limey-bean.github.io/iterative_primer_search) and modifiedPrimerTree_Functions.
 
 ### Parameters
 **forward_primer_seq**
@@ -379,6 +378,11 @@ Information about the blastn parameters can be found in run_primer_blast, and by
 + passed to [run_primer_blastn](https://limey-bean.github.io/run_primer_blastn) is the reward for
         nucleotide match.
 +       The default is reward = 2
+**align**
++ is the maximum number of subject hits to return per query
+        blasted.
++        The default is align = '10000000'. - to few alignments will result in no matching pairs of forward and reverse primers.  To many alignments can result in an error due to RAM limitations.
+
 **ncbi_bin**
 + passed to [run_primer_blastn](https://limey-bean.github.io/run_primer_blastn) is the path to blast+
         tools if not in the user's path. Specify only if blastn and is not in

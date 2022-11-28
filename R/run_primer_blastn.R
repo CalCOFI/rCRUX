@@ -32,11 +32,15 @@
 #'        sizes increase sensitivity and time of the search.
 #'        The default is word_size =  7
 #' @param evalue is the number of expected hits with a similar quality score
-#'        found by chance. The default is evalue = 3e-7.
+#'        found by chance. The default is evalue = '3e-7'.
 #' @param coverage is the minimum percent of the query length recovered in the
 #'        subject hits. The default is coverage = 90.
 #' @param perID is the minimum percent identity of the query relative to the
 #'        subject hits. The default is perID = 50.
+#' @param align is the maximum number of subject hits to return per query
+#'        blasted. The default is align = '10000000'. - to few alignments will
+#'        result in no matching pairs of forward and reverse primers.  To many
+#'        alignments can result in an error due to RAM limitations.
 #' @param reward is the reward for nucleotide match. The default is reward = 2.
 #' @return a tibble 'output_table' representing the blastn results
 #' @export
