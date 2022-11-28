@@ -43,7 +43,7 @@
 
 
 run_primer_blastn <- function(primer_fasta, db, ncbi_bin = NULL, task = "blastn-short", word_size = 7,
-                       evalue = '3e+07', coverage = 90, perID = 50, reward = 2) {
+                       evalue = '3e+07', align = 10000000, coverage = 90, perID = 50, reward = 2) {
 
 
   # Determine arguments
@@ -62,7 +62,7 @@ run_primer_blastn <- function(primer_fasta, db, ncbi_bin = NULL, task = "blastn-
                                                        "saccver", "mismatch", "sstart",
                                                        "send", "staxids\""),
                                       "-evalue", evalue,
-                                      "-num_alignments", "10000000",
+                                      "-num_alignments", align,
                                       "-qcov_hsp_perc", coverage,
                                       "-perc_identity", perID,
                                       "-reward", reward,
