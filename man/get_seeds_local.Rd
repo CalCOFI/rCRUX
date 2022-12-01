@@ -15,6 +15,10 @@ get_seeds_local(
   minimum_length = 5,
   maximum_length = 500,
   primer_specificity_database = "nt",
+  num_fprimers_to_blast = 50,
+  num_rprimers_to_blast = 50,
+  max_to_blast = 2,
+  align = "10000000",
   ...,
   return_table = TRUE
 )
@@ -51,6 +55,27 @@ The default is minimum_length = 5}
 value greater than maximum_length in the product_length column
 The default is maximum_length = 500}
 
+\item{num_fprimers_to_blast}{is the maximum number of possible forward primers
+to blast. This is relevant for degenerate primers, all possible primers
+from a degenerate sequence are enumerated, and the user can choose a
+number to be randomly sampled and used for primer blast.
+The default is num_fprimers_to_blast = 50}
+
+\item{num_rprimers_to_blast}{is the maximum number of possible reverse primers
+to blast. This is relevant for degenerate primers, all possible primers
+from a degenerate sequence are enumerated, and the user can choose a
+number to be randomly sampled and used for primer blast.
+The default is num_rprimers_to_blast = 50}
+
+\item{max_to_blast}{is the number of primers to blast simultaneously.
+The default is max_to_blast = 2. - Increasing this number will decrease
+overall run time, but increase the amount of RAM required.}
+
+\item{align}{is the maximum number of subject hits to return per query
+blasted. The default is align = '10000000'. - to few alignments will
+result in no matching pairs of forward and reverse primers.  To many
+alignments can result in an error due to RAM limitations.}
+
 \item{task}{(passed to \code{\link[=run_primer_blastn]{run_primer_blastn()}}) the task for blastn to
 perform - default here is "blastn_short", which is optimized
 for searches with queries < 50 bp}
@@ -86,15 +111,31 @@ tool. Although it is slower than remotely generating blast seeds, it is not
 subject to the arbitrary throttling of jobs that require significant memory.
 It creates a 'get_seeds_local' directory at \code{output_directory_path} if one
 doesn't yet exist, then creates a subdirectory inside \code{output_directory_path}
-named after \code{metabarcode_name}. It creates three files inside that directory.
+named after \code{metabarcode_name}. It creates four permenant files inside that
+directory. Several temporary files are generated during the run for keeping
+track of primers being blasted and needing to be blasted, and raw blast output.
 One represents the unfiltered output and another represents the output after
 filtering with user modifiable parameters and with appended taxonomy. Also
-generated is a summary of unique taxonomic ranks after filtering.
+generated is a summary of unique taxonomic ranks after filtering, and a
+fasta of the primers used for blast.
 }
 \details{
 get_seeds_local passes the forward and reverse primer sequence for a given
-PCR product to \code{\link[=run_primer_blastn]{run_primer_blastn()}} which individually blastn queries them against a blast formatted
-database using the task "blastn_short". The returned blast hits for each
+PCR product to \code{\link[=run_primer_blastn]{run_primer_blastn()}}. In the case of a non degenerate
+primer set only two primers will be passed to run_primer_blast.  In the case
+of a degenerate primer set, get_seeds_local will get all possible versions of
+the degenerate primer(s) (using primerTree's enumerate_primers() function),
+randomly sample a user defined number of forward and reverse primers, and
+generate a fasta file. The selected primers are subset and passed to
+run_primer_blastn which queries each primer against a blast formatted database
+using the task "blastn_short".
+
+Output is cashed after each sucessful run of run_primer_blastn, so if a run
+is interrupted the user can resubmit the command and pick up where they left
+off.  The user can modify parameters for the run with the exception of
+num_fprimers_to_blast and num_rprimers_to_blast.
+
+The returned blast hits for each
 sequence are matched and checked to see if they generate plausible amplicon
 (e.g. amplify the same accession and are in the correct orientation to produce
 a PCR product). These hits are written to a file with the suffix
@@ -111,10 +152,10 @@ Information about the blastn parameters can be found in run_primer_blast, and
 by accessing blastn -help. Default parameters are optimized to provide
 results similar to that generated through remote blast via primer-blast as
 implemented in \code{\link[=iterative_primer_search]{iterative_primer_search()}}.
-The number of alignments returned for a given blast search is hardcoded at
-"-num_alignments", "10000000",
 }
 \examples{
+
+# Non degenerate primer example: 12S_V5F1 (Riaz et al. 2011)
 
 forward_primer_seq = "TAGAACAGGCTCCTCTAG"
 reverse_primer_seq =  "TTAGATACCCCACTATGC"
@@ -134,5 +175,52 @@ get_seeds_local(forward_primer_seq,
                 maximum_length = 150)
 
 # adjusting the minimum_length and maximum_length parameters reduces the number of total hits by removing reads that could result from off target amplification
+
+
+# Degenerate primer example - mlCOIintF/jgHC02198 (Leray et al. 2013)
+# Note: this will take considerable time and computational resources
+
+forward_primer_seq <- "GGWACWGGWTGAACWGTWTAYCCYCC"
+reverse_primer_seq <- "TANACYTCNGGRTGNCCRAARAAYCA"
+output_directory_path <- "/my/directory/CO1_local"
+metabarcode_name <- "CO1"
+
+
+get_seeds_local(forward_primer_seq,
+                reverse_primer_seq,
+                output_directory_path,
+                metabarcode_name,
+                accession_taxa_sql_path,
+                blast_db_path,
+                minimum_length = 200,
+                maximum_length = 400,
+                aligns = '10000'
+                num_rprimers_to_blast = 200,
+                num_rprimers_to_blast = 2000,
+                max_to_blast = 10)
+
+
+# Non Degenerate but high return primer example - 18S (Amaral-Zettler et al. 2009)
+# Note: this will take considerable time and computational resources
+
+forward_primer_seq <- "GTACACACCGCCCGTC"
+reverse_primer_seq <- "TGATCCTTCTGCAGGTTCACCTAC"
+output_directory_path <- "/my/directory/18S_local"
+metabarcode_name <- "18S"
+
+
+get_seeds_local(forward_primer_seq,
+                reverse_primer_seq,
+                output_directory_path,
+                metabarcode_name,
+                accession_taxa_sql_path,
+                blast_db_path,
+                minimum_length = 250,
+                maximum_length = 350,
+                max_to_blast = 1)
+
+# blasting two primers at a time can max out a system's RAM, however blasting one at a time is more feasable for personal computers with 16 GB RAM
+
+
 
 }

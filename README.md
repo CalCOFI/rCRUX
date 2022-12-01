@@ -153,6 +153,8 @@ Two output .csv files are automatically created at this path based on the argume
 
 A unique taxonomic rank summary file is also generated (e.g. the number of unique phyla, class, etc in the blast hits). If a taxonomic rank category contains NA's, they will be counted as a single unique rank. Sequence availability in NCBI for a given taxid is a limiting factor.
 
+Also generated is a fasta file with the primers used for blast.
+
 Example output can be found [here](/examples/12S_V5F1_generated_11-11-22).
 
 
@@ -306,16 +308,18 @@ Example output can be found [here](/examples/12S_V5F1_generated_11-11-22).
 This script is a local interpretation of [get_seeds_remote](https://limey-bean.github.io/get_seeds_remote) that avoids querying NCBI's [primer BLAST](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) tool. Although it is slower than remotely generating blast seeds, it is not subject to the arbitrary throttling of jobs that require significant memory.
 
 ### Expected Output
-It creates a `get_seeds_local` directory at `output_directory_path` if one doesn't yet exist, then creates a subdirectory inside `output_directory_path` named after `metabarcode_name`. It creates three files inside that directory. One represents the unfiltered output and another represents the output after filtering with user modifiable parameters and with appended taxonomy. Also generated is a summary of unique taxonomic ranks after filtering.
+It creates a `get_seeds_local` directory at `output_directory_path` if one doesn't yet exist, then creates a subdirectory inside `output_directory_path` named after `metabarcode_name`. It creates three files inside that directory. One represents the unfiltered output and another represents the output after filtering with user modifiable parameters and with appended taxonomy. Also generated is a summary of unique taxonomic ranks after filtering and a fasta file of the primers used for blast.
 
 ### Detailed Steps
 get_seeds_local passes the forward and reverse primer sequence for a given PCR product to [run_primer_blastn](https://limey-bean.github.io/run_primer_blastn). In the case of a non degenerate primer set only two primers will be passed to run_primer_blast.  In the case of a degenerate primer set, get_seeds_local will get all possible versions of the degenerate primer(s) (using primerTree's enumerate_primers() function), randomly sample a user defined number of forward and reverse primers, and generate a fasta file. The selected primers are subset and passed to run_primer_blastn which queries each primer against a blast formatted database using the task "blastn_short". This process continues until all of the selected primers are blasted. The result is an output table with the following columns of data: qseqid (query subject id), sgi (subject gi), saccver (subject accession version), mismatch (number of mismatches between the subject a query), sstart (subject start), send (subject end), staxids (subject taxids).
 
-Output is cashed after each sucessful run of run_primer_blastn, so if a run is interrupted the user can resubmit the command and pick up where they left off.  The user can modify parameters for the run with the exception of num_fprimers_to_blast and num_rprimers_to_blast.
+Temporary output is cashed after each sucessful run of run_primer_blastn, so if a run is interrupted the user can resubmit the command and pick up where they left off.  The user can modify parameters for the run with the exception of num_fprimers_to_blast and num_rprimers_to_blast. Temporary files are deleted at the end of the run.
 
 The returned blast hits for the seqeunces are matched and checked to see if they generate plausible amplicons (e.g. amplify the same accession and are in the correct orientation to produce a PCR product). These hits are written to a file with the suffix `_unfiltered_get_seeds_local_output.csv`.  These hits are further filtered for length and number of mismatches.
 
 Taxonomy is appended to these filtered hits using [get_taxonomizr_from_accession](https://limey-bean.github.io/get_taxonomizr_from_accession). The results are written to to file with the suffix `_filtered_get_seeds_local_output_with_taxonomy.csv`. The number of unique instances for each rank in the taxonomic path for the filtered hits are tallied (NAs are counted once per rank) and written to a file with the suffix `_filtered_get_seeds_local_unique_taxonomic_rank_counts.txt`.
+
+
 
 **Note:**
 Information about the blastn parameters can be found in run_primer_blast, and by accessing blastn -help in your terminal.  Default parameters were optimized to provide results similar to those generated through remote blast via primer-blast as implemented in [iterative_primer_search](https://limey-bean.github.io/iterative_primer_search) and modifiedPrimerTree_Functions.

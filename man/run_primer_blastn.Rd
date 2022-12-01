@@ -12,6 +12,7 @@ run_primer_blastn(
   task = "blastn-short",
   word_size = 7,
   evalue = "3e+07",
+  align = "10000000",
   coverage = 90,
   perID = 50,
   reward = 2
@@ -35,7 +36,12 @@ sizes increase sensitivity and time of the search.
 The default is word_size =  7}
 
 \item{evalue}{is the number of expected hits with a similar quality score
-found by chance. The default is evalue = 3e-7.}
+found by chance. The default is evalue = '3e-7'.}
+
+\item{align}{is the maximum number of subject hits to return per query
+blasted. The default is align = '10000000'. - to few alignments will
+result in no matching pairs of forward and reverse primers.  To many
+alignments can result in an error due to RAM limitations.}
 
 \item{coverage}{is the minimum percent of the query length recovered in the
 subject hits. The default is coverage = 90.}

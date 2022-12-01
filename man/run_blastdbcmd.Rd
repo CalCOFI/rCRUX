@@ -15,7 +15,7 @@ run_blastdbcmd(query_row, db, ncbi_bin = NULL)
 \item{ncbi_bin}{is the path to blast+ tools if not in the user's path.
 Specify only if blastn and blastdbcmd  are not in your path.
 The default is ncbi_bin = NULL - if not specified in path do the
-following: ncbi_bin = "/my/local/blast+_folder".}
+following: ncbi_bin = "/my/local/ncbi-blast-2.10.1+/bin/".}
 }
 \value{
 a fasta-formatted character vector

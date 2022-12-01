@@ -9,7 +9,7 @@ run_blastdbcmd_blastn_and_aggregate_resuts(
   sample_indices = sample_indices,
   save_dir,
   blast_seeds_m,
-  ncbi_bin,
+  ncbi_bin = NULL,
   db,
   too_many_ns,
   db_dir,

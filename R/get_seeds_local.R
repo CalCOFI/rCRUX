@@ -7,10 +7,13 @@
 #' subject to the arbitrary throttling of jobs that require significant memory.
 #' It creates a 'get_seeds_local' directory at `output_directory_path` if one
 #' doesn't yet exist, then creates a subdirectory inside `output_directory_path`
-#' named after `metabarcode_name`. It creates three files inside that directory.
+#' named after `metabarcode_name`. It creates four permenant files inside that
+#' directory. Several temporary files are generated during the run for keeping
+#' track of primers being blasted and needing to be blasted, and raw blast output.
 #' One represents the unfiltered output and another represents the output after
 #' filtering with user modifiable parameters and with appended taxonomy. Also
-#' generated is a summary of unique taxonomic ranks after filtering.
+#' generated is a summary of unique taxonomic ranks after filtering, and a
+#' fasta of the primers used for blast.
 #'
 #' @details
 #' get_seeds_local passes the forward and reverse primer sequence for a given
@@ -253,9 +256,11 @@ get_seeds_local <- function(forward_primer_seq, reverse_primer_seq,
 
     if(nreverse > num_rprimers_to_blast){
       message(paste0( 'Reverse primers have ', nreverse, ' possible sequences due to degenerate bases. Sampling ', num_rprimers_to_blast, ' reverse primers. To change this, modify num_rprimers_to_blast.'  ))
+      message("")
       reverse_sample = dplyr::sample_n(rPrimer, num_rprimers_to_blast, replace=FALSE)
     }  else {
       message(paste0( nreverse, ' reverse primer(s) will be blasted.'  ))
+      message("")
       reverse_sample = rPrimer
     }
 
