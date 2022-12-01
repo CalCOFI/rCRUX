@@ -41,7 +41,7 @@ library(rCRUX)
 
 NCBI's [BLAST+](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/) suite must be locally installed and accessible in the user's path. NCBI provides installation instructions for [Windows](https://www.ncbi.nlm.nih.gov/books/NBK52637/), [Linux](https://www.ncbi.nlm.nih.gov/books/NBK52640/), and [Mac OS](https://www.ncbi.nlm.nih.gov/books/NBK569861/). Version 2.10.1+ is verified compatible with rCRUX.
 
-The following is example script to download blast executables:
+The following is example shell script to download blast executables:
 
 ```
 cd /path/to/Applications
@@ -73,7 +73,7 @@ cd ..
 
 ```
 
-You can test your nt blast database using the following command:
+You can test your nt blast database using the following command into terminal:
 
 ```
 blastdbcmd -db '/my/directory/ncbi_nt/nt' -dbtype nucl -entry MN937193.1 -range 499-633
@@ -119,7 +119,7 @@ The following example shows a simple rCRUX pipeline from start to finish. Note t
 
 **Note:** Blast databases and the taxonomic assignment databases (accessionTaxa.sql) can be stored on external hard drive. It increases run time, but is a good option if computer storage capacity is limited.
 
-There are two options to generate seeds for the database generating blast step blast_seeds_local() or blast_seeds_remote(). The local option is slower, however it is not subject to the memory limitations of using the NCBI primer_blast API. The local option is recommended if the user is building a large database, wants to include any [taxid](https://www.ncbi.nlm.nih.gov/taxonomy) in the search, and has many degenerate sites in their primer set.
+There are two options to generate seeds for the database generating blast step blast_seeds_local() or blast_seeds_remote(). The local option is slower, however it is not subject to the memory limitations of using the NCBI primer_blast API. The local option is recommended if the user is building a large database, wants to include any [taxid](https://www.ncbi.nlm.nih.gov/taxonomy) in the search, and has many degenerate sites in their primer set. It also cashed run data so if a run is interrupted the user can pick it up from the last successful round of blast by resubmitting the original command.
 
 ## [get_seeds_local](https://limey-bean.github.io/get_seeds_local)
 
@@ -309,9 +309,11 @@ This script is a local interpretation of [get_seeds_remote](https://limey-bean.g
 It creates a `get_seeds_local` directory at `output_directory_path` if one doesn't yet exist, then creates a subdirectory inside `output_directory_path` named after `metabarcode_name`. It creates three files inside that directory. One represents the unfiltered output and another represents the output after filtering with user modifiable parameters and with appended taxonomy. Also generated is a summary of unique taxonomic ranks after filtering.
 
 ### Detailed Steps
-get_seeds_local passes the forward and reverse primer sequence for a given PCR product to [run_primer_blastn](https://limey-bean.github.io/run_primer_blastn). run_primer_blastn takes a fasta file containing only the forward and reverse primer, and individually queries them against a blast formatted database using the task "blastn_short". The result is an output table with the following columns of data: qseqid (query subject id), sgi (subject gi), saccver (subject accession version), mismatch (number of mismatches between the subject a query), sstart (subject start), send (subject end), staxids (subject taxids).
+get_seeds_local passes the forward and reverse primer sequence for a given PCR product to [run_primer_blastn](https://limey-bean.github.io/run_primer_blastn). In the case of a non degenerate primer set only two primers will be passed to run_primer_blast.  In the case of a degenerate primer set, get_seeds_local will get all possible versions of the degenerate primer(s) (using primerTree's enumerate_primers() function), randomly sample a user defined number of forward and reverse primers, and generate a fasta file. The selected primers are subset and passed to run_primer_blastn which queries each primer against a blast formatted database using the task "blastn_short". This process continues until all of the selected primers are blasted. The result is an output table with the following columns of data: qseqid (query subject id), sgi (subject gi), saccver (subject accession version), mismatch (number of mismatches between the subject a query), sstart (subject start), send (subject end), staxids (subject taxids).
 
-The returned blast hits for each sequence are matched and checked to see if they generate plausible amplicon (e.g. amplify the same accession and are in the correct orientation to produce a PCR product). These hits are written to a file with the suffix `_unfiltered_get_seeds_local_output.csv`.  These hits are further filtered for length and number of mismatches.
+Output is cashed after each sucessful run of run_primer_blastn, so if a run is interrupted the user can resubmit the command and pick up where they left off.  The user can modify parameters for the run with the exception of num_fprimers_to_blast and num_rprimers_to_blast.
+
+The returned blast hits for the seqeunces are matched and checked to see if they generate plausible amplicons (e.g. amplify the same accession and are in the correct orientation to produce a PCR product). These hits are written to a file with the suffix `_unfiltered_get_seeds_local_output.csv`.  These hits are further filtered for length and number of mismatches.
 
 Taxonomy is appended to these filtered hits using [get_taxonomizr_from_accession](https://limey-bean.github.io/get_taxonomizr_from_accession). The results are written to to file with the suffix `_filtered_get_seeds_local_output_with_taxonomy.csv`. The number of unique instances for each rank in the taxonomic path for the filtered hits are tallied (NAs are counted once per rank) and written to a file with the suffix `_filtered_get_seeds_local_unique_taxonomic_rank_counts.txt`.
 
@@ -382,6 +384,21 @@ Information about the blastn parameters can be found in run_primer_blast, and by
 + is the maximum number of subject hits to return per query
         blasted.
 +        The default is align = '10000000'. - to few alignments will result in no matching pairs of forward and reverse primers.  To many alignments can result in an error due to RAM limitations.
+**num_fprimers_to_blast**
++ is the maximum number of possible forward primers
+        to blast. This is relevant for degenerate primers, all possible primers
+        from a degenerate sequence are enumerated, and the user can choose a
+        number to be randomly sampled and used for primer blast.
++        The default is num_fprimers_to_blast = 50
+**num_rprimers_to_blast**
++ is the maximum number of possible reverse primers
+        to blast. This is relevant for degenerate primers, all possible primers
+        from a degenerate sequence are enumerated, and the user can choose a
+        number to be randomly sampled and used for primer blast.
++        The default is num_rprimers_to_blast = 50
+**max_to_blast**
++ is the number of primers to blast simultaneously.
++        The default is max_to_blast = 2. - Increasing this number will decrease overall run time, but increase the amount of RAM required.
 
 **ncbi_bin**
 + passed to [run_primer_blastn](https://limey-bean.github.io/run_primer_blastn) is the path to blast+
@@ -392,24 +409,72 @@ Information about the blastn parameters can be found in run_primer_blast, and by
 ### Example
 
 ```
+ # Non degenerate primer example: 12S_V5F1 (Riaz et al. 2011)
 
-forward_primer_seq = "TAGAACAGGCTCCTCTAG"
-reverse_primer_seq =  "TTAGATACCCCACTATGC"
-output_directory_path <- "/my/directory/12S_V5F1_local_111122_species_750"
-metabarcode_name <- "12S_V5F1" # desired name of metabarcode locus
-accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql"
-blast_db_path <- "/my/directory/ncbi_nt/nt"
+ forward_primer_seq = "TAGAACAGGCTCCTCTAG"
+ reverse_primer_seq =  "TTAGATACCCCACTATGC"
+ output_directory_path <- "/my/directory/12S_V5F1_local_111122_species_750"
+ metabarcode_name <- "12S_V5F1"
+ accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql"
+ blast_db_path <- "/my/directory/ncbi_nt/nt"
 
-get_seeds_local(forward_primer_seq,
-                reverse_primer_seq,
-                output_directory_path,
-                metabarcode_name,
-                accession_taxa_sql_path,
-                blast_db_path,
-                minimum_length = 80,
-                maximum_length = 150)
 
-# adjusting the minimum_length and maximum_length parameters reduces the number of total hits by removing reads that could result from off target amplification
+ get_seeds_local(forward_primer_seq,
+                 reverse_primer_seq,
+                 output_directory_path,
+                 metabarcode_name,
+                 accession_taxa_sql_path,
+                 blast_db_path,
+                 minimum_length = 80,
+                 maximum_length = 150)
+
+ # adjusting the minimum_length and maximum_length parameters reduces the number of total hits by removing reads that could result from off target amplification
+
+
+ # Degenerate primer example - mlCOIintF/jgHC02198 (Leray et al. 2013)
+ # Note: this will take considerable time and computational resources
+
+ forward_primer_seq <- "GGWACWGGWTGAACWGTWTAYCCYCC"
+ reverse_primer_seq <- "TANACYTCNGGRTGNCCRAARAAYCA"
+ output_directory_path <- "/my/directory/CO1_local"
+ metabarcode_name <- "CO1"
+
+
+ get_seeds_local(forward_primer_seq,
+                 reverse_primer_seq,
+                 output_directory_path,
+                 metabarcode_name,
+                 accession_taxa_sql_path,
+                 blast_db_path,
+                 minimum_length = 200,
+                 maximum_length = 400,
+                 aligns = '10000'
+                 num_rprimers_to_blast = 200,
+                 num_rprimers_to_blast = 2000,
+                 max_to_blast = 10)
+
+
+ # Non Degenerate but high return primer example - 18S (Amaral-Zettler et al. 2009)
+ # Note: this will take considerable time and computational resources
+
+ forward_primer_seq <- "GTACACACCGCCCGTC"
+ reverse_primer_seq <- "TGATCCTTCTGCAGGTTCACCTAC"
+ output_directory_path <- "/my/directory/18S_local"
+ metabarcode_name <- "18S"
+
+
+ get_seeds_local(forward_primer_seq,
+                 reverse_primer_seq,
+                 output_directory_path,
+                 metabarcode_name,
+                 accession_taxa_sql_path,
+                 blast_db_path,
+                 minimum_length = 250,
+                 maximum_length = 350,
+                 max_to_blast = 1)
+
+ # blasting two primers at a time can max out a system's RAM, however blasting one at a time is more feasable for personal computers with 16 GB RAM                 
+
 
 ```
 
@@ -735,7 +800,7 @@ be used to make [blast_datatable](https://limey-bean.github.io/blast_datatable) 
 **align**
 + passed to [run_blastn](https://limey-bean.github.io/run_blastn) is the maximum number of subject
         hits to return per query blasted.
-+        The default is align = 50000
++        The default is align = '50000'
 **minimum_length** removes each row that has a value less than
 + minimum_length in the product_length column.
 +        The default is minimum_length = 5
@@ -836,6 +901,12 @@ derep_and_clean_db(output_directory_path, summary_path, metabarcode_name)
 Altschul, S.F., Gish, W., Miller, W., Myers, E.W. & Lipman, D.J. (1990) "Basic local alignment search tool." J. Mol. Biol. 215:403-410.
 
 </div>
+</div>
+
+Amaral-Zettler, L. A., McCliment, E. A., Ducklow, H. W., & Huse, S. M. (2009). A method for studying protistan diversity using massively parallel sequencing of V9 hypervariable regions of small-subunit ribosomal RNA Genes. PLoS ONE, 4(7), e6372. http://doi.org/10.1371/journal.pone.0006372
+
+</div>
+</div>
 
 Camacho C., Coulouris G., Avagyan V., Ma N., Papadopoulos J., Bealer K., & Madden T.L. (2008) "BLAST+: architecture and applications." BMC Bioinformatics 10:421.
 
@@ -855,8 +926,20 @@ metabarcode datasets. Methods in Ecology and Evolution, 10(9), pp.1469-1475.
 Hester, J., 2020. primerTree: Visually Assessing the Specificity and Informativeness of Primer Pairs.
 
 </div>
+</div>
+
+Leray, M., Yang, J. Y., Meyer, C. P., Mills, S. C., Agudelo, N., Ranwez, V., Boehm, J. T., & Machida, R. J. (2013). A new versatile primer set targeting a short fragment of the mitochondrial COI region for metabarcoding metazoan diversity: Application for characterizing coral reef fish gut contents. Frontiers in Zoology , 10 (1), 1–14. https://doi.org/10.1186/1742-9994-10-34
+
+</div>
+
+</div>
 <div id="ref-R Core Team 2018" class="csl-entry">
 R Core Team, R., 2021. R: A language and environment for statistical computing.
+
+</div>
+</div>
+
+Riaz, T., Shehzad, W., Viari, A., Pompanon, F., Taberlet, P. and Coissac, E., 2011. ecoPrimers: inference of new DNA barcode markers from whole genome sequence analysis. Nucleic acids research, 39(21), pp.e145-e145.
 
 </div>
 </div>
