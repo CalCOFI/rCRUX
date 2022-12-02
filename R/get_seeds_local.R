@@ -313,7 +313,7 @@ get_seeds_local <- function(forward_primer_seq, reverse_primer_seq,
     remove <- max_to_blast*2
 
     # if max_to_blast is more than the number of things to blast - take the number of things...
-    if (length(input) < remove){
+    if (nrow(input) < remove){
       remove <- length(input)
     }
 
@@ -347,7 +347,7 @@ get_seeds_local <- function(forward_primer_seq, reverse_primer_seq,
   append_table <- read.csv(append_table_path, colClasses = "character")
 
   # if output table is empty and give warning and stop
-  if (length(append_table) <= 1){
+  if (nrow(append_table) <= 1){
     message("No blast output generated.  Either no hits were found, or your compute environment could not support memory needs of the blastn step.  Try modifying parameters to reduce blast returns (e.g. align, max_to_blast, evalue, etc.)")
     stop()
   }
@@ -370,7 +370,7 @@ get_seeds_local <- function(forward_primer_seq, reverse_primer_seq,
   f_and_r <- dplyr::filter(f_and_r, !is.na(product_length))
 
   # if table is empty and give warning and stop
-  if (length( f_and_r ) <= 1){
+  if (nrow( f_and_r ) <= 1){
     message("No plausible amplicons were found.  Try modifying parameters to increase blast returns (e.g. num_fprimers_to_blast, num_rprimers_to_blast, align, evalue, etc.)")
     stop()
   }
@@ -386,7 +386,7 @@ get_seeds_local <- function(forward_primer_seq, reverse_primer_seq,
   f_and_r <- dplyr::filter(f_and_r, mismatch_forward <= mismatch & mismatch_reverse <= mismatch)
 
   # if table is empty and give warning and stop
-  if (length( f_and_r ) <= 1){
+  if (nrow( f_and_r ) <= 1){
     message("Filtering removed all plausible amplicons.  Try modifying parameters to allow more amplicons to pass filter (e.g. minimum_length, maximum_length, mismatch, etc.)")
     stop()
   }
