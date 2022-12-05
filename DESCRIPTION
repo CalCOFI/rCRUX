@@ -34,7 +34,8 @@ Imports:
     readr,
     XML,
     httr,
-    plyr
+    plyr,
+    phylotools
 
 Encoding: UTF-8
 #LazyData: true
