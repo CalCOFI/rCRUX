@@ -55,7 +55,7 @@
 #'        into to a fasta file to be past to run_primer_blastn.
 #'        (e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG" or
 #'        forward_primer_seq <- c("TAGAACAGGCTCCTCTAG", "GGWACWGGWTGAACWGTWTAYCCYCC")
-#' @param rwhich which turns degenerate primers into into a
+#' @param reverse_primer_seq which which turns degenerate primers into into a
 #'        list of all possible non degenerate primers and converts the primer(s)
 #'        into to a fasta file to be past to run_primer_blastn.
 #'        (e.g reverse_primer_seq <-  "TTAGATACCCCACTATGC" or
