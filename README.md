@@ -414,7 +414,7 @@ Information about the blastn parameters can be found in run_primer_blast, and by
         your path.
 +       The default is ncbi_bin = NULL - if not specified in path do the following: ncbi_bin = "/my/local/ncbi-blast-2.10.1+/bin/".
 
-### Example
+### Examples
 
 ```
  # Non degenerate primer example: 12S_V5F1 (Riaz et al. 2011)
@@ -456,7 +456,7 @@ Information about the blastn parameters can be found in run_primer_blast, and by
                  blast_db_path,
                  minimum_length = 200,
                  maximum_length = 400,
-                 aligns = '10000'
+                 aligns = '10000',
                  num_rprimers_to_blast = 200,
                  num_rprimers_to_blast = 2000,
                  max_to_blast = 10)
