@@ -266,7 +266,7 @@ get_seeds_local <- function(forward_primer_seq, reverse_primer_seq,
     #subset primers if user so chooses
     if(nforward > num_fprimers_to_blast){
       message("")
-      message(paste0( 'Forward primers have ', nforward, ' possible sequences due to degenerate bases. Sampling ', num_fprimers_to_blast, ' forward primers. To change this, modify num_fprimers_to_blast.'  ))
+      message(paste0( 'Forward primers have ', nforward, ' possible sequences due to degenerate bases. Randomly sampling ', num_fprimers_to_blast, ' forward primers. To change this, modify num_fprimers_to_blast.'  ))
       forward_sample = dplyr::sample_n(fPrimer, num_fprimers_to_blast, replace=FALSE)
     } else {
       message("")
@@ -275,7 +275,7 @@ get_seeds_local <- function(forward_primer_seq, reverse_primer_seq,
     }
 
     if(nreverse > num_rprimers_to_blast){
-      message(paste0( 'Reverse primers have ', nreverse, ' possible sequences due to degenerate bases. Sampling ', num_rprimers_to_blast, ' reverse primers. To change this, modify num_rprimers_to_blast.'  ))
+      message(paste0( 'Reverse primers have ', nreverse, ' possible sequences due to degenerate bases. Randomly sampling ', num_rprimers_to_blast, ' reverse primers. To change this, modify num_rprimers_to_blast.'  ))
       message("")
       reverse_sample = dplyr::sample_n(rPrimer, num_rprimers_to_blast, replace=FALSE)
     }  else {
