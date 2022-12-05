@@ -333,7 +333,7 @@ get_seeds_local <- function(forward_primer_seq, reverse_primer_seq,
     remove <- max_to_blast*2
 
     # if max_to_blast is more than the number of things to blast - take the number of things...
-    if (nrow(input) < remove){
+    if (length(input) < remove){
       remove <- length(input)
     }
 
