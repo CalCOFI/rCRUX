@@ -161,7 +161,7 @@
 #'                 blast_db_path,
 #'                 minimum_length = 200,
 #'                 maximum_length = 400,
-#'                 aligns = '10000'
+#'                 aligns = '10000',
 #'                 num_rprimers_to_blast = 200,
 #'                 num_rprimers_to_blast = 2000,
 #'                 max_to_blast = 10)
