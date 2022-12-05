@@ -45,7 +45,7 @@ get_taxonomizr_from_accession <- function(input, accession_taxa_sql_path,
 
     if (!"species" %in% colnames(output)) {
         stop("Failed to create column `species` in output.
-            Hint: this may be caused by 0-row inputs.")
+            Hint: Is your data frame empty?")
     }
 
     if (organize) {
