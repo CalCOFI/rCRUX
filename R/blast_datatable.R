@@ -72,7 +72,9 @@
 #'        get_seeds_remote or get_seeds_local
 #' @param save_dir a directory in which to create files representing the
 #'        current state
-#' @param blast_db_path a directory with a blast-formatted database
+#' @param blast_db_path a directory containing one or more blast-formatted database.
+#'        For multiple blast databases, separate them with a space and add an extra set of quotes.
+#'        (e.g blast_db_path <- "/my/ncbi_nt/nt" or blast_db_path <- '"/my/ncbi_nt/nt  /my/ncbi_ref_euk_rep_genomes/ref_euk_rep_genomes"')
 #' @param accession_taxa_sql_path a path to an sql created by
 #'        [taxonomizr::prepareDatabase()]
 #' @param ncbi_bin the directory that the blast+ suite is in. If NULL, the

@@ -94,6 +94,8 @@ TTAAAACCCAAAGGACTTGGCGGCGCTTCACACCCACCTAGAGGAGCCTGTTCTA
 
 The nt database is **~242 GB** (as of 8/31/22) and can take several hours (overnight) to build. Loss of internet connection can lead to partially downloaded files and blastn errors (see above).
 
+**Note:**
+Several blast formatted databases can be searched simultaneously. See documentation for details.
 
 ### Taxonomizr
 
@@ -119,7 +121,7 @@ The following example shows a simple rCRUX pipeline from start to finish. Note t
 
 **Note:** Blast databases and the taxonomic assignment databases (accessionTaxa.sql) can be stored on external hard drive. It increases run time, but is a good option if computer storage capacity is limited.
 
-There are two options to generate seeds for the database generating blast step blast_seeds_local() or blast_seeds_remote(). The local option is slower, however it is not subject to the memory limitations of using the NCBI primer_blast API. The local option is recommended if the user is building a large database, wants to include any [taxid](https://www.ncbi.nlm.nih.gov/taxonomy) in the search, and has many degenerate sites in their primer set. It also cashed run data so if a run is interrupted the user can pick it up from the last successful round of blast by resubmitting the original command.
+There are two options to generate seeds for the database generating blast step blast_seeds_local() or blast_seeds_remote(). The local option is slower, however it is not subject to the memory limitations of using the NCBI primer_blast API. The local option is recommended if the user is building a large database, wants to include any [taxid](https://www.ncbi.nlm.nih.gov/taxonomy) in the search, wants to use multiple forward or reverse primers, and / or has many degenerate sites in their primer set. It also cashed run data so if a run is interrupted the user can pick it up from the last successful round of blast by resubmitting the original command.
 
 ## [get_seeds_local](https://limey-bean.github.io/get_seeds_local)
 
@@ -303,7 +305,7 @@ Example output can be found [here](/examples/12S_V5F1_generated_11-11-22).
 <img src="/flowcharts/get_seeds_local-flowchart.png" width = 10000 />
 
 ### Overview
-[get_seeds_local](https://limey-bean.github.io/get_seeds_local) takes a set of forward and reverse primer sequences and generates .csv summaries of data returned from a locally run adaptation of [NCBI's primer blast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/). This function performs like *in silicon* to find possible full length barcode sequences containing forward and reverse primer matches. It also generates a count of unique instances of taxonomic ranks (Phylum, Class, Order, Family, Genus, and Species) found in the output.
+[get_seeds_local](https://limey-bean.github.io/get_seeds_local) takes a set of forward and reverse primer sequences (single or multiple forward and single or multiple reverse primers) and generates .csv summaries of data returned from a locally run adaptation of [NCBI's primer blast](https://www.ncbi.nlm.nih.gov/tools/primer-blast/). This function performs like *in silicon* to find possible full length barcode sequences containing forward and reverse primer matches. It also generates a count of unique instances of taxonomic ranks (Phylum, Class, Order, Family, Genus, and Species) found in the output.
 
 This script is a local interpretation of [get_seeds_remote](https://limey-bean.github.io/get_seeds_remote) that avoids querying NCBI's [primer BLAST](https://www.ncbi.nlm.nih.gov/tools/primer-blast/) tool. Although it is slower than remotely generating blast seeds, it is not subject to the arbitrary throttling of jobs that require significant memory.
 
@@ -326,13 +328,13 @@ Information about the blastn parameters can be found in run_primer_blast, and by
 
 ### Parameters
 **forward_primer_seq**
-+ passed to primer_to_fasta, which turns it into fasta
-        file to be past to get_seeds_local.
-+       e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG"
++ which which turns degenerate primers into into a list of all possible non degenerate
+        primers and converts the primer(s) into to a fasta file to be past to run_primer_blastn.
++       e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG" or forward_primer_seq <- c("TAGAACAGGCTCCTCTAG", "GGWACWGGWTGAACWGTWTAYCCYCC")
 **reverse_primer_seq**
-+ passed to primer_to_fasta, which turns it into fasta
-        file to be past to get_seeds_local.
-+       e.g. reverse_primer_seq <-  "TTAGATACCCCACTATGC"
++ which which turns degenerate primers into into a list of all possible non degenerate
+        primers and converts the primer(s) into to a fasta file to be past to run_primer_blastn.
++       e.g. reverse_primer_seq <-  "TTAGATACCCCACTATGC" or reverse_primer_seq <- c("TTAGATACCCCACTATGC", "TANACYTCNGGRTGNCCRAARAAYCA")
 **output_directory_path**
 + the parent directory to place the data in.
 +       e.g. "/path/to/output/12S_V5F1_local_111122_e300_111122"
@@ -357,8 +359,10 @@ Information about the blastn parameters can be found in run_primer_blast, and by
         value greater than maximum_length in the product_length column.
 +       The default is maximum_length = 500
 **blast_db_path**
-+ the path to a directory with a blast-formatted database.
-+       e.g blast_db_path <- "/my/ncbi_nt/nt"
++ blast_db_path a directory containing one or more blast-formatted database.
+        For multiple blast databases, separate them with a space and add an extra set of quotes.
++        e.g blast_db_path <- "/my/ncbi_nt/nt" or blast_db_path <- '"/my/ncbi_nt/nt  /my/ncbi_ref_euk_rep_genomes/ref_euk_rep_genomes"'
+
 **task**
 + passed to [run_primer_blastn](https://limey-bean.github.io/run_primer_blastn) the task for blastn to
         perform
@@ -530,13 +534,13 @@ Often NCBI API will throttle higher taxonomic ranks (Domain, Phylum, etc.). One 
 
 **forward_primer_seq**
 + passed to primer_search, which turns it into a list of
-        each primer it could be based on its degenerate primers, then passes
-        each one in turn to NCBI.
+        all possible non degenerate primers, then passes
+        a user defined number of primer set combinations to NCBI.
 +       e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG"
 **reverse_primer_seq**
 + passed to primer_search, which turns it into a list of
-        each primer it could be based on its degenerate primers, then passes
-        each one in turn to NCBI.
+        all possible non degenerate primers, then passes
+        a user defined number of primer set combinations to NCBI.
 +        e.g. reverse_primer_seq <-  "TTAGATACCCCACTATGC"
 **output_directory_path**
 + the parent directory to place the data in.
@@ -645,7 +649,6 @@ reverse_primer_seq =  "TTAGATACCCCACTATGC"
 output_directory_path <- "/my/directory/12S_V5F1_remote_111122_modified_params"
 metabarcode_name <- "12S_V5F1"
 accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql"
-blast_db_path <- "/my/directory/ncbi_nt/nt"
 
 get_seeds_remote(forward_primer_seq,
                 reverse_primer_seq,
@@ -745,8 +748,9 @@ be used to make [blast_datatable](https://limey-bean.github.io/blast_datatable) 
 + a path to an output csv from get_seeds_local or get_seeds_remote
 +         e.g. seeds_output_path <- '/my/rCRUX_output_directory/12S_V5F1_filtered_get_seeds_remote_output_with_taxonomy.csv'
 **blast_db_path**
-+ a directory containing a blast-formatted database
-+         e.g blast_db_path <- "/my/ncbi_nt/nt"
++ blast_db_path a directory containing one or more blast-formatted database.
+        For multiple blast databases, separate them with a space and add an extra set of quotes.
++        e.g blast_db_path <- "/my/ncbi_nt/nt" or blast_db_path <- '"/my/ncbi_nt/nt  /my/ncbi_ref_euk_rep_genomes/ref_euk_rep_genomes"'
 **accession_taxa_sql_path**
 + a path to the accessionTaxa sql created by taxonomizr.
 +         e.g. accession_taxa_sql_path <- "/my/accessionTaxa.sql"

@@ -15,6 +15,9 @@
 #' and at [NCBI](https://www.ncbi.nlm.nih.gov/books/NBK279684/).
 #'
 #' @param fasta a fasta-formatted string
+#' @param db_dir a path to a directory / directories containing one or more blast-formatted database.
+#'        For multiple blast databases, separate them with a space and add an extra set of quotes.
+#'        (e.g blast_db_path <- "/my/ncbi_nt/nt" or blast_db_path <- '"/my/ncbi_nt/nt  /my/ncbi_ref_euk_rep_genomes/ref_euk_rep_genomes"')
 #' @param temp: a file path to write a temporary fasta to. The default is
 #'        temp = NULL.
 #' @param ncbi_bin is the path to blast+ tools if not in the user's path.

@@ -69,6 +69,9 @@ rCRUX requires a local blast-formatted nucleotide database. These can be user ge
 
 The nt database is **~242 GB** (as of 8/31/22) and can take several hours (overnight) to build. Loss of internet connection can lead to partially downloaded files and blastn errors (see above).
 
+**Note:**
+Several blast formatted databases can be searched simultaneously. See documentation for details.
+
 
 ### Taxonomizr
 

@@ -50,10 +50,16 @@
 #' results similar to that generated through remote blast via primer-blast as
 #' implemented in [rCRUX::iterative_primer_search()].
 #'
-#' @param forward_primer_seq passed to primer_to_fasta, which turns it into fasta
-#'        file to be past to get_seeds_local (e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG").
-#' @param reverse_primer_seq passed to primer_to_fasta, which turns it into fasta
-#'        file to be past to get_seeds_local (e.g. reverse_primer_seq <-  "TTAGATACCCCACTATGC").
+#' @param forward_primer_seq which which turns degenerate primers into into a
+#'        list of all possible non degenerate primers and converts the primer(s)
+#'        into to a fasta file to be past to run_primer_blastn.
+#'        (e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG" or
+#'        forward_primer_seq <- c("TAGAACAGGCTCCTCTAG", "GGWACWGGWTGAACWGTWTAYCCYCC")
+#' @param rwhich which turns degenerate primers into into a
+#'        list of all possible non degenerate primers and converts the primer(s)
+#'        into to a fasta file to be past to run_primer_blastn.
+#'        (e.g reverse_primer_seq <-  "TTAGATACCCCACTATGC" or
+#'        reverse_primer_seq <- c("TTAGATACCCCACTATGC", "TANACYTCNGGRTGNCCRAARAAYCA")
 #' @param output_directory_path the parent directory to place the data in
 #'        (e.g. "/path/to/output/12S_V5F1_local_111122_e300_111122").
 #' @param metabarcode_name used to name the files. get_seeds_local appends
@@ -70,8 +76,9 @@
 #' @param maximum_length get_seeds_local removes each row that has a
 #'        value greater than maximum_length in the product_length column
 #'        The default is maximum_length = 500
-#' @param blast_db_path path to a directory containing a blast-formatted database.
-#'        (e.g blast_db_path <- "/my/ncbi_nt/nt")
+#' @param blast_db_path a directory containing one or more blast-formatted database.
+#'        For multiple blast databases, separate them with a space and add an extra set of quotes.
+#'        (e.g blast_db_path <- "/my/ncbi_nt/nt" or blast_db_path <- '"/my/ncbi_nt/nt  /my/ncbi_ref_euk_rep_genomes/ref_euk_rep_genomes"')
 #' @param task (passed to [rCRUX::run_primer_blastn()]) the task for blastn to
 #'        perform - default here is "blastn_short", which is optimized
 #'        for searches with queries < 50 bp
@@ -80,7 +87,7 @@
 #'        time of the search. The default is word_size =  7
 #' @param evalue (passed to [rCRUX::run_primer_blastn()]) is the number of
 #'        expected hits with a similar quality score found by chance.
-#'        The default is evalue = 3e-7.
+#'        The default is evalue = '3e-7'.
 #' @param coverage (passed to [rCRUX::run_primer_blastn()]) is the minimum
 #'        percent of the query length recovered in the subject hits.
 #'        The default is coverage = 90.
@@ -233,10 +240,23 @@ get_seeds_local <- function(forward_primer_seq, reverse_primer_seq,
                   "I" = list("A", "T", "C"))
 
 
-    # get the possible combinations for degenerate primers using functions in primer tree, deduplicate and separate into two df
-    primers <- enumerate_primers(forward_primer_seq, reverse_primer_seq)
-    fPrimer <- dplyr::distinct(dplyr::select(primers, -2))
-    rPrimer <- dplyr::distinct(dplyr::select(primers, -1))
+
+    # add multiple primers and or get the possible combinations for degenerate primers using functions in primer tree
+    fPrimer <- NULL
+    rPrimer <- NULL
+
+    for (pf in forward_primer_seq ) {
+      forward_primers = enumerate_ambiguity(pf)
+      forward.df <- data.frame(forward=forward_primers, stringsAsFactors = FALSE)
+      fPrimer <- rbind(fPrimer, forward.df)
+    }
+
+    for (pr in reverse_primer_seq ) {
+      reverse_primers = enumerate_ambiguity(pr)
+      reverse.df <- data.frame(reverse=reverse_primers, stringsAsFactors = FALSE)
+      rPrimer <- rbind(rPrimer, reverse.df)
+    }
+
 
     # count rows / number of primers
     nforward <- nrow(fPrimer)

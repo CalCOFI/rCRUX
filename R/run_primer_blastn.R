@@ -25,7 +25,9 @@
 #'        Specify only if blastn and blastdbcmd  are not in your path.
 #'        The default is ncbi_bin = NULL - if not specified in path do the
 #'        following: ncbi_bin = "/my/local/ncbi-blast-2.10.1+/bin/".
-#' @param db path to blast formatted database
+#' @param db a path to a directory / or directories containing one or more blast-formatted database. 
+#'        For multiple blast databases, separate them with a space and add an extra set of quotes.
+#'        (e.g blast_db_path <- "/my/ncbi_nt/nt" or blast_db_path <- '"/my/ncbi_nt/nt  /my/ncbi_ref_euk_rep_genomes/ref_euk_rep_genomes"')
 #' @param task the task for blastn to perform - default here is "blastn_short",
 #'        which is optimized for searches with queries < 50 bp
 #' @param word_size is the fragment size used for blastn search - smaller word

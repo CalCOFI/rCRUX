@@ -46,8 +46,9 @@
 #'
 #' @param seeds_output_path a path to a csv from get_seeds_local or get_seeds_remote
 #'        (e.g. seeds_output_path <- '/my/rCRUX_output_directory/12S_V5F1_filtered_get_seeds_remote_output_with_taxonomy.csv')
-#' @param blast_db_path a directory containing a blast-formatted database
-#'        (e.g blast_db_path <- "/my/ncbi_nt/nt")
+#' @param blast_db_path a directory containing one or more blast-formatted database.
+#'        For multiple blast databases, separate them with a space and add an extra set of quotes.
+#'        (e.g blast_db_path <- "/my/ncbi_nt/nt" or blast_db_path <- '"/my/ncbi_nt/nt  /my/ncbi_ref_euk_rep_genomes/ref_euk_rep_genomes"')
 #' @param accession_taxa_sql_path a path to the accessionTaxa sql created by
 #'        taxonomizr (e.g. accession_taxa_sql_path <- "/my/accessionTaxa.sql")
 #' @param output_directory_path a directory in which to save partial and complete output
@@ -162,6 +163,10 @@ blast_seeds <- function(seeds_output_path, blast_db_path, accession_taxa_sql_pat
 
   # keep only hits with acceptable product length
   output_table <- dplyr::filter(output_table, dplyr::between(amplicon_length, minimum_length, maximum_length))
+
+  # using multiple blast databases leads to duplicates so get rid of those...
+  output_table <- unique(output_table)
+
 
   # Write output_table to dir/blast_seeds_output/summary.csv
   summary_csv_path <- paste(output_dir, "summary.csv", sep = "/")
