@@ -27,7 +27,9 @@ get_seeds_remote or get_seeds_local}
 \item{save_dir}{a directory in which to create files representing the
 current state}
 
-\item{blast_db_path}{a directory with a blast-formatted database}
+\item{blast_db_path}{a directory containing one or more blast-formatted database.
+For multiple blast databases, separate them with a space and add an extra set of quotes.
+(e.g blast_db_path <- "/my/ncbi_nt/nt" or blast_db_path <- '"/my/ncbi_nt/nt  /my/ncbi_ref_euk_rep_genomes/ref_euk_rep_genomes"')}
 
 \item{accession_taxa_sql_path}{a path to an sql created by
 \code{\link[taxonomizr:prepareDatabase]{taxonomizr::prepareDatabase()}}}

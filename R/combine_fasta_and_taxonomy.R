@@ -32,7 +32,7 @@
 #' @export
 #' @examples
 #'
-#' output_directory_path <- "/my/directory/12S_mifish
+#' output_directory_path <- "/my/directory/12S_mifish"
 #' metabarcode_name <- "12S_mifish"
 #' fasta_path = "/my/directory/12S_fasta_and_taxonomy/12S_.fasta"
 #' taxonomy_path = "/my/directory/12S_fasta_and_taxonomy/12S_fasta_and_taxonomy/12S_taxonomy.txt"
@@ -41,6 +41,7 @@
 #' combine_fasta_and_taxonomy(output_directory_path, metabarcode_name, fasta_path, taxonomy_path, accession_taxa_sql_path)
 #'
 #'
+
 
 combine_fasta_and_taxonomy <- function(output_directory_path, metabarcode_name, fasta_path, taxonomy_path, accession_taxa_sql_path, NCBI.accession = TRUE, add.taxid = TRUE){
   # turn a fasta file and taxonomy file into a dataframe with tax id and amplicon length

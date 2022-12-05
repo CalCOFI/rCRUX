@@ -20,13 +20,15 @@ get_seeds_remote(
 )
 }
 \arguments{
-\item{forward_primer_seq}{passed to \code{\link[=primer_search]{primer_search()}}, which turns it into a list of
-each primer it could be based on its degenerate primers, then passes
-each one in turn to NCBI (e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG")}
+\item{forward_primer_seq}{passed to \code{\link[=primer_search]{primer_search()}}, which turns it
+into a list of all possible non degenerate primers, then passes
+a user defined number of primer set combinations to NCBI.
+(e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG")}
 
-\item{reverse_primer_seq}{passed to \code{\link[=primer_search]{primer_search()}}, which turns it into a list of
-each primer it could be based on its degenerate primers, then passes
-each one in turn to NCBI (e.g. reverse_primer_seq <-  "TTAGATACCCCACTATGC")}
+\item{reverse_primer_seq}{passed to \code{\link[=primer_search]{primer_search()}}, which turns it
+into a list of all possible non degenerate primers, then passes
+a user defined number of primer set combinations to NCBI.
+(e.g. reverse_primer_seq <-  "TTAGATACCCCACTATGC")}
 
 \item{output_directory_path}{the parent directory to place the data in.
 (e.g. "/path/to/output/12S_V5F1_remote_111122")}
@@ -178,7 +180,6 @@ reverse_primer_seq =  "TTAGATACCCCACTATGC"
 output_directory_path <- "/my/directory/12S_V5F1_remote_111122_modified_params"
 metabarcode_name <- "12S_V5F1"
 accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql"
-blast_db_path <- "/my/directory/ncbi_nt/nt"
 
 
 get_seeds_remote(forward_primer_seq,

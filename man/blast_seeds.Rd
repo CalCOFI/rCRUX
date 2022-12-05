@@ -22,8 +22,9 @@ blast_seeds(
 \item{seeds_output_path}{a path to a csv from get_seeds_local or get_seeds_remote
 (e.g. seeds_output_path <- '/my/rCRUX_output_directory/12S_V5F1_filtered_get_seeds_remote_output_with_taxonomy.csv')}
 
-\item{blast_db_path}{a directory containing a blast-formatted database
-(e.g blast_db_path <- "/my/ncbi_nt/nt")}
+\item{blast_db_path}{a directory containing one or more blast-formatted database.
+For multiple blast databases, separate them with a space and add an extra set of quotes.
+(e.g blast_db_path <- "/my/ncbi_nt/nt" or blast_db_path <- '"/my/ncbi_nt/nt  /my/ncbi_ref_euk_rep_genomes/ref_euk_rep_genomes"')}
 
 \item{accession_taxa_sql_path}{a path to the accessionTaxa sql created by
 taxonomizr (e.g. accession_taxa_sql_path <- "/my/accessionTaxa.sql")}

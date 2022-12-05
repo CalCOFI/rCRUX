@@ -57,15 +57,17 @@ taxonomic ranks after filtering.
 <table>
 <tr style="vertical-align: top;"><td><code>forward_primer_seq</code></td>
 <td>
-<p>passed to <code>primer_search()</code>, which turns it into a list of
-each primer it could be based on its degenerate primers, then passes
-each one in turn to NCBI (e.g. forward_primer_seq &lt;- &quot;TAGAACAGGCTCCTCTAG&quot;)</p>
+<p>passed to <code>primer_search()</code>, which turns it
+into a list of all possible non degenerate primers, then passes
+a user defined number of primer set combinations to NCBI.
+(e.g. forward_primer_seq &lt;- &quot;TAGAACAGGCTCCTCTAG&quot;)</p>
 </td></tr>
 <tr style="vertical-align: top;"><td><code>reverse_primer_seq</code></td>
 <td>
-<p>passed to <code>primer_search()</code>, which turns it into a list of
-each primer it could be based on its degenerate primers, then passes
-each one in turn to NCBI (e.g. reverse_primer_seq &lt;-  &quot;TTAGATACCCCACTATGC&quot;)</p>
+<p>passed to <code>primer_search()</code>, which turns it
+into a list of all possible non degenerate primers, then passes
+a user defined number of primer set combinations to NCBI.
+(e.g. reverse_primer_seq &lt;-  &quot;TTAGATACCCCACTATGC&quot;)</p>
 </td></tr>
 <tr style="vertical-align: top;"><td><code>output_directory_path</code></td>
 <td>
@@ -285,7 +287,6 @@ reverse_primer_seq =  "TTAGATACCCCACTATGC"
 output_directory_path &lt;- "/my/directory/12S_V5F1_remote_111122_modified_params"
 metabarcode_name &lt;- "12S_V5F1"
 accession_taxa_sql_path &lt;- "/my/directory/accessionTaxa.sql"
-blast_db_path &lt;- "/my/directory/ncbi_nt/nt"
 
 
 get_seeds_remote(forward_primer_seq,

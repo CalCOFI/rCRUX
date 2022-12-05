@@ -64,13 +64,19 @@ fasta of the primers used for blast.
 <table>
 <tr style="vertical-align: top;"><td><code>forward_primer_seq</code></td>
 <td>
-<p>passed to primer_to_fasta, which turns it into fasta
-file to be past to get_seeds_local (e.g. forward_primer_seq &lt;- &quot;TAGAACAGGCTCCTCTAG&quot;).</p>
+<p>which which turns degenerate primers into into a
+list of all possible non degenerate primers and converts the primer(s)
+into to a fasta file to be past to run_primer_blastn.
+(e.g. forward_primer_seq &lt;- &quot;TAGAACAGGCTCCTCTAG&quot; or
+forward_primer_seq &lt;- c(&quot;TAGAACAGGCTCCTCTAG&quot;, &quot;GGWACWGGWTGAACWGTWTAYCCYCC&quot;)</p>
 </td></tr>
 <tr style="vertical-align: top;"><td><code>reverse_primer_seq</code></td>
 <td>
-<p>passed to primer_to_fasta, which turns it into fasta
-file to be past to get_seeds_local (e.g. reverse_primer_seq &lt;-  &quot;TTAGATACCCCACTATGC&quot;).</p>
+<p>which which turns degenerate primers into into a
+list of all possible non degenerate primers and converts the primer(s)
+into to a fasta file to be past to run_primer_blastn.
+(e.g reverse_primer_seq &lt;-  &quot;TTAGATACCCCACTATGC&quot; or
+reverse_primer_seq &lt;- c(&quot;TTAGATACCCCACTATGC&quot;, &quot;TANACYTCNGGRTGNCCRAARAAYCA&quot;)</p>
 </td></tr>
 <tr style="vertical-align: top;"><td><code>output_directory_path</code></td>
 <td>
@@ -90,8 +96,9 @@ generates (e.g. metabarcode_name &lt;- &quot;12S_V5F1&quot;).</p>
 </td></tr>
 <tr style="vertical-align: top;"><td><code>blast_db_path</code></td>
 <td>
-<p>path to a directory containing a blast-formatted database.
-(e.g blast_db_path &lt;- &quot;/my/ncbi_nt/nt&quot;)</p>
+<p>a directory containing one or more blast-formatted database.
+For multiple blast databases, separate them with a space and add an extra set of quotes.
+(e.g blast_db_path &lt;- &quot;/my/ncbi_nt/nt&quot; or blast_db_path &lt;- '&quot;/my/ncbi_nt/nt  /my/ncbi_ref_euk_rep_genomes/ref_euk_rep_genomes&quot;')</p>
 </td></tr>
 <tr style="vertical-align: top;"><td><code>mismatch</code></td>
 <td>
@@ -156,7 +163,7 @@ time of the search. The default is word_size =  7</p>
 <td>
 <p>(passed to <code>run_primer_blastn()</code>) is the number of
 expected hits with a similar quality score found by chance.
-The default is evalue = 3e-7.</p>
+The default is evalue = '3e-7'.</p>
 </td></tr>
 <tr style="vertical-align: top;"><td><code>coverage</code></td>
 <td>

@@ -1,0 +1,108 @@
+<!DOCTYPE html><html><head><title>R: Combines matching fasta and taxonomy files, calculates...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table style="width: 100%;"><tr><td>combine_fasta_and_taxonomy {rCRUX}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Combines matching fasta and taxonomy files, calculates product length, and if need adds taxids</h2>
+
+<h3>Description</h3>
+
+<p>combine_fasta_and_taxonomy takes a fasta file and a corresponding taxonomy file, and turns it
+into an output .csv that can be used in <code>derep_and_clean_db()</code> and <code>compare_db()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class='language-R'>combine_fasta_and_taxonomy(
+  output_directory_path,
+  metabarcode_name,
+  fasta_path,
+  taxonomy_path,
+  accession_taxa_sql_path,
+  NCBI.accession = TRUE,
+  add.taxid = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;"><td><code>output_directory_path</code></td>
+<td>
+<p>the path to the output directory</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>metabarcode_name</code></td>
+<td>
+<p>used to name the the files.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>fasta_path</code></td>
+<td>
+<p>the path to the fasta file of interest</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>taxonomy_path</code></td>
+<td>
+<p>the path to the taxonomy file of interest</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>accession_taxa_sql_path</code></td>
+<td>
+<p>the path to sql created by taxonomizr
+(e.g. accession_taxa_sql_path &lt;- &quot;/my/accessionTaxa.sql&quot;)</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>NCBI.accession</code></td>
+<td>
+<p>is name of the sequence an the NCBI accession number.
+The default value is NCBI.accession = TRUE.  If NCBI.accession = FALSE
+the function will asign taxonomy using species name.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>add.taxid</code></td>
+<td>
+<p>does the user want to add taxid. The default is add.taxid = TRUE, which adds
+taxid bases on the status of NCBI.accession.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Fasta files are converted to a dataframe with columns accession and sequence. The product length
+for each seqeunce is calculated. Taxonomy is joined to the corresponding accession, and taxonomic
+ranks are separated by superkingdom, phylum, class, order, family, and genus and species. Lastly
+taxonomy is added based on NCBI accession, or species id if the accession is not available.
+</p>
+<p>An rCRUX formatted summary .csv with the suffix &quot;rCRUX_formatted_summary.csv&quot; is generated in the
+output directory indicated by output_directory_path.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class='language-R'>
+output_directory_path &lt;- "/my/directory/12S_mifish"
+metabarcode_name &lt;- "12S_mifish"
+fasta_path = "/my/directory/12S_fasta_and_taxonomy/12S_.fasta"
+taxonomy_path = "/my/directory/12S_fasta_and_taxonomy/12S_fasta_and_taxonomy/12S_taxonomy.txt"
+
+
+combine_fasta_and_taxonomy(output_directory_path, metabarcode_name, fasta_path, taxonomy_path, accession_taxa_sql_path)
+
+
+</code></pre>
+
+<hr /><div style="text-align: center;">[Package <em>rCRUX</em> version 0.0.1.000 ]</div>
+</div>
+</body></html>

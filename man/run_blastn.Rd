@@ -18,6 +18,10 @@ run_blastn(
 \arguments{
 \item{fasta}{a fasta-formatted string}
 
+\item{db_dir}{a path to a directory / directories containing one or more blast-formatted database.
+For multiple blast databases, separate them with a space and add an extra set of quotes.
+(e.g blast_db_path <- "/my/ncbi_nt/nt" or blast_db_path <- '"/my/ncbi_nt/nt  /my/ncbi_ref_euk_rep_genomes/ref_euk_rep_genomes"')}
+
 \item{ncbi_bin}{is the path to blast+ tools if not in the user's path.
 Specify only if blastn and blastdbcmd  are not in your path.
 The default is ncbi_bin = NULL - if not specified in path do the

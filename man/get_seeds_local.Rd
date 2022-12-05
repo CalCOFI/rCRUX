@@ -24,11 +24,17 @@ get_seeds_local(
 )
 }
 \arguments{
-\item{forward_primer_seq}{passed to primer_to_fasta, which turns it into fasta
-file to be past to get_seeds_local (e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG").}
+\item{forward_primer_seq}{which which turns degenerate primers into into a
+list of all possible non degenerate primers and converts the primer(s)
+into to a fasta file to be past to run_primer_blastn.
+(e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG" or
+forward_primer_seq <- c("TAGAACAGGCTCCTCTAG", "GGWACWGGWTGAACWGTWTAYCCYCC")}
 
-\item{reverse_primer_seq}{passed to primer_to_fasta, which turns it into fasta
-file to be past to get_seeds_local (e.g. reverse_primer_seq <-  "TTAGATACCCCACTATGC").}
+\item{reverse_primer_seq}{which which turns degenerate primers into into a
+list of all possible non degenerate primers and converts the primer(s)
+into to a fasta file to be past to run_primer_blastn.
+(e.g reverse_primer_seq <-  "TTAGATACCCCACTATGC" or
+reverse_primer_seq <- c("TTAGATACCCCACTATGC", "TANACYTCNGGRTGNCCRAARAAYCA")}
 
 \item{output_directory_path}{the parent directory to place the data in
 (e.g. "/path/to/output/12S_V5F1_local_111122_e300_111122").}
@@ -40,8 +46,9 @@ generates (e.g. metabarcode_name <- "12S_V5F1").}
 \item{accession_taxa_sql_path}{the path to sql created by taxonomizr
 (e.g. accession_taxa_sql_path <- "/my/accessionTaxa.sql")}
 
-\item{blast_db_path}{path to a directory containing a blast-formatted database.
-(e.g blast_db_path <- "/my/ncbi_nt/nt")}
+\item{blast_db_path}{a directory containing one or more blast-formatted database.
+For multiple blast databases, separate them with a space and add an extra set of quotes.
+(e.g blast_db_path <- "/my/ncbi_nt/nt" or blast_db_path <- '"/my/ncbi_nt/nt  /my/ncbi_ref_euk_rep_genomes/ref_euk_rep_genomes"')}
 
 \item{mismatch}{the highest acceptable mismatch value per hit. get_seeds_local removes each
 row with a mismatch greater than the specified value.
@@ -86,7 +93,7 @@ time of the search. The default is word_size =  7}
 
 \item{evalue}{(passed to \code{\link[=run_primer_blastn]{run_primer_blastn()}}) is the number of
 expected hits with a similar quality score found by chance.
-The default is evalue = 3e-7.}
+The default is evalue = '3e-7'.}
 
 \item{coverage}{(passed to \code{\link[=run_primer_blastn]{run_primer_blastn()}}) is the minimum
 percent of the query length recovered in the subject hits.
