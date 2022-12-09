@@ -121,7 +121,7 @@ The following example shows a simple rCRUX pipeline from start to finish. Note t
 
 **Note:** Blast databases and the taxonomic assignment databases (accessionTaxa.sql) can be stored on external hard drive. It increases run time, but is a good option if computer storage capacity is limited.
 
-There are two options to generate seeds for the database generating blast step blast_seeds_local() or blast_seeds_remote(). The local option is slower, however it is not subject to the memory limitations of using the NCBI primer_blast API. The local option is recommended if the user is building a large database, wants to include any [taxid](https://www.ncbi.nlm.nih.gov/taxonomy) in the search, wants to use multiple forward or reverse primers, and / or has many degenerate sites in their primer set. It also cashed run data so if a run is interrupted the user can pick it up from the last successful round of blast by resubmitting the original command.
+There are two options to generate seeds for the database generating blast step blast_seeds_local() or blast_seeds_remote(). The local option is slower, however it is not subject to the memory limitations of using the NCBI primer_blast API. The local option is recommended if the user is building a large database, wants to include any [taxid](https://www.ncbi.nlm.nih.gov/taxonomy) in the search, wants to use multiple forward or reverse primers, and / or has many degenerate sites in their primer set. It also cached run data so if a run is interrupted the user can pick it up from the last successful round of blast by resubmitting the original command.
 
 ## [get_seeds_local](https://limey-bean.github.io/get_seeds_local)
 
@@ -315,7 +315,7 @@ It creates a `get_seeds_local` directory at `output_directory_path` if one doesn
 ### Detailed Steps
 get_seeds_local passes the forward and reverse primer sequence for a given PCR product to [run_primer_blastn](https://limey-bean.github.io/run_primer_blastn). In the case of a non degenerate primer set only two primers will be passed to run_primer_blast.  In the case of a degenerate primer set, get_seeds_local will get all possible versions of the degenerate primer(s) (using primerTree's enumerate_primers() function), randomly sample a user defined number of forward and reverse primers, and generate a fasta file. The selected primers are subset and passed to run_primer_blastn which queries each primer against a blast formatted database using the task "blastn_short". This process continues until all of the selected primers are blasted. The result is an output table with the following columns of data: qseqid (query subject id), sgi (subject gi), saccver (subject accession version), mismatch (number of mismatches between the subject a query), sstart (subject start), send (subject end), staxids (subject taxids).
 
-Temporary output is cashed after each sucessful run of run_primer_blastn, so if a run is interrupted the user can resubmit the command and pick up where they left off.  The user can modify parameters for the run with the exception of num_fprimers_to_blast and num_rprimers_to_blast. Temporary files are deleted at the end of the run.
+Temporary output is cached after each sucessful run of run_primer_blastn, so if a run is interrupted the user can resubmit the command and pick up where they left off.  The user can modify parameters for the run with the exception of num_fprimers_to_blast and num_rprimers_to_blast. Temporary files are deleted at the end of the run.
 
 The returned blast hits for the seqeunces are matched and checked to see if they generate plausible amplicons (e.g. amplify the same accession and are in the correct orientation to produce a PCR product). These hits are written to a file with the suffix `_unfiltered_get_seeds_local_output.csv`.  These hits are further filtered for length and number of mismatches.
 
@@ -682,7 +682,7 @@ of [blast_datatable](https://limey-bean.github.io/blast_datatable) for more info
 
 ### Expected Output
 
-During the blast_seeds the following data are cashed as files in a temporary directory `blast_seeds_save` in the `output_directory_path`. These files are passed to and updated by [blast_datatable](https://limey-bean.github.io/blast_datatable): output_table.txt (most recent updates from the
+During the blast_seeds the following data are cached as files in a temporary directory `blast_seeds_save` in the `output_directory_path`. These files are passed to and updated by [blast_datatable](https://limey-bean.github.io/blast_datatable): output_table.txt (most recent updates from the
 blast run), blast_seeds_passed_filter.txt (seed table that tracks the blast
 status of seeds), unsampled_indices.txt (list of seed indices that need to
 be blasted), too_many_ns.txt (tracks seeds that have been removed due to more

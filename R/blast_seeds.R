@@ -18,7 +18,7 @@
 #' blast, supply the same seeds and working directory. See the documentation
 #' of [rCRUX::blast_datatable()] for more information.
 #'
-#' During the blast_seeds the following data are cashed as files and passed into
+#' During the blast_seeds the following data are cached as files and passed into
 #' [rCRUX::blast_datatable()]: output_table.txt (most recent updates from the
 #' blast run), blast_seeds_passed_filter.txt (seed table that tracks the blast
 #' status of seeds), unsampled_indices.txt (list of seed indices that need to

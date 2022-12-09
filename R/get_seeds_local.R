@@ -26,7 +26,7 @@
 #' run_primer_blastn which queries each primer against a blast formatted database
 #' using the task "blastn_short".
 #'
-#' Output is cashed after each sucessful run of run_primer_blastn, so if a run
+#' Output is cached after each sucessful run of run_primer_blastn, so if a run
 #' is interrupted the user can resubmit the command and pick up where they left
 #' off.  The user can modify parameters for the run with the exception of
 #' num_fprimers_to_blast and num_rprimers_to_blast.
@@ -186,7 +186,7 @@
 #'                 maximum_length = 350,
 #'                 max_to_blast = 1)
 #'
-#' # blasting two primers at a time can max out a system's RAM, however blasting one at a time is more feasable for personal computers with 16 GB RAM
+#' # blasting two primers at a time can max out a system's RAM, however blasting one at a time is more feasible for personal computers with 16 GB RAM
 #'
 #'
 #'
