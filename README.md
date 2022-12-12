@@ -786,7 +786,7 @@ be used to make [blast_datatable](https://limey-bean.github.io/blast_datatable) 
 **rank**
 + passed to [blast_datatable](https://limey-bean.github.io/blast_datatable) is the data column
         representing the taxonomic rank to randomly sample.
-+       The default is rank = genus - Note: sampling a lower rank  (e.g. species) will generate more total hits and take more time, conversely sampling a higher rank (e.g. family) will generate fewer total hits and take less time.
++       The default is rank = 'genus' - Note: sampling a lower rank  (e.g. species) will generate more total hits and take more time, conversely sampling a higher rank (e.g. family) will generate fewer total hits and take less time.
 **ncbi_bin**
 + passed to [run_blastdbcmd](https://limey-bean.github.io/run_blastdbcmd)
         and [run_blastn](https://limey-bean.github.io/run_blastn)is
@@ -831,7 +831,7 @@ blast_seeds(seeds_output_path,
             accession_taxa_sql_path,
             output_directory_path,
             metabarcode_name,
-            rank = species,
+            rank = 'species',
             max_to_blast = 750)
 
 # using the rank of species will increase the number of total unique blast hits
