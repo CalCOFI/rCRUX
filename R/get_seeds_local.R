@@ -167,7 +167,7 @@
 #'                 aligns = '10000',
 #'                 num_rprimers_to_blast = 200,
 #'                 num_rprimers_to_blast = 2000,
-#'                 max_to_blast = 10)
+#'                 max_to_blast = 10, num_threads = NULL)
 #'
 #'
 #' # Non Degenerate but high return primer example - 18S (Amaral-Zettler et al. 2009)
