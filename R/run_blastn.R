@@ -32,13 +32,14 @@
 #'        subject hits. The default is perID = 70.
 #' @param align is the maximum number of subject hits to return per query
 #'        blasted. The default is align = 50000.
+#' @param num_threads is the number of CPUs to engage in the blastn search. The default num_treads = NULL, uses [parallel::detectCores()] to determine the user's number of CPUs automatically and use that for the value of -num_threads.
 #' @return a tibble representing the blastn results
 #' @export
 
 
 
 run_blastn <- function(fasta, db_dir, temp = NULL, ncbi_bin = NULL,
-                       evalue = 1e-6, align = 50000, coverage = 50, perID = 70) {
+                       evalue = 1e-6, align = 50000, coverage = 50, perID = 70, num_threads = NULL) {
 
   # This is a hacky workaround to deal with the fact
   # that blastn wants a file path as a query
@@ -59,8 +60,12 @@ run_blastn <- function(fasta, db_dir, temp = NULL, ncbi_bin = NULL,
 
   writeLines(fasta, con = temp)
 
-  # Determine arguments
-  cores <- parallel::detectCores()
+if (is.null(num_threads)) {
+    # Determine arguments
+    cores <- parallel::detectCores()
+  } else {
+    cores <- num_threads
+  }
 
   message("Calling blastn. This may take a long time.")
 

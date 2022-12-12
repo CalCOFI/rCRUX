@@ -25,7 +25,7 @@
 #'        Specify only if blastn and blastdbcmd  are not in your path.
 #'        The default is ncbi_bin = NULL - if not specified in path do the
 #'        following: ncbi_bin = "/my/local/ncbi-blast-2.10.1+/bin/".
-#' @param db a path to a directory / or directories containing one or more blast-formatted database. 
+#' @param db a path to a directory / or directories containing one or more blast-formatted database.
 #'        For multiple blast databases, separate them with a space and add an extra set of quotes.
 #'        (e.g blast_db_path <- "/my/ncbi_nt/nt" or blast_db_path <- '"/my/ncbi_nt/nt  /my/ncbi_ref_euk_rep_genomes/ref_euk_rep_genomes"')
 #' @param task the task for blastn to perform - default here is "blastn_short",
@@ -43,6 +43,9 @@
 #'        blasted. The default is align = '10000000'. - to few alignments will
 #'        result in no matching pairs of forward and reverse primers.  To many
 #'        alignments can result in an error due to RAM limitations.
+#' @param num_threads is the number of CPUs to engage in the blastn search. The
+#'        default num_treads = NULL, uses [parallel::detectCores()] to determine the user's
+#'        number of CPUs automatically and use that for the value of -num_threads.
 #' @param reward is the reward for nucleotide match. The default is reward = 2.
 #' @return a tibble 'output_table' representing the blastn results
 #' @export
@@ -53,7 +56,14 @@ run_primer_blastn <- function(primer_fasta, db, ncbi_bin = NULL, task = "blastn-
 
 
   # Determine arguments
-  cores <- parallel::detectCores()
+
+  if (is.null(num_threads)) {
+      # Determine arguments
+      cores <- parallel::detectCores()
+    } else {
+      cores <- num_threads
+    }
+
 
   message("Calling blastn for primers. This may take a long time.")
 

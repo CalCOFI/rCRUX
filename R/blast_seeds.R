@@ -101,6 +101,9 @@
 #' @param maximum_length removes each row that has a
 #'        value greater than maximum_length in the product_length column
 #'        The default is maximum_length = 500
+#' @param num_threads is the number of CPUs to engage in the blastn search. The
+#'        default num_treads = NULL, uses [parallel::detectCores()] to determine the user's
+#'        number of CPUs automatically and use that for the value of -num_threads.
 #' @return NULL
 #' @export
 #'

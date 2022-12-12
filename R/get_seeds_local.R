@@ -117,6 +117,9 @@
 #'        tools if not in the user's path.  Specify only if blastn and is not in
 #'        your path. The default is ncbi_bin = NULL - if not specified in path
 #'        do the following: ncbi_bin = "/my/local/ncbi-blast-2.10.1+/bin".
+#' @param num_threads is the number of CPUs to engage in the blastn search. The
+#'        default num_treads = NULL, uses [parallel::detectCores()] to determine the user's
+#'        number of CPUs automatically and use that for the value of -num_threads.
 #' @return NULL
 #' @export
 #'
