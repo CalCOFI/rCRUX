@@ -167,7 +167,7 @@
 #'                 aligns = '10000',
 #'                 num_rprimers_to_blast = 200,
 #'                 num_rprimers_to_blast = 2000,
-#'                 max_to_blast = 10, num_threads = NULL)
+#'                 max_to_blast = 10)
 #'
 #'
 #' # Non Degenerate but high return primer example - 18S (Amaral-Zettler et al. 2009)
@@ -206,7 +206,7 @@ get_seeds_local <- function(forward_primer_seq, reverse_primer_seq,
                             primer_specificity_database = "nt",
                             num_fprimers_to_blast = 50,
                             num_rprimers_to_blast = 50, max_to_blast = 2,
-                            align = '10000000',  ...,
+                            align = '10000000',  num_threads = NULL, ...,
                             return_table = TRUE) {
 
   # Start by making the directory and checking for the sql and whatnot.
