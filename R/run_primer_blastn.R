@@ -57,7 +57,7 @@ run_primer_blastn <- function(primer_fasta, db, ncbi_bin = NULL, task = "blastn-
 
   # Determine arguments
 
-  print(num_threads)
+
 
   if (is.null(num_threads)) {
       # Determine arguments
@@ -66,7 +66,7 @@ run_primer_blastn <- function(primer_fasta, db, ncbi_bin = NULL, task = "blastn-
       cores <- num_threads
     }
 
-print(cores)
+
 
   message("Calling blastn for primers. This may take a long time.")
 
