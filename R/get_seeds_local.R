@@ -345,7 +345,7 @@ get_seeds_local <- function(forward_primer_seq, reverse_primer_seq,
     writeLines(to_blast, to_blast_path)
 
     # blast the subset
-    output_table <- run_primer_blastn(to_blast_path, blast_db_path, num_threads...)
+    output_table <- run_primer_blastn(to_blast_path, blast_db_path, ...)
 
     # add to previous results - if they exist
     append_table <- rbind(append_table, output_table)

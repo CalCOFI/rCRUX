@@ -57,6 +57,8 @@ run_primer_blastn <- function(primer_fasta, db, ncbi_bin = NULL, task = "blastn-
 
   # Determine arguments
 
+  print(num_threads)
+
   if (is.null(num_threads)) {
       # Determine arguments
       cores <- parallel::detectCores()
