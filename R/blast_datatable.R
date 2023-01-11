@@ -115,7 +115,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
 
 
-  while (length(unsampled_indices) > 1) {
+  while (length(unsampled_indices) > 0) {
 
 
       if (file.exists(paste(save_dir, "unsampled_indices.txt", sep = "/"))) {
@@ -150,10 +150,6 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     message(paste("BLAST round", num_rounds))
     message(paste(length(unsampled_indices), "indices left to process."))
 
-    if (length(unsampled_indices) == 0 ){
-      break
-    }
-
 
     # update status of blast seeds by labeling all reads no in the upsampled
     # indicies list as "done"
@@ -165,7 +161,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
 
 
-    if (length(unsampled_indices) < 2) {
+    if (length(unsampled_indices) == 0) {
       break
     } else if (length(unsampled_indices) <= max_to_blast) {
       sample_indices <- unsampled_indices
@@ -185,7 +181,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
 
     # clean up messages
-    if ( length(unsampled_indices) < 2) {
+    if ( length(unsampled_indices) == 0) {
       break
     } else if (length(unsampled_indices) > max_to_blast) {
      message(" ")
@@ -213,7 +209,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
 
 
-    while (length(sample_indices) > 1 && length(unsampled_indices) > 1) {
+    while (length(sample_indices) > 1 && length(unsampled_indices) != 0) {
 
       # Pick up where it left off
       if (file.exists(paste(save_dir, "unsampled_indices.txt", sep = "/"))) {
