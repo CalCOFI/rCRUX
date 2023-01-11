@@ -159,10 +159,11 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     # if unsampled indices are greater than the max to blast (default n = 1000),
     # the blast seed table will be randomly sampled by taxonomic ranks
 
-
-
+    message("1")
+    message(unsampled_indices)
     if (length(unsampled_indices) == 0) {
       unsampled_indices <- 0
+      message(unsampled_indices)
       break
     } else if (length(unsampled_indices) <= max_to_blast) {
       sample_indices <- unsampled_indices
@@ -180,7 +181,8 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
       sample_indices <- which(blast_seeds_m$accession %in% seeds_by_rank_indices)
     }
 
-
+    message("2")
+    message(unsampled_indices)
     # clean up messages
     if ( length(unsampled_indices) == 0) {
       break
@@ -196,6 +198,8 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
     }
 
+    message("3")
+    message(unsampled_indices)
     if (length(unsampled_indices) == 0) {
 
       unsampled_indices <- 0
@@ -215,7 +219,8 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     # it will run.  If not the number of indices to be blasted for a rank will be
     # broken into the max_to_blast value.
 
-    message(paste("unsampled_indices = ", unsampled_indices))
+    message("4")
+    message(unsampled_indices)
 
     while (length(sample_indices) > 0 && length(unsampled_indices) > 0) {
 
@@ -245,6 +250,9 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
       blast_seeds_m <- read.csv(blast_seeds_m_path, colClasses = "character")
 
       }
+
+      message("5")
+      message(unsampled_indices)
 
       if (length(unsampled_indices) == 0){
         message("done blasting...")
