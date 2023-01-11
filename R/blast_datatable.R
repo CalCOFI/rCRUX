@@ -112,9 +112,8 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
   blast_seeds_m$blast_status <- "not_done"
   unsampled_indices <- seq_along(blast_seeds_m$accession)
 
-  print(paste0(unsampled_indices, "unsampled indicies"))
 
-if (length(unsampled_indices) > 1) {
+
 
   while (length(unsampled_indices) > 1) {
 
@@ -144,6 +143,11 @@ if (length(unsampled_indices) > 1) {
 
       }
 
+    if (length(unsampled_indices) > 1) {
+      message(" ")
+      message(paste(length(unsampled_indices), "indices left to process."))
+      break
+    }
 
     # information about state of blast
     message(" ")
