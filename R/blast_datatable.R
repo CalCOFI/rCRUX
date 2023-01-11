@@ -215,7 +215,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     # it will run.  If not the number of indices to be blasted for a rank will be
     # broken into the max_to_blast value.
 
-    message(paste("unsampled_indices = ", unsampled_indices)
+    message(paste("unsampled_indices = ", unsampled_indices))
 
     while (length(sample_indices) > 0 && length(unsampled_indices) > 0) {
 
