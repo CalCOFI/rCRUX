@@ -113,7 +113,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
   unsampled_indices <- seq_along(blast_seeds_m$accession)
 
 
-
+if (length(unsampled_indices) > 1) {
   while (length(unsampled_indices) > 1) {
 
 
@@ -291,6 +291,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
         rm(blast_seeds_m)
 
   }
+}
 
   # Clean up final datatable by removing any hyphens, updating amplicon_length
   # and removing reads with too many Ns
