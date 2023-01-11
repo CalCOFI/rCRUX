@@ -201,6 +201,10 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     unsampled_indices <-
       unsampled_indices[!(unsampled_indices %in% sample_indices)]
 
+    } else {
+
+      unsampled_indices <- 0
+
     }
 
 
@@ -211,7 +215,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
 
 
-    while (length(sample_indices) > 0 ) {
+    while (length(sample_indices) > 0 && length(sample_indices) > 0) {
 
       # Pick up where it left off
       if (file.exists(paste(save_dir, "unsampled_indices.txt", sep = "/"))) {
@@ -240,7 +244,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
       }
 
-      if (length(unsampled_indices) == 0){
+      if (length(unsampled_indices) < 2){
         message("done blasting...")
         unsampled_indices <- 0
         break
