@@ -114,7 +114,6 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
 
 
-
   while (length(unsampled_indices) > 0) {
 
 
@@ -144,7 +143,6 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
       }
 
 
-
     # information about state of blast
     message(" ")
     message(paste("BLAST round", num_rounds))
@@ -159,16 +157,12 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     # if unsampled indices are greater than the max to blast (default n = 1000),
     # the blast seed table will be randomly sampled by taxonomic ranks
 
-    message("a")
-    message(length(unsampled_indices))
-    if (length(unsampled_indices) == 0) {
-      unsampled_indices <- 0
-      message("b")
-      message(length(unsampled_indices))
-      break
-    } else if (length(unsampled_indices) <= max_to_blast) {
+
+
+    if (length(unsampled_indices) <= max_to_blast) {
       sample_indices <- unsampled_indices
-    } else {
+    }
+    else  {
 
 
       # if more indices than the max_to_blast are present
@@ -182,12 +176,9 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
       sample_indices <- which(blast_seeds_m$accession %in% seeds_by_rank_indices)
     }
 
-    message("c")
-    message(length(unsampled_indices))
+
     # clean up messages
-    if ( length(unsampled_indices) == 0) {
-      break
-    } else if (length(unsampled_indices) > max_to_blast) {
+    if (length(unsampled_indices) > max_to_blast) {
      message(" ")
      message(paste(rank, "has", length(sample_indices), "unique occurrences in the blast seeds data table."))
      message(paste("These may be subset..." ))
@@ -199,21 +190,11 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
     }
 
-    message("d")
-    message(length(unsampled_indices))
 
-    if (length(unsampled_indices) == 0) {
-
-      unsampled_indices <- 0
-
-    } else {
-
+    # update unsampled_indices by removing the sample_indices from the list
     unsampled_indices <-
       unsampled_indices[!(unsampled_indices %in% sample_indices)]
 
-      # update unsampled_indices by removing the sample_indices from the list
-
-    }
 
 
     # run blast command, blastn, and aggregate the results based on the the value
@@ -221,10 +202,10 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     # it will run.  If not the number of indices to be blasted for a rank will be
     # broken into the max_to_blast value.
 
-    message("e")
-    message(length(unsampled_indices))
 
-    while (length(sample_indices) > 0 && length(unsampled_indices) > 0) {
+
+    while (length(sample_indices) > 0 ){
+
 
       # Pick up where it left off
       if (file.exists(paste(save_dir, "unsampled_indices.txt", sep = "/"))) {
@@ -253,15 +234,8 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
       }
 
-      message("f")
-      message(length(unsampled_indices))
 
-      if (length(unsampled_indices) == 0){
-        message("done blasting...")
-        unsampled_indices <- 0
-        break
-
-      } else if (length(sample_indices) == length(unsampled_indices)) {
+      if (length(sample_indices) == length(unsampled_indices)) {
 
         run_blastdbcmd_blastn_and_aggregate_resuts(unsampled_indices, save_dir,
           blast_seeds_m, ncbi_bin, blast_db_path, too_many_ns, db_dir,
@@ -318,7 +292,6 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
   }
 
-
   # Clean up final datatable by removing any hyphens, updating amplicon_length
   # and removing reads with too many Ns
 
@@ -352,8 +325,9 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     #make a list of multi_taxid accessions for blastdbcmd
     accession <- paste0(multi_taxids$accession, collapse=",")
 
-    # send accessions through blastdbcmd
     message("here")
+
+    # send accessions through blastdbcmd
     expand_multi_taxids_output <- system2("blastdbcmd", args = c("-db", blast_db_path,
                                                              "-dbtype", "nucl",
                                                              "-entry", accession,
