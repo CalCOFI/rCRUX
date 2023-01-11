@@ -144,11 +144,6 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
       }
 
 
-      if (length(unsampled_indices) < 1) {
-
-        break
-
-      }
 
     # information about state of blast
     message(" ")
@@ -168,6 +163,8 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
     if (length(unsampled_indices) <= max_to_blast) {
       sample_indices <- unsampled_indices
+    } else if (length(unsampled_indices) < 1) {
+      break
     }
     else  {
 
