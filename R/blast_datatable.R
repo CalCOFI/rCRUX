@@ -159,11 +159,12 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     # if unsampled indices are greater than the max to blast (default n = 1000),
     # the blast seed table will be randomly sampled by taxonomic ranks
 
-    message("1")
-    message(unsampled_indices)
+    message("a")
+    message(length(unsampled_indices))
     if (length(unsampled_indices) == 0) {
       unsampled_indices <- 0
-      message(unsampled_indices)
+      message("b")
+      message(length(unsampled_indices))
       break
     } else if (length(unsampled_indices) <= max_to_blast) {
       sample_indices <- unsampled_indices
@@ -181,8 +182,8 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
       sample_indices <- which(blast_seeds_m$accession %in% seeds_by_rank_indices)
     }
 
-    message("2")
-    message(unsampled_indices)
+    message("c")
+    message(length(unsampled_indices))
     # clean up messages
     if ( length(unsampled_indices) == 0) {
       break
@@ -198,8 +199,9 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
     }
 
-    message("3")
-    message(unsampled_indices)
+    message("d")
+    message(length(unsampled_indices))
+
     if (length(unsampled_indices) == 0) {
 
       unsampled_indices <- 0
@@ -219,8 +221,8 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     # it will run.  If not the number of indices to be blasted for a rank will be
     # broken into the max_to_blast value.
 
-    message("4")
-    message(unsampled_indices)
+    message("e")
+    message(length(unsampled_indices))
 
     while (length(sample_indices) > 0 && length(unsampled_indices) > 0) {
 
@@ -251,8 +253,8 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
       }
 
-      message("5")
-      message(unsampled_indices)
+      message("f")
+      message(length(unsampled_indices))
 
       if (length(unsampled_indices) == 0){
         message("done blasting...")
@@ -351,6 +353,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     accession <- paste0(multi_taxids$accession, collapse=",")
 
     # send accessions through blastdbcmd
+    message("here")
     expand_multi_taxids_output <- system2("blastdbcmd", args = c("-db", blast_db_path,
                                                              "-dbtype", "nucl",
                                                              "-entry", accession,
