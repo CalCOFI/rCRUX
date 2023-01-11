@@ -115,7 +115,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
 
 
-  while (length(unsampled_indices) > 0) {
+  while (length(unsampled_indices) > 1) {
 
 
       if (file.exists(paste(save_dir, "unsampled_indices.txt", sep = "/"))) {
@@ -150,6 +150,9 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     message(paste("BLAST round", num_rounds))
     message(paste(length(unsampled_indices), "indices left to process."))
 
+    if (length(unsampled_indices) == 0 ){
+      break
+    }
 
 
     # update status of blast seeds by labeling all reads no in the upsampled
