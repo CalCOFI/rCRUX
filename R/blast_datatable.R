@@ -146,10 +146,8 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     message(" ")
     message(paste("indices ", length(unsampled_indices)
 
-    if (length(unsampled_indices) > 1) {
-      message(" ")
-      message(paste(length(unsampled_indices), "indices left to process."))
-      break
+    if (length(unsampled_indices) < 1) {
+     break
     }
 
     # information about state of blast
