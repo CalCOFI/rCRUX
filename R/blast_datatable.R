@@ -248,9 +248,8 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
         message("done blasting...")
         unsampled_indices <- 0
         break
-      }
 
-      if (length(sample_indices) == length(unsampled_indices)) {
+      } else if (length(sample_indices) == length(unsampled_indices)) {
 
         run_blastdbcmd_blastn_and_aggregate_resuts(unsampled_indices, save_dir,
           blast_seeds_m, ncbi_bin, blast_db_path, too_many_ns, db_dir,
