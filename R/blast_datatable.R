@@ -162,12 +162,11 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
 
 
-    if (length(unsampled_indices) <= max_to_blast) {
-      sample_indices <- unsampled_indices
-    } else if (length(unsampled_indices) < 1) {
+    if (length(unsampled_indices) < 2) {
       break
-    }
-    else {
+    } else if (length(unsampled_indices) <= max_to_blast) {
+      sample_indices <- unsampled_indices
+    } else {
 
 
       # if more indices than the max_to_blast are present
@@ -183,9 +182,8 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
 
     # clean up messages
-    if ( length(unsampled_indices) > 0) {
+    if ( length(unsampled_indices) < 2) {
       break
-
     } else if (length(unsampled_indices) > max_to_blast) {
      message(" ")
      message(paste(rank, "has", length(sample_indices), "unique occurrences in the blast seeds data table."))
