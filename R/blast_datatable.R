@@ -195,15 +195,16 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
     }
 
-    if ( length(unsampled_indices) > 0) {
+    if (length(unsampled_indices) == 0) {
 
-    # update unsampled_indices by removing the sample_indices from the list
-    unsampled_indices <-
-      unsampled_indices[!(unsampled_indices %in% sample_indices)]
+      unsampled_indices <- 0
 
     } else {
 
-      unsampled_indices <- 0
+    unsampled_indices <-
+      unsampled_indices[!(unsampled_indices %in% sample_indices)]
+
+      # update unsampled_indices by removing the sample_indices from the list
 
     }
 
