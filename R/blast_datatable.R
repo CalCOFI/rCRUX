@@ -143,6 +143,9 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
       }
 
+
+    print(length(unsampled_indices))
+
     if (length(unsampled_indices) > 1) {
       message(" ")
       message(paste(length(unsampled_indices), "indices left to process."))
