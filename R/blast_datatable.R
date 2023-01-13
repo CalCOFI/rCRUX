@@ -334,7 +334,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     #                                                         "-dbtype", "nucl",
     #                                                         "-entry", accession,
     #                                                         "-outfmt", "'%a %T'"),
-     #                                              stdout = TRUE, stderr = FALSE)
+    #                                              stdout = TRUE, stderr = FALSE)
 
     #make df to store fixed multi taxid info
     #accession_df <- dplyr::select(multi_taxids, accession)
@@ -345,7 +345,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
     #accession_output_table <- tibble::as_tibble(expand_multi_taxids_output)
     #accession_output_table <-  tidyr::separate(accession_output_table, col = value, into = column_names,
-     #                            sep = " ")
+    #                            sep = " ")
 
     # add row_id for sorting later
     #accession_output_table <- dplyr::mutate(accession_output_table, row_id= dplyr::row_number())
