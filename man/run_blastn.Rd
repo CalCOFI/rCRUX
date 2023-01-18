@@ -12,7 +12,8 @@ run_blastn(
   evalue = 1e-06,
   align = 50000,
   coverage = 50,
-  perID = 70
+  perID = 70,
+  num_threads = NULL
 )
 }
 \arguments{
@@ -38,6 +39,8 @@ subject hits. The default is coverage = 50.}
 
 \item{perID}{is the minimum percent identity of the query relative to the
 subject hits. The default is perID = 70.}
+
+\item{num_threads}{is the number of CPUs to engage in the blastn search. The default num_treads = NULL, uses \code{\link[parallel:detectCores]{parallel::detectCores()}} to determine the user's number of CPUs automatically and use that for the value of -num_threads.}
 
 \item{temp:}{a file path to write a temporary fasta to. The default is
 temp = NULL.}

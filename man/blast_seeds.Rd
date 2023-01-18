@@ -71,7 +71,7 @@ wildcards = "NNNN"}
 
 \item{rank}{passed to \code{\link[=blast_datatable]{blast_datatable()}} is the data column
 representing the taxonomic rank to randomly sample. The default is
-rank = genus - sampling a lower rank  (e.g. species) will generate
+rank = 'genus' - sampling a lower rank  (e.g. species) will generate
 more total hits and take more time, conversely sampling a higher rank
 (e.g. family) will generate fewer total hits and take less time.}
 
@@ -94,6 +94,10 @@ of the query relative to the subject hits. The default is perID = 70.}
 
 \item{align}{passed to \code{\link[=run_blastn]{run_blastn()}} is the maximum number of subject
 hits to return per query blasted. The default is align = 50000.}
+
+\item{num_threads}{is the number of CPUs to engage in the blastn search. The
+default num_treads = NULL, uses \code{\link[parallel:detectCores]{parallel::detectCores()}} to determine the user's
+number of CPUs automatically and use that for the value of -num_threads.}
 }
 \description{
 blast_seeds uses \code{\link[=blast_datatable]{blast_datatable()}} to search against a blast
@@ -112,7 +116,7 @@ error or experiencing other interruptions. To resume a partially completed
 blast, supply the same seeds and working directory. See the documentation
 of \code{\link[=blast_datatable]{blast_datatable()}} for more information.
 
-During the blast_seeds the following data are cashed as files and passed into
+During the blast_seeds the following data are cached as files and passed into
 \code{\link[=blast_datatable]{blast_datatable()}}: output_table.txt (most recent updates from the
 blast run), blast_seeds_passed_filter.txt (seed table that tracks the blast
 status of seeds), unsampled_indices.txt (list of seed indices that need to
@@ -150,7 +154,7 @@ blast_seeds(seeds_output_path,
             accession_taxa_sql_path,
             output_directory_path,
             metabarcode_name,
-            rank = species,
+            rank = 'species',
             max_to_blast = 750)
 
 # using the rank of species will increase the number of total unique blast hits
