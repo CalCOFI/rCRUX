@@ -19,6 +19,7 @@ get_seeds_local(
   num_rprimers_to_blast = 50,
   max_to_blast = 2,
   align = "10000000",
+  num_threads = NULL,
   ...,
   return_table = TRUE
 )
@@ -83,6 +84,10 @@ blasted. The default is align = '10000000'. - to few alignments will
 result in no matching pairs of forward and reverse primers.  To many
 alignments can result in an error due to RAM limitations.}
 
+\item{num_threads}{is the number of CPUs to engage in the blastn search. The
+default num_treads = NULL, uses \code{\link[parallel:detectCores]{parallel::detectCores()}} to determine the user's
+number of CPUs automatically and use that for the value of -num_threads.}
+
 \item{task}{(passed to \code{\link[=run_primer_blastn]{run_primer_blastn()}}) the task for blastn to
 perform - default here is "blastn_short", which is optimized
 for searches with queries < 50 bp}
@@ -137,7 +142,7 @@ generate a fasta file. The selected primers are subset and passed to
 run_primer_blastn which queries each primer against a blast formatted database
 using the task "blastn_short".
 
-Output is cashed after each sucessful run of run_primer_blastn, so if a run
+Output is cached after each sucessful run of run_primer_blastn, so if a run
 is interrupted the user can resubmit the command and pick up where they left
 off.  The user can modify parameters for the run with the exception of
 num_fprimers_to_blast and num_rprimers_to_blast.
@@ -226,7 +231,7 @@ get_seeds_local(forward_primer_seq,
                 maximum_length = 350,
                 max_to_blast = 1)
 
-# blasting two primers at a time can max out a system's RAM, however blasting one at a time is more feasable for personal computers with 16 GB RAM
+# blasting two primers at a time can max out a system's RAM, however blasting one at a time is more feasible for personal computers with 16 GB RAM
 
 
 

@@ -15,7 +15,8 @@ run_primer_blastn(
   align = "10000000",
   coverage = 90,
   perID = 50,
-  reward = 2
+  reward = 2,
+  num_threads = NULL
 )
 }
 \arguments{
@@ -52,6 +53,10 @@ subject hits. The default is coverage = 90.}
 subject hits. The default is perID = 50.}
 
 \item{reward}{is the reward for nucleotide match. The default is reward = 2.}
+
+\item{num_threads}{is the number of CPUs to engage in the blastn search. The
+default num_treads = NULL, uses \code{\link[parallel:detectCores]{parallel::detectCores()}} to determine the user's
+number of CPUs automatically and use that for the value of -num_threads.}
 }
 \value{
 a tibble 'output_table' representing the blastn results
