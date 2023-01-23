@@ -385,6 +385,11 @@ get_seeds_local <- function(forward_primer_seq, reverse_primer_seq,
   f_and_r <- dplyr::inner_join(x=F_only, y=R_only, by=c("accession", "gi", "staxids"))
   f_and_r <- dplyr::mutate(f_and_r, product_length=0)
 
+  f_and_r <-
+      dplyr::mutate(f_and_r,
+                    dplyr::across(c('forward_start', 'forward_stop', 'reverse_start', 'reverse_stop'), .fns = as.integer)
+      )
+
   # calculate product length if F and R primer pairs are in correct orientation to make amplicon
   f_and_r <- dplyr::mutate(f_and_r, product_length = dplyr::case_when((forward_start < reverse_start & forward_start < forward_stop & reverse_stop < reverse_start ) ~ (as.numeric(reverse_start) - as.numeric(forward_start)),
                                                                       (forward_start > reverse_start & forward_start > forward_stop & reverse_stop > reverse_start) ~ (as.numeric(forward_start) - as.numeric(reverse_start)),))
