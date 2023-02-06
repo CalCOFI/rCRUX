@@ -162,7 +162,12 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     if (length(unsampled_indices) <= max_to_blast) {
       sample_indices <- unsampled_indices
     }
-    else  {
+    else if (rank == all) {
+
+      sample_indices <- blast_seeds_m$accession
+
+    }
+    else {
 
 
       # if more indices than the max_to_blast are present
