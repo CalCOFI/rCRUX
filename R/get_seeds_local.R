@@ -121,6 +121,9 @@
 #'        default num_treads = NULL, uses [parallel::detectCores()] to determine the user's
 #'        number of CPUs automatically and use that for the value of -num_threads.
 #' @return NULL
+#' 
+#' @importFrom magrittr `%>%`
+#' 
 #' @export
 #'
 #' @examples
@@ -193,11 +196,6 @@
 #'
 #'
 #'
-
-
-
-
-
 get_seeds_local <- function(forward_primer_seq, reverse_primer_seq,
                             output_directory_path, metabarcode_name,
                             accession_taxa_sql_path,
@@ -208,241 +206,291 @@ get_seeds_local <- function(forward_primer_seq, reverse_primer_seq,
                             num_rprimers_to_blast = 50, max_to_blast = 2,
                             align = '10000000',  num_threads = NULL, ...,
                             return_table = TRUE) {
-
-  # Start by making the directory and checking for the sql and whatnot.
-  out <- paste0(output_directory_path, "/get_seeds_local/")
-  suppressWarnings(dir.create(output_directory_path))
-  suppressWarnings(dir.create(out))
+  
+  # Check paths provided
+  check_blast_plus_installation(ncbi_bin = if('ncbi_bin' %in% names(list(...))) ncbi_bin else NULL)
+  
+  check_blast_db(blast_db_path)
+  
   if (!file.exists(accession_taxa_sql_path)) {
-    stop("accession_taxa_sql_path does not exist")
+    stop("accession_taxa_sql_path does not exist.\n",
+         "The path to the taxonomizr SQL file cannot be found. ",
+         "Please revise the path provided:\n", accession_taxa_sql_path)
   }
-
-  # make fasta file paths for storing primer blast runs
-  fasta_path <- paste0(out, metabarcode_name, "_primers_selected_for_blastn.fasta")
-  to_blast_path <- paste0(out, metabarcode_name, "_subset_for_blastn.fasta")
-  left_to_blast_path <- paste0(out, metabarcode_name, "_need_to_blastn.fasta")
-  append_table_path <- paste0(out, metabarcode_name, "_temp_blast_output.csv")
-
+  
+  # Create output directories
+  out <- file.path(output_directory_path, "get_seeds_local")
+  dir.create(out, showWarnings = FALSE)
+  
+  message('Output directory: ', out, '\n')
+  
+  # Make file paths for storing primer blast runs
+  fasta_path <- file.path(out, paste0(metabarcode_name, "_primers_selected_for_blastn.fasta"))
+  to_blast_path <- file.path(out,  paste0(metabarcode_name, "_subset_for_blastn.fasta"))
+  left_to_blast_path <- file.path(out,  paste0(metabarcode_name, "_need_to_blastn.fasta"))
+  append_table_path <- file.path(out,  paste0(metabarcode_name, "_temp_blast_output.csv"))
+  
   # with any luck this function will pick up where it left off by checking for the left_to_blast file.
-  # If it does not exist it starts from scratch.  If it does not exist it skips the beginning bit and go strait to sub-setting for blast.
-
-  if (!file.exists(left_to_blast_path)) {
-
-    #key for degenerate bases, copied from modifiedPrimerTreeFunctions
-    iupac = list( "M" = list("A", "C"),
-                  "R" = list("A", "G"),
-                  "W" = list("A", "T"),
-                  "S" = list("C", "G"),
-                  "Y" = list("C", "T"),
-                  "K" = list("G", "T"),
-                  "V" = list("A", "C", "G"),
-                  "H" = list("A", "C", "T"),
-                  "D" = list("A", "G", "T"),
-                  "B" = list("C", "G", "T"),
-                  "N" = list("A", "C", "G", "T"),
-                  "I" = list("A", "T", "C"))
-
-
-
+  # If it does not exist it starts from scratch.  If it does exist it skips the beginning bit and go strait to sub-setting for blast.
+  no_previous_files_to_blast <- !file.exists(left_to_blast_path)
+  
+  if (no_previous_files_to_blast) {
+    
+    message('No previous primer blast files found. Starting pipeline from beginning.\n')
+    
+    message('Examining primers for degenerate bases.')
+    
     # add multiple primers and or get the possible combinations for degenerate primers using functions in primer tree
     fPrimer <- NULL
     rPrimer <- NULL
-
-    for (pf in forward_primer_seq ) {
+    
+    for (pf in forward_primer_seq) {
       forward_primers = enumerate_ambiguity(pf)
-      forward.df <- data.frame(forward=forward_primers, stringsAsFactors = FALSE)
+      forward.df <- data.frame(forward = forward_primers, stringsAsFactors = FALSE)
       fPrimer <- rbind(fPrimer, forward.df)
     }
-
+    
     for (pr in reverse_primer_seq ) {
       reverse_primers = enumerate_ambiguity(pr)
-      reverse.df <- data.frame(reverse=reverse_primers, stringsAsFactors = FALSE)
+      reverse.df <- data.frame(reverse = reverse_primers, stringsAsFactors = FALSE)
       rPrimer <- rbind(rPrimer, reverse.df)
     }
-
-
+    
     # count rows / number of primers
     nforward <- nrow(fPrimer)
     nreverse <- nrow(rPrimer)
-
-
+    
     #subset primers if user so chooses
-    if(nforward > num_fprimers_to_blast){
-      message("")
-      message(paste0( 'Forward primers have ', nforward, ' possible sequences due to degenerate bases. Randomly sampling ', num_fprimers_to_blast, ' forward primers. To change this, modify num_fprimers_to_blast.'  ))
-      forward_sample = dplyr::sample_n(fPrimer, num_fprimers_to_blast, replace=FALSE)
+    if (nforward > num_fprimers_to_blast){
+      
+      message('  Forward primers have ', nforward, ' possible sequences due to degenerate bases. ', 
+              'Randomly sampling ', num_fprimers_to_blast, ' forward primers. ',
+              'To change this, modify num_fprimers_to_blast.')
+      
+      forward_sample = dplyr::sample_n(fPrimer, num_fprimers_to_blast, replace = FALSE)
+      
     } else {
-      message("")
-      message(paste0(  nforward, ' forward primer(s) will be blasted.'))
+      
+      message('  ', nforward, ' forward primer(s) will be blasted.')
+      
       forward_sample = fPrimer
     }
-
+    
     if(nreverse > num_rprimers_to_blast){
-      message(paste0( 'Reverse primers have ', nreverse, ' possible sequences due to degenerate bases. Randomly sampling ', num_rprimers_to_blast, ' reverse primers. To change this, modify num_rprimers_to_blast.'  ))
-      message("")
+      
+      message(
+        '  Reverse primers have ', nreverse, ' possible sequences due to degenerate bases. ',
+        'Randomly sampling ', num_rprimers_to_blast, ' reverse primers. ',
+        'To change this, modify num_rprimers_to_blast.\n')
+      
       reverse_sample = dplyr::sample_n(rPrimer, num_rprimers_to_blast, replace=FALSE)
+      
     }  else {
-      message(paste0( nreverse, ' reverse primer(s) will be blasted.'  ))
-      message("")
+      
+      message('  ', nreverse, ' reverse primer(s) will be blasted.\n')
+      
       reverse_sample = rPrimer
     }
-
-
+    
     # forward fasta first
     fastaf <- character(nrow(forward_sample) * 2 )
     fastaf[c(TRUE, FALSE)] <- paste0(">forward_row_", row.names(forward_sample))
     fastaf[c(FALSE, TRUE)] <- forward_sample$forward
-
+    
     # then reverse fasta
     fastar <- character(nrow(reverse_sample) *2 )
     fastar[c(TRUE, FALSE)] <- paste0(">reverse_row_", row.names(reverse_sample))
     fastar[c(FALSE, TRUE)] <- reverse_sample$reverse
-
+    
     # write forward to fasta output then append reverse
     writeLines(fastaf, fasta_path)
     write(fastar, file = fasta_path, append = TRUE)
-
-    # column names for the blast output
-    column_names <-  c("qseqid",
-                       "sgi",
-                       "saccver",
-                       "mismatch",
-                       "sstart",
-                       "send",
-                       "staxids")
-
-    # make a tibble to store blast output and add column names
-    append_table <- tibble::as_tibble(data.frame(matrix(nrow=0,ncol=length(column_names))))
-    colnames(append_table) <- column_names
-
-
+    
+    # make a tibble to store blast output 
+    # -outfmt 6 ...
+    append_table <-
+      tibble::tibble("qseqid" = character(0),
+                     "sgi" = character(0),
+                     "saccver" = character(0),
+                     "mismatch" = character(0),
+                     "sstart" = character(0),
+                     "send" = character(0),
+                     "staxids" = character(0))
+    
   } else {
-
+    
+    message('Previous primer blast files found. Continuing from there.')
+    
     fasta_path = left_to_blast_path
     append_table = read.csv(append_table_path, colClasses = "character")
-
+    
   }
-
-  #
+  
   input <- readr::read_lines(fasta_path)
-
-
-  message(paste0('Reads will be blasted in subsets of up to ', max_to_blast,  ' read(s). To change this, modify max_to_blast.'))
-  message("")
-
+  
+  message('Reads will be blasted in subsets of up to ', max_to_blast,  ' read(s). ',
+          'To change this, modify max_to_blast.\n')
+  
   # take a subset of the primers and blast - keep subsetting until we finish
   while (length(input) > 0){
     # lines to subset
     remove <- max_to_blast*2
-
+    
     # if max_to_blast is more than the number of things to blast - take the number of things...
     if (length(input) < remove){
       remove <- length(input)
     }
-
+    
     # make and write subset to blast file
     to_blast = input[(0:remove)]
     writeLines(to_blast, to_blast_path)
-
+    
     # blast the subset
-    output_table <- run_primer_blastn(to_blast_path, blast_db_path, num_threads = num_threads, ...)
-
+    output_table <- run_primer_blastn(to_blast_path, db = blast_db_path, num_threads = num_threads, ...)
+    
     # add to previous results - if they exist
     append_table <- rbind(append_table, output_table)
-
+    
     # remove duplicates
-    append_table <- append_table %>% dplyr::group_by(saccver, sstart) %>% dplyr::filter(mismatch == min(mismatch))  %>% dplyr::distinct(saccver, sstart, .keep_all = TRUE)
-
+    append_table <- 
+      append_table %>% 
+      dplyr::group_by(saccver, sstart) %>% 
+      dplyr::filter(mismatch == min(mismatch)) %>% 
+      dplyr::distinct(saccver, sstart, .keep_all = TRUE)
+    
     # update the file that contains primers to be blasted
     input = input[-(0:remove)]
     na.omit(input)
     writeLines(input, left_to_blast_path)
-
+    
     #save results for later
     write.csv(append_table,
               file = append_table_path,
               row.names = FALSE)
   }
-
+  
   unlink(left_to_blast_path)
   unlink(to_blast_path)
-
+  
+  message('\nBlasting complete.\n')
+  message('Wrangling results.\n')
+  
   append_table <- read.csv(append_table_path, colClasses = "character")
-
+  
   # if output table is empty and give warning and stop
   if (nrow(append_table) <= 1){
-    stop("No blast output generated.  Either no hits were found, or your compute environment could not support memory needs of the blastn step.  Try modifying parameters to reduce blast returns (e.g. align, max_to_blast, evalue, etc.)")
-
+    
+    stop("No blast output generated. ",
+         "Either no hits were found, or your compute environment could not support memory needs of the blastn step. ",
+         "Try modifying parameters to reduce blast returns (e.g. align, max_to_blast, evalue, etc.)")
+    
   }
-
+  
   # parse amplicons from hits to forward and reverse hits
   # First isolate forward and reverse reads and rename columns
-  F_only <-  dplyr::rename(dplyr::filter(append_table, grepl('forward',qseqid)), gi=sgi, accession = saccver, mismatch_forward = mismatch, forward_start = sstart, forward_stop = send )
-  R_only <-  dplyr::rename(dplyr::filter(append_table, grepl('reverse',qseqid)), gi=sgi, accession = saccver, mismatch_reverse = mismatch, reverse_start = sstart, reverse_stop = send )
-
-
+  F_only <-
+    append_table %>%
+    dplyr::filter(grepl('forward', qseqid)) %>%
+    dplyr::rename(
+      gi = sgi,
+      accession = saccver,
+      mismatch_forward = mismatch,
+      forward_start = sstart,
+      forward_stop = send
+    )
+  
+  R_only <-
+    append_table %>%
+    dplyr::filter(grepl('reverse', qseqid)) %>%
+    dplyr::rename(
+      gi = sgi,
+      accession = saccver,
+      mismatch_reverse = mismatch,
+      reverse_start = sstart,
+      reverse_stop = send
+    )
+  
+  
   # keep only the accessions with forward and reverse primer hits, and add a column for product length
-  f_and_r <- dplyr::inner_join(x=F_only, y=R_only, by=c("accession", "gi", "staxids"))
-  f_and_r <- dplyr::mutate(f_and_r, product_length=0)
-
   f_and_r <-
-      dplyr::mutate(f_and_r,
-                    dplyr::across(c('forward_start', 'forward_stop', 'reverse_start', 'reverse_stop'), .fns = as.integer)
-      )
-
+    dplyr::inner_join(x = F_only,
+                      y = R_only,
+                      by = c("accession", "gi", "staxids")) %>% 
+    dplyr::mutate(product_length = 0, 
+                  dplyr::across(c('forward_start', 'forward_stop', 'reverse_start', 'reverse_stop'), .fns = as.integer)
+    )
+  
   # calculate product length if F and R primer pairs are in correct orientation to make amplicon
-  f_and_r <- dplyr::mutate(f_and_r, product_length = dplyr::case_when((forward_start < reverse_start & forward_start < forward_stop & reverse_stop < reverse_start ) ~ (as.numeric(reverse_start) - as.numeric(forward_start)),
-                                                                      (forward_start > reverse_start & forward_start > forward_stop & reverse_stop > reverse_start) ~ (as.numeric(forward_start) - as.numeric(reverse_start)),))
-
+  f_and_r <-
+    dplyr::mutate(f_and_r, product_length = dplyr::case_when(
+      (forward_start < reverse_start &
+         forward_start < forward_stop &
+         reverse_stop < reverse_start) ~ (as.numeric(reverse_start) - as.numeric(forward_start)),
+      (forward_start > reverse_start &
+         forward_start > forward_stop &
+         reverse_stop > reverse_start) ~ (as.numeric(forward_start) - as.numeric(reverse_start)),
+    ))
+  
   # remove all F and R primer pairs that would not make an amplicon
   f_and_r <- dplyr::filter(f_and_r, !is.na(product_length))
-
+  
   # if table is empty and give warning and stop
   if (nrow( f_and_r ) <= 1){
-    stop("No plausible amplicons were found.  Try modifying parameters to increase blast returns (e.g. num_fprimers_to_blast, num_rprimers_to_blast, align, evalue, etc.)")
-
+    
+    stop("No plausible amplicons were found. ",
+         "Try modifying parameters to increase blast returns (e.g. num_fprimers_to_blast, num_rprimers_to_blast, align, evalue, etc.)")
+    
   }
-
+  
   #save unfiltered seeds output
-  save_output_as_csv(f_and_r, "_unfiltered_get_seeds_local_output", out,
-                     metabarcode_name)
-
+  write.csv(f_and_r, 
+            file = file.path(out, paste0(metabarcode_name, "_unfiltered_get_seeds_local_output.csv")),
+            row.names = FALSE)
+  
   # keep only hits with acceptable product length
   f_and_r <- dplyr::filter(f_and_r, dplyr::between(product_length, minimum_length, maximum_length))
-
+  
   # keep hits with accaptable number of mismatches
   f_and_r <- dplyr::filter(f_and_r, mismatch_forward <= mismatch & mismatch_reverse <= mismatch)
-
+  
   # if table is empty and give warning and stop
   if (nrow( f_and_r ) <= 1){
-    stop("Filtering removed all plausible amplicons.  Try modifying parameters to allow more amplicons to pass filter (e.g. minimum_length, maximum_length, mismatch, etc.)")
+    stop("Filtering removed all plausible amplicons. ", 
+         "Try modifying parameters to allow more amplicons to pass filter (e.g. minimum_length, maximum_length, mismatch, etc.)")
   }
-
-  taxonomized_table <- get_taxonomizr_from_accession(f_and_r,
-                                                     accession_taxa_sql_path)
-
+  
+  # issue with taxonomizr remove.file that leads to warnings that can be omitted
+  taxonomized_table <- 
+    suppressWarnings(
+      get_taxonomizr_from_accession(f_and_r, accession_taxa_sql_path)
+    )
+  
   # save output
-  save_output_as_csv(taxonomized_table,
-                     "_filtered_get_seeds_local_output_with_taxonomy", out,
-                     metabarcode_name)
-
-
+  write.csv(taxonomized_table, 
+            file = file.path(out, paste0(metabarcode_name, "_filtered_get_seeds_local_output_with_taxonomy.csv")),
+            row.names = FALSE)
+  
   # Count distinct taxonomic ranks - includes NA
-  tax_rank_sum <- dplyr::summarise_at(taxonomized_table,c('superkingdom', 'phylum','class','order','family','genus','species'),dplyr::n_distinct)
-
+  tax_rank_sum <- 
+    taxonomized_table %>% 
+    dplyr::summarise(
+      dplyr::across(c('superkingdom', 'phylum','class','order','family','genus','species'), .fns = dplyr::n_distinct)
+    )
+  
   # Write output to blast_seeds_output
-  tax_rank_sum_table_path <- paste0(out, "/", metabarcode_name, "_filtered_get_seeds_local_unique_taxonomic_rank_counts.txt")
-  write.table(tax_rank_sum, file = tax_rank_sum_table_path, row.names = FALSE, col.names=TRUE, sep = ",")
-
+  write.csv(tax_rank_sum, 
+            file = file.path(out, paste0(metabarcode_name, "_filtered_get_seeds_local_unique_taxonomic_rank_counts.csv")),
+            row.names = FALSE)
+  
   unlink(append_table_path)
-
-  #return if you're supposed to
+  
+  message('Done.')
+  
+  # return if you're supposed to
   if (return_table) {
     return(taxonomized_table)
   }
-  else {
-    return(NULL)
-  }
+  
+  invisible(NULL)
+  
 }
-
-`%>%` <- magrittr::`%>%`

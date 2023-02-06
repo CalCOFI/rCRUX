@@ -142,6 +142,8 @@
 #'        for more information.
 #'
 #' @return a data.frame containing the same information as the .csv it generates
+#' 
+#' @importFrom magrittr `%>%`
 #' @export
 #' @examples
 #'
@@ -173,58 +175,75 @@
 
 
 get_seeds_remote <- function(forward_primer_seq, reverse_primer_seq,
-                            output_directory_path, metabarcode_name,
-                            accession_taxa_sql_path,
-                            organism, mismatch = 3,
-                            minimum_length = 5, maximum_length = 500,
-                            primer_specificity_database = "nt", ...,
-                            return_table = TRUE) {
-
-    # Start by making the directory and checking for the sql and whatnot.
-    out <- paste0(output_directory_path, "/get_seeds_remote/")
-    suppressWarnings(dir.create(output_directory_path))
-    suppressWarnings(dir.create(out))
-    if (!file.exists(accession_taxa_sql_path)) {
-      stop("accession_taxa_sql_path does not exist")
-    }
-
-    # Aggregate the primer_search return values
-    # Then parse_primer_hits all of them
-    raw_table <- iterative_primer_search(forward_primer_seq, reverse_primer_seq,
-                                          organism,
-                                          primer_specificity_database, ...)
-    # Throw an error if there are no results
-    if (nrow(raw_table) < 1) {
-      stop("Primer search returned no hits.")
-    }
-
-    filtered_table <- filter_primer_hits(raw_table,
-                                          forward_primer_seq, reverse_primer_seq,
-                                          mismatch, minimum_length,
-                                          maximum_length)
-    taxonomized_table <- get_taxonomizr_from_accession(filtered_table,
-                                                        accession_taxa_sql_path)
-
-    # save output
-    save_output_as_csv(taxonomized_table,
-                        "_filtered_get_seeds_remote_output_with_taxonomy", out,
-                        metabarcode_name)
-    save_output_as_csv(raw_table, "_unfiltered_get_seeds_remote_output_", out,
-                        metabarcode_name)
-
-    # Count distinct taxonomic ranks - includes NA
-    tax_rank_sum <- dplyr::summarise_at(taxonomized_table,c('superkingdom','phylum','class','order','family','genus','species'),dplyr::n_distinct)
-
-    # Write output to blast_seeds_output
-    tax_rank_sum_table_path <- paste0(out, "/", metabarcode_name, "_filtered_get_seeds_remote_unique_taxonomic_rank_counts.txt")
-    write.table(tax_rank_sum, file = tax_rank_sum_table_path, row.names = FALSE, col.names=TRUE, sep = ",")
-
-
-    #return if you're supposed to
-    if (return_table) {
-      return(taxonomized_table)
-    }
-    else {
-      return(NULL)
-    }
+                             output_directory_path, metabarcode_name,
+                             accession_taxa_sql_path,
+                             organism, mismatch = 3,
+                             minimum_length = 5, maximum_length = 500,
+                             primer_specificity_database = "nt", ...,
+                             return_table = TRUE) {
+  
+  # Check paths provided
+  if (!file.exists(accession_taxa_sql_path)) {
+    stop("accession_taxa_sql_path does not exist.\n",
+         "The path to the taxonomizr SQL file cannot be found. ",
+         "Please revise the path provided:\n", accession_taxa_sql_path)
+  }
+  
+  # Create output directories
+  out <- file.path(output_directory_path, "get_seeds_local")
+  dir.create(out, showWarnings = FALSE)
+  
+  message('Output directory: ', out, '\n')
+  
+  # Aggregate the primer_search return values
+  # Then parse_primer_hits all of them
+  raw_table <- 
+    iterative_primer_search(forward_primer_seq, reverse_primer_seq,
+                            organism,
+                            primer_specificity_database, ...)
+  
+  # Throw an error if there are no results
+  if (nrow(raw_table) < 1) {
+    stop("Primer search returned no hits.")
+  }
+  
+  filtered_table <- 
+    filter_primer_hits(raw_table,
+                       forward_primer_seq, reverse_primer_seq,
+                       mismatch, minimum_length,
+                       maximum_length)
+  
+  taxonomized_table <- 
+    get_taxonomizr_from_accession(filtered_table,
+                                  accession_taxa_sql_path)
+  
+  # save output
+  write.csv(taxonomized_table,
+            file = file.path(out, paste0(metabarcode_name, "_filtered_get_seeds_remote_output_with_taxonomy.csv")),
+            row.names = FALSE)
+  
+  write.csv(raw_table,
+            file = file.path(out, paste0(metabarcode_name, "_unfiltered_get_seeds_remote_output.csv")),
+            row.names = FALSE)
+  
+  # Count distinct taxonomic ranks - includes NA
+  tax_rank_sum <- 
+    taxonomized_table %>% 
+    dplyr::summarise(
+      dplyr::across(c('superkingdom', 'phylum','class','order','family','genus','species'), .fns = dplyr::n_distinct)
+    )
+  
+  # Write output to blast_seeds_output
+  write.csv(tax_rank_sum,
+            file = file.path(out, paste0(metabarcode_name, "_filtered_get_seeds_remote_unique_taxonomic_rank_counts.csv")),
+            row.names = FALSE)
+  
+  
+  #return if you're supposed to
+  if (return_table) {
+    return(taxonomized_table)
+  }
+  
+  invisible(NULL)
+  
 }
