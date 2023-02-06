@@ -1,4 +1,3 @@
-
 #' Query a pair of primers using ncbi's Primer-BLAST, if primers contain iupac
 #'
 #' #PrimerTree
@@ -37,18 +36,6 @@ primer_search = function(forward, reverse, num_permutations=25, ..., .parallel=F
   plyr::alply(primers, .margins=1, .expand=F, .parallel=.parallel, .progress=.progress,
         function(row) BLAST_primer(row$forward, row$reverse, ...))
 }
-iupac = list( "M" = list("A", "C"),
-              "R" = list("A", "G"),
-              "W" = list("A", "T"),
-              "S" = list("C", "G"),
-              "Y" = list("C", "T"),
-              "K" = list("G", "T"),
-              "V" = list("A", "C", "G"),
-              "H" = list("A", "C", "T"),
-              "D" = list("A", "G", "T"),
-              "B" = list("C", "G", "T"),
-              "N" = list("A", "C", "G", "T"),
-              "I" = list("A", "T", "C"))
 
 enumerate_primers = function(forward, reverse){
   forward_primers = enumerate_ambiguity(forward)
@@ -57,17 +44,32 @@ enumerate_primers = function(forward, reverse){
                          each=length(forward_primers)),
              stringsAsFactors = FALSE)
 }
+
 enumerate_ambiguity = function(sequence){
+  
+  iupac = list( "M" = list("A", "C"),
+                "R" = list("A", "G"),
+                "W" = list("A", "T"),
+                "S" = list("C", "G"),
+                "Y" = list("C", "T"),
+                "K" = list("G", "T"),
+                "V" = list("A", "C", "G"),
+                "H" = list("A", "C", "T"),
+                "D" = list("A", "G", "T"),
+                "B" = list("C", "G", "T"),
+                "N" = list("A", "C", "G", "T"),
+                "I" = list("A", "T", "C"))
+  
   search_regex = paste(names(iupac), collapse='|')
   locs = stringr::str_locate_all(sequence, search_regex)
   sequences = list()
   count = 1
   for (i in seq_len(nrow(locs[[1]]))){
     loc = locs[[1]][i,]
-    ambiguity = str_sub(sequence, loc[1], loc[2])
+    ambiguity = stringr::str_sub(sequence, loc[1], loc[2])
     for(type in iupac[[ambiguity]]){
       new_seq = sequence
-      str_sub(new_seq, loc[1], loc[2]) <- type
+      stringr::str_sub(new_seq, loc[1], loc[2]) <- type
       sequences[[count]] = enumerate_ambiguity(new_seq)
       count = count + 1
     }

@@ -50,3 +50,4 @@ blast_test_*
 new_seeds_test
 large_test
 utility.r
+inst/doc
