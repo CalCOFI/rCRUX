@@ -218,5 +218,5 @@ get_fasta_no_hyp <- function(dupt, file_out_dir, metabarcode_name) {
   fasta <- character(nrow(dupt_no_hiyp) * 2)
   fasta[c(TRUE, FALSE)] <- paste0(">", dupt_no_hiyp$accession)
   fasta[c(FALSE, TRUE)] <- dupt_no_hiyp$sequence
-  writeLines(fasta, file.path(file_out_dir, paste0(metabarcode_name, "_.fasta")))
+  writeLines(fasta, file.path(file_out_dir, paste0(metabarcode_name, ".fasta")))
 }
