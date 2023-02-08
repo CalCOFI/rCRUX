@@ -146,11 +146,11 @@ blast_seeds <- function(seeds_output_path, blast_db_path, accession_taxa_sql_pat
     options(warn = warnings)
   }
 
-  output_dir <- paste(output_directory_path, "blast_seeds_output", sep = "/")
-  save_dir <- paste(output_directory_path, "blast_seeds_save", sep = "/")
+  output_dir <- file.path(output_directory_path, "blast_seeds_output")
+  save_dir <- file.path(output_directory_path, "blast_seeds_save")
 
   # if run failed before any blast output delete save_dir
-  output_table_path <- paste(save_dir, "output_table.txt", sep = "/")
+  output_table_path <- file.path(save_dir, "output_table.txt")
   if (file.exists(output_table_path) & file.size(output_table_path) < 5){
      unlink(save_dir, recursive=TRUE)
   }
@@ -172,7 +172,7 @@ blast_seeds <- function(seeds_output_path, blast_db_path, accession_taxa_sql_pat
 
 
   # Write output_table to dir/blast_seeds_output/summary.csv
-  summary_csv_path <- paste(output_dir, "summary.csv", sep = "/")
+  summary_csv_path <- file.path(output_dir, "summary.csv")
   write.csv(output_table, file = summary_csv_path, row.names = FALSE)
 
   # Write a fasta
@@ -184,29 +184,29 @@ blast_seeds <- function(seeds_output_path, blast_db_path, accession_taxa_sql_pat
   taxa_table <-dplyr::slice(taxa_table,-1)
 
   # Write the thing
-  taxa_table_path <- paste0(output_dir, "/", metabarcode_name, "_taxonomy.txt")
+  taxa_table_path <- file.path(output_dir, paste0 (metabarcode_name, "_taxonomy.txt"))
   write.table(taxa_table, file = taxa_table_path, row.names = FALSE, col.names=FALSE, sep = "\t")
 
   # Count distinct taxonomic ranks - includes NA - some variation here
   tax_rank_sum <- dplyr::summarise_at(output_table,c('superkingdom','phylum','class','order','family','genus','species'),dplyr::n_distinct)
 
   # Write output to blast_seeds_output
-  tax_rank_sum_table_path <- paste0(output_dir, "/", metabarcode_name, "_blast_seeds_summary_unique_taxonomic_rank_counts.txt")
+  tax_rank_sum_table_path <- file.path(output_dir, paste0(metabarcode_name, "_blast_seeds_summary_unique_taxonomic_rank_counts.txt"))
   write.table(tax_rank_sum, file = tax_rank_sum_table_path, row.names = FALSE, col.names=TRUE, sep = ",")
 
 
   # Read condensed vectors and expand them
   if (expand_vectors) {
-    too_many_ns_path <- paste(save_dir, "too_many_ns.txt", sep = "/")
+    too_many_ns_path <- file.path(save_dir, "too_many_ns.txt")
     too_many_ns_indices <- as.numeric(readLines(too_many_ns_path))
     too_many_ns <- blast_seeds[too_many_ns_indices, ]
-    too_many_ns_csv_path <- paste(output_dir, "too_many_ns.csv", sep = "/")
+    too_many_ns_csv_path <- file.path(output_dir, "too_many_ns.csv")
     write.csv(too_many_ns, file = too_many_ns_csv_path, row.names = FALSE)
 
-    blastdbcmd_failed_path <- paste(save_dir, "blastdbcmd_failed.txt", sep = "/")
+    blastdbcmd_failed_path <- file.path(save_dir, "blastdbcmd_failed.txt")
     blastdbcmd_failed_indices <- as.numeric(readLines(blastdbcmd_failed_path))
     blastdbcmd_failed <- blast_seeds[blastdbcmd_failed_indices, ]
-    blastdbcmd_failed_csv_path <- paste(output_dir, "blastdbcmd_failed.csv", sep = "/")
+    blastdbcmd_failed_csv_path <- file.path(output_dir, "blastdbcmd_failed.csv")
     write.csv(blastdbcmd_failed, file = blastdbcmd_failed_csv_path, row.names = FALSE)
   }
   unlink(save_dir, recursive=TRUE)
@@ -218,5 +218,5 @@ get_fasta_no_hyp <- function(dupt, file_out_dir, metabarcode_name) {
   fasta <- character(nrow(dupt_no_hiyp) * 2)
   fasta[c(TRUE, FALSE)] <- paste0(">", dupt_no_hiyp$accession)
   fasta[c(FALSE, TRUE)] <- dupt_no_hiyp$sequence
-  writeLines(fasta, paste0(file_out_dir, "/", metabarcode_name, "_.fasta"))
+  writeLines(fasta, file.path(file_out_dir, paste0(metabarcode_name, "_.fasta")))
 }
