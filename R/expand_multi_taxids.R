@@ -14,13 +14,19 @@
 #'
 #'
 #' @param output_table
+#'
 #' @param max_to_blast passed to [rCRUX::blast_datatable()] and is the maximum
 #'        number of entries to pass to blastcmdb.
 #'        The default is max_to_blast = 1000 - the optimal number of reads to
 #'        blast will depend on the user's environment (available RAM) and the
 #'        number of possible hits (determined by marker and parameters)
+#' @param blast_db_path a directory containing one or more blast-formatted database.
+#'        For multiple blast databases, separate them with a space and add an extra set of quotes.
+#'        (e.g blast_db_path <- "/my/ncbi_nt/nt" or blast_db_path <- '"/my/ncbi_nt/nt  /my/ncbi_ref_euk_rep_genomes/ref_euk_rep_genomes"')
+#' @param ncbi_bin the directory that the blast+ suite is in. If NULL, the
+#'        program will use your PATH environmental variable to locate them
 #'
-#' @return NULL
+#' @return an output table
 #'
 #' @export
 #' @examples
@@ -29,7 +35,7 @@
 #'
 
 
-expand_multi_taxids <- function(output_table, max_to_blast){
+expand_multi_taxids <- function(output_table, max_to_blast, blast_db_path, ncbi_bin = NULL){
 
   #Identify rows with multiple ids and filter into new dataframe
   multi_taxids <- dplyr::filter(output_table, grepl(';', BLAST_db_taxids))
@@ -52,11 +58,20 @@ expand_multi_taxids <- function(output_table, max_to_blast){
       find <- paste0(subset, collapse = ",")
 
       # send accessions through blastdbcmd
-      expand_multi_taxids_out <- system2("blastdbcmd", args = c("-db", blast_db_path,
+      if (is.null(ncbi_bin)) {
+          expand_multi_taxids_out <- system2("blastdbcmd", args = c("-db", blast_db_path,
                                                              "-dbtype", "nucl",
                                                              "-entry", find,
                                                              "-outfmt", "'%a %T'"),
                                       stdout = TRUE, stderr = FALSE)
+      } else {
+          blastdbcmd_name <- paste0(ncbi_bin, "/blastdbcmd")
+          expand_multi_taxids_out <- system2(blastdbcmd_name, args = c("-db", blast_db_path,
+                                                             "-dbtype", "nucl",
+                                                             "-entry", find,
+                                                             "-outfmt", "'%a %T'"),
+                                      stdout = TRUE, stderr = FALSE)
+      }
 
       expand_multi_taxids_output <- c(expand_multi_taxids_out, expand_multi_taxids_output)
       list <- list[!(list %in% subset)]

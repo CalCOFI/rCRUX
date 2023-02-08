@@ -324,7 +324,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
   output_table <- expand_multi_taxids(output_table, max_to_blast)
 
     output_table_taxonomy <-
-      get_taxonomizr_from_accession(output_table, accession_taxa_sql_path)
+      get_taxonomizr_from_accession(output_table, accession_taxa_sql_path, blast_db_path, ncbi_bin = NULL)
 
     return(output_table_taxonomy)
 }
