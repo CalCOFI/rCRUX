@@ -164,7 +164,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     }
     else if (rank == all) {
 
-      sample_indices <- blast_seeds_m$accession
+      sample_indices <- unsampled_indices
 
     }
     else {
