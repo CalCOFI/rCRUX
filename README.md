@@ -790,6 +790,7 @@ be used to make [blast_datatable](https://limey-bean.github.io/blast_datatable) 
 + passed to [blast_datatable](https://limey-bean.github.io/blast_datatable) is the data column
         representing the taxonomic rank to randomly sample.
 +       The default is rank = 'genus' - Note: sampling a lower rank  (e.g. species) will generate more total hits and take more time, conversely sampling a higher rank (e.g. family) will generate fewer total hits and take less time.
++ - Note: It is possible to blast all seeds using rank = 'all'. This may take a very long time but will produce the most complete output.
 **ncbi_bin**
 + passed to [run_blastdbcmd](https://limey-bean.github.io/run_blastdbcmd)
         and [run_blastn](https://limey-bean.github.io/run_blastn)is
@@ -813,7 +814,7 @@ be used to make [blast_datatable](https://limey-bean.github.io/blast_datatable) 
         hits to return per query blasted.
 +        The default is align = '50000'
 **minimum_length**
-+ removes each row that has a value less thanminimum_length in the product_length column.
++ removes each row that has a value less than the minimum_length in the product_length column.
 +         The default is minimum_length = 5
 **maximum_length**
 + removes each row that has a value greater than maximum_length in the product_length column
