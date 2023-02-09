@@ -14,27 +14,22 @@
 #' @return a fasta-formatted character vector
 #' @export
 run_blastdbcmd <- function(query_row, db, ncbi_bin = NULL) {
+  
   # Extract arguments
   accession <- query_row$accession
   forward <- as.numeric(query_row$forward_stop)
   reverse <- as.numeric(query_row$reverse_stop)
   
-  # Massage forward and reverse
-  if (forward < reverse) {
-    forward <- forward + 1
-    reverse <- reverse - 1
-  }
-  else {
-    # Swap them
+  # Flip sequence range values if required
+  if (forward > reverse){
     temp <- forward
     forward <- reverse
     reverse <- temp
-    
-    # Tighten
-    # This could be done in fewer lines but I expanded it for clarity
-    forward <- forward + 1
-    reverse <- reverse - 1
   }
+  
+  # Massage/extend forward and reverse range values
+  forward <- forward + 1
+  reverse <- reverse - 1
   
   seq_range <- paste0(forward, "-", reverse)
   
@@ -45,6 +40,8 @@ run_blastdbcmd <- function(query_row, db, ncbi_bin = NULL) {
   }
   
   # run blastdbcmd, suppress status warning and use them outside of function
+  # if the function returns a status other than 0 (successful), the value
+  # with have an attribute 'status' .. attr(result, 'status')
   suppressWarnings(
     system2(blastdbcmd, 
             args = c("-db", db,

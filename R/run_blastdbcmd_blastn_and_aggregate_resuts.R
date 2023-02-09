@@ -23,8 +23,7 @@
 #'        following: ncbi_bin = "/my/local/ncbi-blast-2.10.1+/bin/".
 #' @param too_many_ns a vector of indices that result
 #'        in a fasta with too many Ns
-#' @param db the type of blast db - e.g. nt
-#' @param db_dir path to the blast db
+#' @param db path to the blast db
 #' @param blastdbcmd_failed a vector of indices not found in the local
 #'        database
 #' @param unsampled_indices the indices that need to be sampled
@@ -40,13 +39,12 @@
 #' @export
 
 run_blastdbcmd_blastn_and_aggregate_resuts <-
-  function(sample_indices = sample_indices,
+  function(sample_indices,
            save_dir,
            blast_seeds_m,
            ncbi_bin = NULL,
            db,
            too_many_ns,
-           db_dir,
            blastdbcmd_failed,
            unsampled_indices,
            output_table,
@@ -54,9 +52,7 @@ run_blastdbcmd_blastn_and_aggregate_resuts <-
            num_rounds,
            ...) {
     
-    
-    
-    # run blastdbcmd on each
+    # Run blastdbcmd on each sample index
     # sort results into appropriate buckets
     aggregate_fasta <- NULL
     message(paste("Running blastdbcmd on", length(sample_indices), "samples.\n"))
@@ -64,16 +60,12 @@ run_blastdbcmd_blastn_and_aggregate_resuts <-
     
     for (index in sample_indices) {
       
-      fasta <- suppressWarnings(run_blastdbcmd(blast_seeds_m[index, ], db, ncbi_bin = ncbi_bin))
-      
-      # Maybe in these cases we can just append directly to output?
-      # room for improvement here...
-      # Well, in cases where the command has a non-0 exit status,
-      # system2 sometimes (always?) returns a character vector of length 0
-      # This causes an error because there are no characters to check, so
-      # the if has nothing to operate on. This kludgey `or` fixes that.
-      
-      # Check status (if attribute present) and if not 0 - blastdbcmd
+      fasta <- 
+        run_blastdbcmd(query_row = blast_seeds_m[index, ], 
+                       db = db, 
+                       ncbi_bin = ncbi_bin)
+
+      # Check status (if attribute present) and if not 0 - blastdbcmd failed
       blastdbcmd_failed_status <- 
         !is.null(attr(fasta, 'status')) && attr(fasta, 'status') != 0
       
@@ -96,7 +88,7 @@ run_blastdbcmd_blastn_and_aggregate_resuts <-
     save_state(save_dir = save_dir,
                output_table = output_table, 
                unsampled_indices = unsampled_indices, 
-               too_many_ns =too_many_ns,
+               too_many_ns = too_many_ns,
                blastdbcmd_failed = blastdbcmd_failed, 
                num_rounds = num_rounds, 
                blast_seeds_m = blast_seeds_m)
@@ -104,12 +96,15 @@ run_blastdbcmd_blastn_and_aggregate_resuts <-
     if (!is.character(aggregate_fasta)) {
       #message("aggregate_fasta has value ", aggregate_fasta)
       message("No useable accession numbers. Proceeding to next round.")
-      
     }
     else {
       
       # run blastn and aggregate results
-      blastn_output <- run_blastn(fasta = aggregate_fasta, db_dir = db, ncbi_bin = ncbi_bin, ...)
+      blastn_output <- 
+        run_blastn(fasta = aggregate_fasta, 
+                   db = db, 
+                   ncbi_bin = ncbi_bin, 
+                   ...)
       
       if (nrow(blastn_output) == 0 && length(unsampled_indices) > 0) {
         
@@ -126,7 +121,7 @@ run_blastdbcmd_blastn_and_aggregate_resuts <-
       }
       else {
         
-        message(nrow(blastn_output), " blast hits returned.")
+        message('  ', nrow(blastn_output), " blast hits returned.")
         
       }
       

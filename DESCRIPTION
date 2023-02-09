@@ -28,14 +28,15 @@ Imports:
     tidyr,
     stringr,
     lubridate,
-    primerTree,
     progress,
     zoo,
     readr,
     XML,
     httr,
     plyr,
-    phylotools
+    phylotools,
+    rlang,
+    purrr
 Encoding: UTF-8
 #LazyData: true
 Roxygen: list(markdown = TRUE)

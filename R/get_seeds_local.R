@@ -39,7 +39,7 @@
 #' a PCR product). These hits are written to a file with the suffix
 #' `_unfiltered_get_seeds_local_output.csv`.  These hits are further filtered for
 #' length and number of mismatches. Taxonomy is appended to these filtered hits
-#' using [rCRUX::get_taxonomizr_from_accession()]. The results are written to
+#' using [rCRUX::get_taxonomy_from_accession()]. The results are written to
 #' to a file with the suffix `_filtered_get_seeds_local_output_with_taxonomy.csv`.
 #' The number of unique instances for each rank in the taxonomic path for the
 #' filtered hits are tallied (NAs are counted once per rank) and written to a
