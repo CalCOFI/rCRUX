@@ -143,10 +143,9 @@
 #'
 #' @return a data.frame containing the same information as the .csv it generates
 #' 
-#' @importFrom magrittr `%>%`
 #' @export
 #' @examples
-#'
+#'\dontrun{
 #' forward_primer_seq = "TAGAACAGGCTCCTCTAG"
 #' reverse_primer_seq =  "TTAGATACCCCACTATGC"
 #' output_directory_path <- "/my/directory/12S_V5F1_remote_111122_modified_params"
@@ -170,10 +169,7 @@
 #'
 #' # This results in approximately 111500 blast seed returns (there is some variation due to database updates, etc.), note the default generated approximately 1047.
 #' # This assumes the user is not throttled by memory limitations.
-#'
-#'
-
-
+#'}
 get_seeds_remote <- function(forward_primer_seq, reverse_primer_seq,
                              output_directory_path, metabarcode_name,
                              accession_taxa_sql_path,
@@ -214,7 +210,7 @@ get_seeds_remote <- function(forward_primer_seq, reverse_primer_seq,
                        maximum_length)
   
   taxonomized_table <- 
-    get_taxonomizr_from_accession(filtered_table,
+    get_taxonomy_from_accession(filtered_table,
                                   accession_taxa_sql_path)
   
   # save output

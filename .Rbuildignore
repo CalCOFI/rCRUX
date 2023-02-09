@@ -8,3 +8,6 @@
 ^outputs$
 ^LICENSE\.md$
 ^.*\.Rproj$
+^inst/rCRUXPlumberAPI
+^inst/rCruxShiny
+^inst/shauns_notes
