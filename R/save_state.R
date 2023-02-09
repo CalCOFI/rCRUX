@@ -20,20 +20,20 @@
 save_state <- function(save_dir, output_table, unsampled_indices, too_many_ns,
                         blastdbcmd_failed, num_rounds, blast_seeds_m) {
     if (!dir.exists(save_dir)) {
-        dir.create(save_dir)
+        dir.create(save_dir, showWarnings = FALSE)
     }
     write.csv(output_table,
-            file = paste(save_dir, "output_table.txt", sep = "/"),
+            file = file.path(save_dir, "output_table.txt"),
             row.names = FALSE)
     write.csv(blast_seeds_m,
-            file = paste(save_dir, "blast_seeds_passed_filter.txt", sep = "/"),
+            file = file.path(save_dir, "blast_seeds_passed_filter.txt"),
             row.names = FALSE)
     writeLines(as.character(unsampled_indices),
-                con = paste(save_dir, "unsampled_indices.txt", sep = "/"))
+                con = file.path(save_dir, "unsampled_indices.txt"))
     writeLines(as.character(too_many_ns),
-                con = paste(save_dir, "too_many_ns.txt", sep = "/"))
+                con = file.path(save_dir, "too_many_ns.txt"))
     writeLines(as.character(blastdbcmd_failed),
-                con = paste(save_dir, "blastdbcmd_failed.txt", sep = "/"))
+                con = file.path(save_dir, "blastdbcmd_failed.txt"))
     writeLines(as.character(num_rounds),
-                con = paste(save_dir, "num_rounds.txt", sep = "/"))
+                con = file.path(save_dir, "num_rounds.txt"))
 }

@@ -1,199 +1,214 @@
-# ---
-#   title: "Using-rCRUX-mock-DB"
-# output: rmarkdown::html_vignette
-# vignette: >
-#   %\VignetteIndexEntry{Using-rCRUX-mock-DB}
-# %\VignetteEngine{knitr::rmarkdown}
-# %\VignetteEncoding{UTF-8}
-# ---
-#   
-#   ```{r, include = FALSE}
-# knitr::opts_chunk$set(
-#   collapse = TRUE,
-#   comment = "#>"
-# )
-# ```
-# 
-# ```{r setup}
-# library(rCRUX)
-# ```
-# 
-# Mock NCBI and taxonomizr DBs are included with rCRUX. They contain very few 16S, 18S and 
-# MiFish 12S locus sequences and are using for testing rCRUX.
-# 
-# ```{r}
-# cat(sep = "\n",
-#     list.files(recursive = TRUE,
-#                system.file(package = 'rCRUX', 'mock-db')
-#     )
-# )
-# ```
-# 
-# ### 16S example
-# 
-# Setup 
-# 
-# ```{r}
-# # Create a temp output directory
-# output_directory_path_top <- tempdir()
-# output_directory_path <- file.path(output_directory_path_top, '16S')
-# dir.create(output_directory_path, showWarnings = FALSE)
-# 
-# # Source DBs
-# # Need to tag on 'mock-db' the end of 'mock-db/blastdb' file path
-# blast_db_path <- file.path(system.file(package = 'rCRUX', 'mock-db/blastdb'), 'mock-db')
-# accession_taxa_sql_path <- system.file(package = 'rCRUX', 'mock-db/taxonomizr-ncbi-db-small.sql')
-# 
-# # Primers
-# # Nitrospira F probe, Bacteria 1492R
-# forward_primer_seq <- 'AGAGGAGCGCGGAATTCC'
-# reverse_primer_seq <- 'TACCTTGTTACGACTT'
-# 
-# metabarcode_name <- "Nitrospira"
-# ```
-# 
-# ```{r}
-# get_seeds_local(forward_primer_seq = forward_primer_seq,
-#                 reverse_primer_seq = reverse_primer_seq,
-#                 output_directory_path = output_directory_path,
-#                 metabarcode_name = metabarcode_name,
-#                 accession_taxa_sql_path = accession_taxa_sql_path,
-#                 blast_db_path = blast_db_path, 
-#                 minimum_length = 5, 
-#                 maximum_length = 900,
-#                 return_table = FALSE)
-# ```
-# 
-# 
-# ```{r}
-# # files in get_seeds_local/
-# cat(sep = "\n",
-#     list.files(file.path(output_directory_path, 'get_seeds_local'))
-# )
-# ```
-# 
-# ```{r}
-# read.csv(
-#   file.path(output_directory_path, 'get_seeds_local/Nitrospira_filtered_get_seeds_local_output_with_taxonomy.csv') 
-# )
-# ```
-# 
-# ```{r}
-# seeds_output_path <- 
-#   file.path(output_directory_path, 'get_seeds_local/Nitrospira_filtered_get_seeds_local_output_with_taxonomy.csv') 
-# 
-# blast_seeds(seeds_output_path = seeds_output_path,
-#             blast_db_path = blast_db_path,
-#             accession_taxa_sql_path = accession_taxa_sql_path,
-#             output_directory_path = output_directory_path,
-#             metabarcode_name = metabarcode_name, 
-#             maximum_length = 900)
-# ```
-# 
-# ```{r}
-# # files in blast_seeds_output/
-# cat(sep = "\n",
-#     list.files(file.path(output_directory_path, 'blast_seeds_output'))
-# )
-# ```
-# 
-# ```{r}
-# read.csv(
-#   file.path(output_directory_path, 'blast_seeds_output/summary.csv') 
-# )
-# ```
-# 
-# ```{r}
-# summary_path <- file.path(output_directory_path, "blast_seeds_output/summary.csv")
-# 
-# derep_and_clean_db(output_directory_path = output_directory_path,
-#                    summary_path = summary_path, 
-#                    metabarcode_name = metabarcode_name)
-# ```
-# 
-# ```{r}
-# # files in derep_and_clean_db/
-# cat(sep = "\n",
-#     list.files(file.path(output_directory_path, 'derep_and_clean_db'))
-# )
-# ```
-# 
-# ### 12S
-# 
-# ```{r}
-# # Create a temp output directory
-# output_directory_path <- file.path(output_directory_path_top, '12S')
-# dir.create(output_directory_path, showWarnings = FALSE)
-# 
-# # 12S probes
-# forward_primer_seq = "TAGAACAGGCTCCTCTAG"
-# reverse_primer_seq =  "TTAGATACCCCACTATGC"
-# 
-# metabarcode_name <- "12S"
-# ```
-# 
-# ```{r}
-# get_seeds_local(forward_primer_seq = forward_primer_seq,
-#                 reverse_primer_seq = reverse_primer_seq,
-#                 output_directory_path = output_directory_path,
-#                 metabarcode_name = metabarcode_name,
-#                 accession_taxa_sql_path = accession_taxa_sql_path,
-#                 blast_db_path = blast_db_path, 
-#                 minimum_length = 5, 
-#                 maximum_length = 900,
-#                 return_table = FALSE)
-# ```
-# 
-# 
-# ```{r}
-# # files in get_seeds_local/
-# cat(sep = "\n",
-#     list.files(file.path(output_directory_path, 'get_seeds_local'))
-# )
-# ```
-# 
-# ```{r}
-# read.csv(
-#   file.path(output_directory_path, 'get_seeds_local/12S_filtered_get_seeds_local_output_with_taxonomy.csv') 
-# )
-# ```
-# 
-# ```{r}
-# seeds_output_path <- 
-#   file.path(output_directory_path, 'get_seeds_local/12S_filtered_get_seeds_local_output_with_taxonomy.csv') 
-# 
-# blast_seeds(seeds_output_path = seeds_output_path,
-#             blast_db_path = blast_db_path,
-#             accession_taxa_sql_path = accession_taxa_sql_path,
-#             output_directory_path = output_directory_path,
-#             metabarcode_name = metabarcode_name, 
-#             maximum_length = 500)
-# ```
-# 
-# ```{r}
-# # files in blast_seeds_output/
-# cat(sep = "\n",
-#     list.files(file.path(output_directory_path, 'blast_seeds_output'))
-# )
-# ```
-# 
-# ```{r}
-# read.csv(
-#   file.path(output_directory_path, 'blast_seeds_output/summary.csv') 
-# )
-# ```
-# 
-# ```{r}
-# summary_path <- file.path(output_directory_path, "blast_seeds_output/summary.csv")
-# 
-# derep_and_clean_db(output_directory_path = output_directory_path,
-#                    summary_path = summary_path, 
-#                    metabarcode_name = metabarcode_name)
-# ```
-# 
-# ```{r}
-# # files in derep_and_clean_db/
-# cat(sep = "\n",
-#     list.files(file.path(output_directory_path, 'derep_and_clean_db'))
-# )
-# ```
+---
+title: "Using-rCRUX-mock-DB"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using-rCRUX-mock-DB}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(rCRUX)
+```
+
+> This document will only be run if NCBI binaries are found with the user PATH
+
+```{r, include=F}
+knitr::opts_chunk$set(
+  eval = has_blast_plus_binaries('123')
+)
+```
+
+Mock NCBI and taxonomizr DBs are included with rCRUX. They contain very few 16S, 18S and 
+MiFish 12S locus sequences and are using for testing rCRUX.
+
+```{r}
+cat(sep = "\n",
+    list.files(recursive = TRUE,
+               system.file(package = 'rCRUX', 'mock-db')
+    )
+)
+```
+
+### 16S example
+
+Setup 
+
+```{r}
+# Create a temp output directory
+output_directory_path_top <- tempdir()
+output_directory_path <- file.path(output_directory_path_top, '16S')
+dir.create(output_directory_path, showWarnings = FALSE)
+
+# Source DBs
+# Need to tag on 'mock-db' the end of 'mock-db/blastdb' file path
+blast_db_path <- file.path(system.file(package = 'rCRUX', 'mock-db/blastdb'), 'mock-db')
+accession_taxa_sql_path <- system.file(package = 'rCRUX', 'mock-db/taxonomizr-ncbi-db-small.sql')
+
+# Primers
+# Nitrospira F probe, Bacteria 1492R
+forward_primer_seq <- 'AGAGGAGCGCGGAATTCC'
+reverse_primer_seq <- 'TACCTTGTTACGACTT'
+
+metabarcode_name <- "Nitrospira"
+```
+
+```{r}
+get_seeds_local(forward_primer_seq = forward_primer_seq,
+                reverse_primer_seq = reverse_primer_seq,
+                output_directory_path = output_directory_path,
+                metabarcode_name = metabarcode_name,
+                accession_taxa_sql_path = accession_taxa_sql_path,
+                blast_db_path = blast_db_path, 
+                minimum_length = 5, 
+                maximum_length = 900,
+                return_table = FALSE,
+                num_threads = 'max')
+```
+
+
+```{r}
+# files in get_seeds_local/
+cat(sep = "\n",
+    list.files(file.path(output_directory_path, 'get_seeds_local'))
+)
+```
+
+```{r}
+read.csv(
+  file.path(output_directory_path, 'get_seeds_local/Nitrospira_filtered_get_seeds_local_output_with_taxonomy.csv') 
+)
+```
+
+```{r}
+seeds_output_path <- 
+  file.path(output_directory_path, 'get_seeds_local/Nitrospira_filtered_get_seeds_local_output_with_taxonomy.csv') 
+
+blast_seeds(seeds_output_path = seeds_output_path,
+            blast_db_path = blast_db_path,
+            accession_taxa_sql_path = accession_taxa_sql_path,
+            output_directory_path = output_directory_path,
+            metabarcode_name = metabarcode_name, 
+            maximum_length = 900,
+            num_threads = 'max')
+```
+
+```{r}
+# files in blast_seeds_output/
+cat(sep = "\n",
+    list.files(file.path(output_directory_path, 'blast_seeds_output'))
+)
+```
+
+```{r}
+read.csv(
+  file.path(output_directory_path, 'blast_seeds_output/summary.csv') 
+)
+```
+
+```{r}
+summary_path <- file.path(output_directory_path, "blast_seeds_output/summary.csv")
+
+derep_and_clean_db(output_directory_path = output_directory_path,
+                   summary_path = summary_path, 
+                   metabarcode_name = metabarcode_name)
+```
+
+```{r}
+# files in derep_and_clean_db/
+cat(sep = "\n",
+    list.files(file.path(output_directory_path, 'derep_and_clean_db'))
+)
+```
+
+### 12S
+
+```{r}
+# Create a temp output directory
+output_directory_path_top <- tempdir()
+output_directory_path <- file.path(output_directory_path_top, '12S')
+dir.create(output_directory_path, showWarnings = FALSE)
+
+# Source DBs
+# Need to tag on 'mock-db' the end of 'mock-db/blastdb' file path
+blast_db_path <- file.path(system.file(package = 'rCRUX', 'mock-db/blastdb'), 'mock-db')
+accession_taxa_sql_path <- system.file(package = 'rCRUX', 'mock-db/taxonomizr-ncbi-db-small.sql')
+
+# 12S probes
+forward_primer_seq = "TAGAACAGGCTCCTCTAG"
+reverse_primer_seq =  "TTAGATACCCCACTATGC"
+
+metabarcode_name <- "12S"
+```
+
+```{r}
+get_seeds_local(forward_primer_seq = forward_primer_seq,
+                reverse_primer_seq = reverse_primer_seq,
+                output_directory_path = output_directory_path,
+                metabarcode_name = metabarcode_name,
+                accession_taxa_sql_path = accession_taxa_sql_path,
+                blast_db_path = blast_db_path, 
+                minimum_length = 5, 
+                maximum_length = 900,
+                return_table = FALSE)
+```
+
+```{r}
+# files in get_seeds_local/
+cat(sep = "\n",
+    list.files(file.path(output_directory_path, 'get_seeds_local'))
+)
+```
+
+```{r}
+read.csv(
+  file.path(output_directory_path, 'get_seeds_local/12S_filtered_get_seeds_local_output_with_taxonomy.csv') 
+)
+```
+
+```{r}
+seeds_output_path <- 
+  file.path(output_directory_path, 'get_seeds_local/12S_filtered_get_seeds_local_output_with_taxonomy.csv') 
+
+blast_seeds(seeds_output_path = seeds_output_path,
+            blast_db_path = blast_db_path,
+            accession_taxa_sql_path = accession_taxa_sql_path,
+            output_directory_path = output_directory_path,
+            metabarcode_name = metabarcode_name, 
+            maximum_length = 500)
+```
+
+```{r}
+# files in blast_seeds_output/
+cat(sep = "\n",
+    list.files(file.path(output_directory_path, 'blast_seeds_output'))
+)
+```
+
+```{r}
+read.csv(
+  file.path(output_directory_path, 'blast_seeds_output/summary.csv') 
+)
+```
+
+```{r}
+summary_path <- file.path(output_directory_path, "blast_seeds_output/summary.csv")
+
+derep_and_clean_db(output_directory_path = output_directory_path,
+                   summary_path = summary_path, 
+                   metabarcode_name = metabarcode_name)
+```
+
+```{r}
+# files in derep_and_clean_db/
+cat(sep = "\n",
+    list.files(file.path(output_directory_path, 'derep_and_clean_db'))
+)
+```

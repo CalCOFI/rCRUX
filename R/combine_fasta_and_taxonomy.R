@@ -31,6 +31,8 @@
 #'
 #' @export
 #' @examples
+#' 
+#' \dontrun{
 #'
 #' output_directory_path <- "/my/directory/12S_mifish"
 #' metabarcode_name <- "12S_mifish"
@@ -39,7 +41,7 @@
 #'
 #'
 #' combine_fasta_and_taxonomy(output_directory_path, metabarcode_name, fasta_path, taxonomy_path, accession_taxa_sql_path)
-#'
+#'}
 #'
 
 

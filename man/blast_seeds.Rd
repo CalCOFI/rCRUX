@@ -19,7 +19,7 @@ blast_seeds(
 )
 }
 \arguments{
-\item{seeds_output_path}{a path to a csv from get_seeds_local or get_seeds_remote
+\item{seeds_output_path}{a path to a csv from \code{get_seeds_local()} or \code{get_seeds_remote()}
 (e.g. seeds_output_path <- '/my/rCRUX_output_directory/12S_V5F1_filtered_get_seeds_remote_output_with_taxonomy.csv')}
 
 \item{blast_db_path}{a directory containing one or more blast-formatted database.
@@ -142,6 +142,8 @@ but not the local blast database. This is relevant for the results of
 }
 \examples{
 
+\dontrun{
+
 seeds_output_path <- "/my/directory/12S_V5F1_remote_111122_modified_params/blast_seeds_output/summary.csv"
 output_directory_path <- "/my/directory/12S_V5F1_remote_111122_modified_params"
 metabarcode_name <- "12S_V5F1"
@@ -159,6 +161,5 @@ blast_seeds(seeds_output_path,
 
 # using the rank of species will increase the number of total unique blast hits
 # modifying the max_to_blast submits fewer reads simultaneously and reduces overall RAM while extending the run
-
-
+}
 }

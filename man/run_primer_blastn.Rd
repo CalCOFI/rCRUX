@@ -2,13 +2,11 @@
 % Please edit documentation in R/run_primer_blastn.R
 \name{run_primer_blastn}
 \alias{run_primer_blastn}
-\title{Runs blastn with the input primer sequences converted to a primer_fasta file
-as a query}
+\title{Run blastn with a fasta file}
 \usage{
 run_primer_blastn(
   primer_fasta,
   db,
-  ncbi_bin = NULL,
   task = "blastn-short",
   word_size = 7,
   evalue = "3e+07",
@@ -16,7 +14,8 @@ run_primer_blastn(
   coverage = 90,
   perID = 50,
   reward = 2,
-  num_threads = NULL
+  num_threads = 1,
+  ncbi_bin = NULL
 )
 }
 \arguments{
@@ -26,17 +25,11 @@ run_primer_blastn(
 For multiple blast databases, separate them with a space and add an extra set of quotes.
 (e.g blast_db_path <- "/my/ncbi_nt/nt" or blast_db_path <- '"/my/ncbi_nt/nt  /my/ncbi_ref_euk_rep_genomes/ref_euk_rep_genomes"')}
 
-\item{ncbi_bin}{is the path to blast+ tools if not in the user's path.
-Specify only if blastn and blastdbcmd  are not in your path.
-The default is ncbi_bin = NULL - if not specified in path do the
-following: ncbi_bin = "/my/local/ncbi-blast-2.10.1+/bin/".}
+\item{task}{the task for blastn to perform. The default here is "blastn-short",
+which is optimized for searches with queries < 50 bp.}
 
-\item{task}{the task for blastn to perform - default here is "blastn_short",
-which is optimized for searches with queries < 50 bp}
-
-\item{word_size}{is the fragment size used for blastn search - smaller word
-sizes increase sensitivity and time of the search.
-The default is word_size =  7}
+\item{word_size}{is the fragment size used for blastn search. Smaller word
+sizes increase sensitivity and time of the search. The default is word_size =  7.}
 
 \item{evalue}{is the number of expected hits with a similar quality score
 found by chance. The default is evalue = '3e-7'.}
@@ -54,16 +47,20 @@ subject hits. The default is perID = 50.}
 
 \item{reward}{is the reward for nucleotide match. The default is reward = 2.}
 
-\item{num_threads}{is the number of CPUs to engage in the blastn search. The
-default num_treads = NULL, uses \code{\link[parallel:detectCores]{parallel::detectCores()}} to determine the user's
-number of CPUs automatically and use that for the value of -num_threads.}
+\item{num_threads}{number, the number of CPUs to engage in the blastn search. The
+value 'max' can be used and which uses \code{\link[parallel:detectCores]{parallel::detectCores()}} to determine
+the user's maximum number of CPUs automatically (use with caution).}
+
+\item{ncbi_bin}{is the path to blast+ tools if not in the user's PATH
+Specify only if blastn and blastdbcmd  are not in your path.
+The default is ncbi_bin = NULL - if not specified in path do the
+following: ncbi_bin = "/my/local/ncbi-blast-2.10.1+/bin/".}
 }
 \value{
 a tibble 'output_table' representing the blastn results
 }
 \description{
-Runs blastn with the input primer sequences converted to a primer_fasta file
-as a query
+Run blastn with a fasta file
 }
 \details{
 Calls blastn with a primer fasta file as the query. The user can not add
@@ -82,4 +79,20 @@ and at \href{https://www.ncbi.nlm.nih.gov/books/NBK279684/}{NCBI}.
 Note:
 The number of alignments returned for a given blast search is hardcoded at
 "-num_alignments 10000000".
+}
+\examples{
+
+temp_fasta <- tempfile(fileext = '.fasta')
+
+test_primers <-
+  c('>primer_forward', 'AGAGGAGCGCGGAATTCC', 
+  '>primer_reverse', 'TACCTTGTTACGACTT')
+  
+writeLines(test_primers, temp_fasta)
+
+blast_db_path <- file.path(system.file(package = 'rCRUX', 'mock-db/blastdb'), 'mock-db')
+
+# Returns a data.frame of results
+result <- run_primer_blastn(primer_fasta = temp_fasta, db = blast_db_path)
+
 }

@@ -8,3 +8,10 @@
 ^outputs$
 ^LICENSE\.md$
 ^.*\.Rproj$
+flowcharts
+inst/rCRUXPlumberAPI
+inst/rCruxShiny
+inst/shauns_notes
+inst/mock-db/names.dmp
+inst/mock-db/nodes.dmp
+inst/mock-db/taxonomizr-ncbi-db-raw.sql

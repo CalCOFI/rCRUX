@@ -1,7 +1,7 @@
 #' Query primer NCBI's Blast and generate a .csv to use for blast_seeds
 #'
 #' @description
-#' get_seeds_remote combines modified versions of [primerTree::primer_search()]
+#' get_seeds_remote combines modified versions of `primerTree::primer_search()`
 #' and primerTree's parse_primer to make [rCRUX::iterative_primer_search()]
 #' which is called to query NCBI's
 #' [primer BLAST](https://www.ncbi.nlm.nih.gov/tools/primer-blast/)
@@ -29,7 +29,7 @@
 #' or user modified length and number of mismatches parameters are retained.
 #'
 #' Taxonomy is appended to these filtered hits using
-#' [rCRUX::get_taxonomizr_from_accession()]. The results are written to
+#' [rCRUX::get_taxonomy_from_accession()]. The results are written to
 #' to file with the suffix `_filtered_get_seeds_remote_output_with_taxonomy.csv`.
 #' The number of unique instances for each rank in the taxonomic path for the
 #' filtered hits are tallied (NAs are counted once per rank) and written to a
@@ -47,13 +47,13 @@
 #' it equal to whatever you like.
 #'
 #' As of 2022-08-16, the primer blast GUI contains some options that are not
-#' implemented by [primerTree::primer_search()] and by extension [rCRUX::iterative_primer_search()]
+#' implemented by `primerTree::primer_search()` and by extension [rCRUX::iterative_primer_search()]
 #' primer_search doesn't include explicit documentation of allowed options, but
 #' it will quickly report if an option isn't allowed, so trial and error will
 #' not be very time consuming.
 #'
 #' Note:
-#' See [rCRUX::iterative_primer_search()] and [rCRUX::modifiedPrimerTree_Functions]
+#' See [rCRUX::iterative_primer_search()] and `rCRUX::modifiedPrimerTree_Functions`
 #' for additional run parameters not included below.
 #'
 #' Check NCBI's primer blast for additional search options**
@@ -138,15 +138,14 @@
 #'        this parameter can maximize primer hits, but can also lead to API run
 #'        throttling due to memory limitations
 #' @param ... additional arguments passed to primer_search, see
-#'        [primerTree::primer_search()] and [NCBI primer-blast tool]](https://www.ncbi.nlm.nih.gov/tools/primer-blast/)
+#'        `primerTree::primer_search()` and [NCBI primer-blast tool](https://www.ncbi.nlm.nih.gov/tools/primer-blast/)
 #'        for more information.
 #'
 #' @return a data.frame containing the same information as the .csv it generates
 #' 
-#' @importFrom magrittr `%>%`
 #' @export
 #' @examples
-#'
+#'\dontrun{
 #' forward_primer_seq = "TAGAACAGGCTCCTCTAG"
 #' reverse_primer_seq =  "TTAGATACCCCACTATGC"
 #' output_directory_path <- "/my/directory/12S_V5F1_remote_111122_modified_params"
@@ -170,10 +169,7 @@
 #'
 #' # This results in approximately 111500 blast seed returns (there is some variation due to database updates, etc.), note the default generated approximately 1047.
 #' # This assumes the user is not throttled by memory limitations.
-#'
-#'
-
-
+#'}
 get_seeds_remote <- function(forward_primer_seq, reverse_primer_seq,
                              output_directory_path, metabarcode_name,
                              accession_taxa_sql_path,
@@ -214,7 +210,7 @@ get_seeds_remote <- function(forward_primer_seq, reverse_primer_seq,
                        maximum_length)
   
   taxonomized_table <- 
-    get_taxonomizr_from_accession(filtered_table,
+    get_taxonomy_from_accession(filtered_table,
                                   accession_taxa_sql_path)
   
   # save output

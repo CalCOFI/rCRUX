@@ -12,7 +12,7 @@
 #' to convert entries into fasta files, passes them to blastn to query local
 #' blast formatted databases with those sequences. It compiles the results
 #' of blastn into a data.frame that it cleans and returns with taxonomy added
-#' using [rCRUX::get_taxonomizr_from_accession]. Additionally, it saves its
+#' using [rCRUX::get_taxonomy_from_accession]. Additionally, it saves its
 #' state as text files in a specified directory with each iteration, allowing
 #' the user to restart an interrupted run of [rCRUX::blast_seeds()].
 #'
@@ -51,7 +51,7 @@
 #' [rCRUX::save_state()]. Manually changing these files is not suggested as
 #' it can change the behavior of blast_datatable.
 #'
-#' Restarting an interrupted [rCRUX::blast_seed()] run:
+#' Restarting an interrupted [rCRUX::blast_seeds()] run:
 #' To restart from an incomplete blast_datatable, submit the previous command
 #' again. Do not modify the paths specified in the previous command, however
 #' parameter arguments (e.g. rank, max_to_blast) can be modified. blast_datable
@@ -96,13 +96,15 @@
 blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa_sql_path,
                             ncbi_bin = NULL, force_db = FALSE,
                             sample_size = 1, wildcards = "NNNN", rank = 'genus', max_to_blast = 1000, ...) {
-
-
-  if (!(check_db(blast_db_path,ncbi_bin) || force_db)) {
-    stop(blast_db_path, " is probably not a blast database.
-         Use force_db = TRUE to try it anyway.")
+  
+  check_blast_plus_installation(ncbi_bin = if('ncbi_bin' %in% names(list(...))) ncbi_bin else NULL)
+  check_blast_db(blast_db_path)
+  if (!file.exists(accession_taxa_sql_path)) {
+    stop("accession_taxa_sql_path does not exist.\n",
+         "The path to the taxonomizr SQL file cannot be found. ",
+         "Please revise the path provided:\n", accession_taxa_sql_path)
   }
-
+  
   # Default values for tracker variables
   num_rounds <- 1
   too_many_ns <- NULL
@@ -111,208 +113,219 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
   blast_seeds_m <- blast_seeds
   blast_seeds_m$blast_status <- "not_done"
   unsampled_indices <- seq_along(blast_seeds_m$accession)
-
-
-
+  
+  
   while (length(unsampled_indices) > 0) {
-
-
-      if (file.exists(paste(save_dir, "unsampled_indices.txt", sep = "/"))) {
-
-        rounds_path <- paste(save_dir, "num_rounds.txt", sep = "/")
-        num_rounds <- as.numeric(readLines(con = rounds_path))
-
-        ns_path <- paste(save_dir, "too_many_ns.txt", sep = "/")
-        too_many_ns <- as.numeric(readLines(con = ns_path))
-
-        blastdbcmd_failed_path <- paste(save_dir, "blastdbcmd_failed.txt", sep = "/")
-        blastdbcmd_failed <- as.numeric(readLines(con = blastdbcmd_failed_path))
-
-        unsampled_indices_path <-
-          paste(save_dir, "unsampled_indices.txt", sep = "/")
-        unsampled_indices <-
-          as.numeric(readLines(con = unsampled_indices_path))
-
-        output_table_path <- paste(save_dir, "output_table.txt", sep = "/")
-        output_table <- read.csv(output_table_path, colClasses = "character")
-
-
-        blast_seeds_m_path <- paste(save_dir, "blast_seeds_passed_filter.txt", sep = "/")
-        blast_seeds_m <- read.csv(blast_seeds_m_path, colClasses = "character")
-
-      }
-
-
-    # information about state of blast
-    message(" ")
-    message(paste("BLAST round", num_rounds))
-    message(paste(length(unsampled_indices), "indices left to process."))
-
-
-    # update status of blast seeds by labeling all reads no in the upsampled
+    
+    # Get previous information if they exist
+    unsampled_indicies_file <- file.path(save_dir, "unsampled_indices.txt")
+    
+    if (file.exists(unsampled_indicies_file)) {
+      
+      message('Previous unsampled indices exist, continuing from there.')
+      
+      rounds_path <- file.path(save_dir, "num_rounds.txt")
+      num_rounds <- as.numeric(readLines(con = rounds_path))
+      
+      ns_path <- file.path(save_dir, "too_many_ns.txt")
+      too_many_ns <- as.numeric(readLines(con = ns_path))
+      
+      blastdbcmd_failed_path <- file.path(save_dir, "blastdbcmd_failed.txt")
+      blastdbcmd_failed <- as.numeric(readLines(con = blastdbcmd_failed_path))
+      
+      unsampled_indices_path <- file.path(save_dir, "unsampled_indices.txt")
+      unsampled_indices <- as.numeric(readLines(con = unsampled_indices_path))
+      
+      output_table_path <- file.path(save_dir, "output_table.txt")
+      output_table <- read.csv(output_table_path, colClasses = "character")
+      
+      blast_seeds_m_path <- file.path(save_dir, "blast_seeds_passed_filter.txt")
+      blast_seeds_m <- read.csv(blast_seeds_m_path, colClasses = "character")
+      
+    }
+    
+    # Information about state of blast
+    message("BLAST round: ", num_rounds)
+    message('  ', length(unsampled_indices), " indices left to process.\n")
+    
+    # Update status of blast seeds by labeling all reads not in the upsampled
     # indicies list as "done"
     blast_seeds_m$blast_status[-unsampled_indices] <- "done"
-
-    # collect indices to blast
+    
+    # Collect indices to blast
+    # TODO unclear this part
     # if unsampled indices are greater than the max to blast (default n = 1000),
     # the blast seed table will be randomly sampled by taxonomic ranks
-
-    all = 'all'
-
     if (length(unsampled_indices) <= max_to_blast) {
       sample_indices <- unsampled_indices
     }
-    else if (rank == all) {
+
+    else if (rank == 'all') {
 
       sample_indices <- unsampled_indices
 
     }
     else {
-
-
       # if more indices than the max_to_blast are present
       # randomly select entries (default is n=1) for each rank then turn the
       # accession numbers into a vector
-
-      seeds_by_rank_indices <- dplyr::pull(dplyr::filter(dplyr::slice_sample(dplyr::group_by(blast_seeds_m,!!!rlang::syms(rank)), n=sample_size), blast_status == 'not_done'), accession)
-
+      seeds_by_rank_indices <- 
+        blast_seeds_m %>% 
+        dplyr::group_by(!!!rlang::syms(rank)) %>% 
+        dplyr::slice_sample(n = sample_size) %>% 
+        dplyr::filter(.data$blast_status == 'not_done') %>% 
+        dplyr::pull(.data$accession)
       # search the original output blast_seeds for the indices (row numbers) to
       # be used as blast seeds and make vector or sample indices
       sample_indices <- which(blast_seeds_m$accession %in% seeds_by_rank_indices)
     }
-
-
+    
     # clean up messages
     if (length(unsampled_indices) > max_to_blast) {
-     message(" ")
-     message(paste(rank, "has", length(sample_indices), "unique occurrences in the blast seeds data table."))
-     message(paste("These may be subset..." ))
-
+      message(
+        rank, " has ", length(sample_indices), " unique occurrences in the blast seeds data table.\n",
+        "These may be subset ...\n"
+      )
     } else {
-
-     message(" ")
-     message("The number of unsampled indices is less than or equal to the maximum number to be blasted")
-
+      message("The number of unsampled indices is less than or equal to the maximum number to be blasted.\n")
     }
-
-
+    
     # update unsampled_indices by removing the sample_indices from the list
     unsampled_indices <-
       unsampled_indices[!(unsampled_indices %in% sample_indices)]
-
-
-
+    
     # run blast command, blastn, and aggregate the results based on the the value
-    # max_to_blast.  If there are fewer indices for a rank than the max_to_blast
-    # it will run.  If not the number of indices to be blasted for a rank will be
+    # max_to_blast. If there are fewer indices for a rank than the max_to_blast
+    # it will run. If not the number of indices to be blasted for a rank will be
     # broken into the max_to_blast value.
-
-
-
+    
     while (length(sample_indices) > 0 ){
-
-
-      # Pick up where it left off
-      if (file.exists(paste(save_dir, "unsampled_indices.txt", sep = "/"))) {
-
-      rounds_path <- paste(save_dir, "num_rounds.txt", sep = "/")
-      num_rounds <- as.numeric(readLines(con = rounds_path))
-
-      ns_path <- paste(save_dir, "too_many_ns.txt", sep = "/")
-      too_many_ns <- as.numeric(readLines(con = ns_path))
-
-      blastdbcmd_failed_path <- paste(save_dir, "blastdbcmd_failed.txt", sep = "/")
-      blastdbcmd_failed <- as.numeric(readLines(con = blastdbcmd_failed_path))
-
-      unsampled_indices_path <-
-          paste(save_dir, "unsampled_indices.txt", sep = "/")
-
-      unsampled_indices <-
-          as.numeric(readLines(con = unsampled_indices_path))
-
-      output_table_path <- paste(save_dir, "output_table.txt", sep = "/")
-      output_table <- read.csv(output_table_path, colClasses = "character")
-
-
-      blast_seeds_m_path <- paste(save_dir, "blast_seeds_passed_filter.txt", sep = "/")
-      blast_seeds_m <- read.csv(blast_seeds_m_path, colClasses = "character")
-
+      
+      # Get previous information if they exist
+      unsampled_indicies_file <- file.path(save_dir, "unsampled_indices.txt")
+      
+      if (file.exists(unsampled_indicies_file)) {
+        
+        rounds_path <- file.path(save_dir, "num_rounds.txt")
+        num_rounds <- as.numeric(readLines(con = rounds_path))
+        
+        ns_path <- file.path(save_dir, "too_many_ns.txt")
+        too_many_ns <- as.numeric(readLines(con = ns_path))
+        
+        blastdbcmd_failed_path <- file.path(save_dir, "blastdbcmd_failed.txt")
+        blastdbcmd_failed <- as.numeric(readLines(con = blastdbcmd_failed_path))
+        
+        unsampled_indices_path <- file.path(save_dir, "unsampled_indices.txt")
+        unsampled_indices <- as.numeric(readLines(con = unsampled_indices_path))
+        
+        output_table_path <- file.path(save_dir, "output_table.txt")
+        output_table <- read.csv(output_table_path, colClasses = "character")
+        
+        blast_seeds_m_path <- file.path(save_dir, "blast_seeds_passed_filter.txt")
+        blast_seeds_m <- read.csv(blast_seeds_m_path, colClasses = "character")
+        
       }
-
-
+      
+      # TODO - this section could use better layout to only run run_blastdbcmd_blastn_and_aggregate_resuts
+      # once, with some object that was created with the if else if elses e.g. `sample_indices_in`
+      #
+      # sample_indices == unsampled; sample_indices_in <- unsampled
+      # sample_indices <= max_to_blast; sample_indices_in <- sample_indices
+      # else;  sample_indices_in <- head(sample_indices, max_to_blast)
+      #
+      # How to update sample indices?
+      
       if (length(sample_indices) == length(unsampled_indices)) {
-
-        run_blastdbcmd_blastn_and_aggregate_resuts(unsampled_indices, save_dir,
-          blast_seeds_m, ncbi_bin, blast_db_path, too_many_ns, db_dir,
-          blastdbcmd_failed, unsampled_indices, output_table, wildcards,
-          num_rounds, ...)
-
-
-
-          unsampled_indices <- unsampled_indices[!(unsampled_indices)]
-
-          break
-
-
-      } else if (length(sample_indices) <= max_to_blast) {
-
-
-        run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices, save_dir,
-            blast_seeds_m, ncbi_bin, blast_db_path, too_many_ns, db_dir,
-            blastdbcmd_failed, unsampled_indices, output_table, wildcards,
-            num_rounds, ...)
-
-
-
-        sample_indices <- sample_indices[!(sample_indices)]
-
+        
+        message('tmp - length(sample_indices) == length(unsampled_indices)\n')
+        
+        run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices = unsampled_indices,
+                                                   save_dir = save_dir,
+                                                   blast_seeds_m = blast_seeds_m,
+                                                   ncbi_bin = ncbi_bin, 
+                                                   db = blast_db_path, 
+                                                   too_many_ns = too_many_ns,
+                                                   blastdbcmd_failed = blastdbcmd_failed,
+                                                   unsampled_indices = unsampled_indices,
+                                                   output_table = output_table, 
+                                                   wildcards = wildcards,
+                                                   num_rounds = num_rounds, 
+                                                   ...)
+        
+        unsampled_indices <- unsampled_indices[!(unsampled_indices)]
+        
         break
-
+        
+      } else if (length(sample_indices) <= max_to_blast) {
+        
+        message('tmp - length(sample_indices) <= max_to_blast\n')
+        
+        run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices = sample_indices,
+                                                   save_dir = save_dir,
+                                                   blast_seeds_m = blast_seeds_m,
+                                                   ncbi_bin = ncbi_bin, 
+                                                   db = blast_db_path, 
+                                                   too_many_ns = too_many_ns,
+                                                   blastdbcmd_failed = blastdbcmd_failed,
+                                                   unsampled_indices = unsampled_indices,
+                                                   output_table = output_table, 
+                                                   wildcards = wildcards,
+                                                   num_rounds = num_rounds, 
+                                                   ...)
+        
+        sample_indices <- sample_indices[!(sample_indices)]
+        
+        break
+        
       } else {
-
-
+        
+        message('tmp - Subsetting sample_indices\n')
+        
         # take chunks of the sample indices that are equivalent to max_to_blast
-        subset <- head(sample_indices, max_to_blast)
-
-
-        run_blastdbcmd_blastn_and_aggregate_resuts(subset, save_dir,
-              blast_seeds_m, ncbi_bin, blast_db_path, too_many_ns, db_dir,
-              blastdbcmd_failed, unsampled_indices, output_table, wildcards,
-              num_rounds, ...)
-
+        subset <- utils::head(sample_indices, max_to_blast)
+        
+        run_blastdbcmd_blastn_and_aggregate_resuts(sample_indices = subset,
+                                                   save_dir = save_dir,
+                                                   blast_seeds_m = blast_seeds_m,
+                                                   ncbi_bin = ncbi_bin, 
+                                                   db = blast_db_path, 
+                                                   too_many_ns = too_many_ns,
+                                                   blastdbcmd_failed = blastdbcmd_failed,
+                                                   unsampled_indices = unsampled_indices,
+                                                   output_table = output_table, 
+                                                   wildcards = wildcards,
+                                                   num_rounds = num_rounds, 
+                                                   ...)
+        
         # update sample indices
         sample_indices <- sample_indices[!(sample_indices %in% subset)]
       }
-
-
-
+      
     }
-
-
-
-        rm(output_table)
-        rm(too_many_ns)
-        rm(blastdbcmd_failed)
-        rm(blast_seeds_m)
-
+    
+    rm(output_table)
+    rm(too_many_ns)
+    rm(blastdbcmd_failed)
+    rm(blast_seeds_m)
+    
   }
-
+  
   # Clean up final datatable by removing any hyphens, updating amplicon_length
   # and removing reads with too many Ns
+  
+  output_table_path <- file.path(save_dir, "output_table.txt")
+  output_table <- utils::read.csv(output_table_path, colClasses = "character")
+  
+  # Remove hyphens and reads with multiple Ns in output and recount amplicon length.
+  output_table <- dplyr::mutate(output_table, sequence = gsub("-", "", sequence))
+  
+  too_many_ns <- dplyr::filter(output_table, grepl(wildcards, sequence))
 
-    output_table_path <- paste(save_dir, "output_table.txt", sep = "/")
-    output_table <- read.csv(output_table_path, colClasses = "character")
-
-  #remove hyphens and reads with multiple Ns in output and recount amplicon length.
-    output_table <- dplyr::mutate(output_table, sequence = gsub("-", "", sequence))
-
-    too_many_ns <- dplyr::filter(output_table, grepl(wildcards, sequence))
-
-    output_table <- dplyr::setdiff(output_table, too_many_ns)
-
-    output_table <- dplyr::mutate(output_table, amplicon_length = nchar(sequence))
-
-
+  output_table <- dplyr::setdiff(output_table, too_many_ns)
+  
+  output_table <- dplyr::mutate(output_table, amplicon_length = nchar(sequence))
+  
+  
   #### The blast db downloaded from NCBIs FTP site has representative accessions
   # meaning identical sequences have been collapsed across multiple accessions
   # even if they have different taxid.
@@ -322,21 +335,14 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
   # that report a single taxid
 
   output_table <- expand_multi_taxids(output_table, max_to_blast)
+  
+  output_table_taxonomy <-
+    suppressWarnings(
+      get_taxonomy_from_accession(output_table, accession_taxa_sql_path)
+    )
+  
+  return(output_table_taxonomy)
 
-    output_table_taxonomy <-
-      get_taxonomizr_from_accession(output_table, accession_taxa_sql_path, blast_db_path, ncbi_bin = NULL)
-
-    return(output_table_taxonomy)
 }
 
-# True if the blast_db_path is a blast database, false if it's not
 
-
-check_db <- function(blast_db_path, ncbi_bin) {
-  if (is.null(ncbi_bin)) {
-    try(system2("blastdbcmd", args = c("-db", blast_db_path, "-info"), stdout = FALSE)) == 0
-  } else {
-    blastdbcmd_path <- paste0(ncbi_bin, "/blastdbcmd")
-    try(system2(command = blastdbcmd_path, args = c("-db", blast_db_path, "-info"), stdout = FALSE)) == 0
-  }
-}

@@ -13,49 +13,42 @@
 #'        following: ncbi_bin = "/my/local/ncbi-blast-2.10.1+/bin/".
 #' @return a fasta-formatted character vector
 #' @export
-
-
 run_blastdbcmd <- function(query_row, db, ncbi_bin = NULL) {
-    # Extract arguments
-    accession <- query_row$accession
-    forward <- as.numeric(query_row$forward_stop)
-    reverse <- as.numeric(query_row$reverse_stop)
-
-    # Massage forward and reverse
-    if (forward < reverse) {
-        forward <- forward + 1
-        reverse <- reverse - 1
-    }
-    else {
-        # Swap them
-        temp <- forward
-        forward <- reverse
-        reverse <- temp
-
-        # Tighten
-        # This could be done in fewer lines but I expanded it for clarity
-        forward <- forward + 1
-        reverse <- reverse - 1
-    }
-
-    seq_range <- paste0(forward, "-", reverse)
-
-    # System call
-    if (is.null(ncbi_bin)) {
-        fasta <- system2("blastdbcmd", args = c("-db", db,
-                                                "-dbtype", "nucl",
-                                                "-entry", accession,
-                                                "-range", seq_range),
-                                                stdout = TRUE, stderr = FALSE)
-        return(fasta)
-    }
-    else {
-        blastdbcmd_path <- paste0(ncbi_bin, "/blastdbcmd")
-        fasta <- system2(command= blastdbcmd_path, args = c("-db", db,
-                                                "-dbtype", "nucl",
-                                                "-entry", accession,
-                                                "-range", seq_range),
-                                                stdout = TRUE, stderr = FALSE)
-        return(fasta)
-    }
+  
+  # Extract arguments
+  accession <- query_row$accession
+  forward <- as.numeric(query_row$forward_stop)
+  reverse <- as.numeric(query_row$reverse_stop)
+  
+  # Flip sequence range values if required
+  if (forward > reverse){
+    temp <- forward
+    forward <- reverse
+    reverse <- temp
+  }
+  
+  # Massage/extend forward and reverse range values
+  forward <- forward + 1
+  reverse <- reverse - 1
+  
+  seq_range <- paste0(forward, "-", reverse)
+  
+  if (!is.null(ncbi_bin)){
+    blastdbcmd <- file.path(ncbi_bin, 'blastdbcmd')
+  } else {
+    blastdbcmd = 'blastdbcmd'
+  }
+  
+  # run blastdbcmd, suppress status warning and use them outside of function
+  # if the function returns a status other than 0 (successful), the value
+  # with have an attribute 'status' .. attr(result, 'status')
+  suppressWarnings(
+    system2(blastdbcmd, 
+            args = c("-db", db,
+                     "-dbtype", "nucl",
+                     "-entry", accession,
+                     "-range", seq_range),
+            stdout = TRUE, stderr = FALSE)
+  )
+  
 }

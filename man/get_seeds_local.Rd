@@ -7,49 +7,39 @@
 get_seeds_local(
   forward_primer_seq,
   reverse_primer_seq,
-  output_directory_path,
   metabarcode_name,
+  output_directory_path,
   accession_taxa_sql_path,
   blast_db_path,
+  return_table = TRUE,
   mismatch = 6,
   minimum_length = 5,
   maximum_length = 500,
-  primer_specificity_database = "nt",
   num_fprimers_to_blast = 50,
   num_rprimers_to_blast = 50,
   max_to_blast = 2,
-  align = "10000000",
-  num_threads = NULL,
-  ...,
-  return_table = TRUE
+  ...
 )
 }
 \arguments{
-\item{forward_primer_seq}{which which turns degenerate primers into into a
-list of all possible non degenerate primers and converts the primer(s)
-into to a fasta file to be past to run_primer_blastn.
-(e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG" or
-forward_primer_seq <- c("TAGAACAGGCTCCTCTAG", "GGWACWGGWTGAACWGTWTAYCCYCC")}
-
-\item{reverse_primer_seq}{which which turns degenerate primers into into a
-list of all possible non degenerate primers and converts the primer(s)
-into to a fasta file to be past to run_primer_blastn.
-(e.g reverse_primer_seq <-  "TTAGATACCCCACTATGC" or
-reverse_primer_seq <- c("TTAGATACCCCACTATGC", "TANACYTCNGGRTGNCCRAARAAYCA")}
-
-\item{output_directory_path}{the parent directory to place the data in
-(e.g. "/path/to/output/12S_V5F1_local_111122_e300_111122").}
+\item{forward_primer_seq, reverse_primer_seq}{character vector of one or more primer sequences. Degenerate primers
+are expanded into a list of all possible non degenerate primers before being
+passed on as a fasta to \code{run_primer_blastn()}}
 
 \item{metabarcode_name}{used to name the files. get_seeds_local appends
 metabarcode_name to the beginning of each of the files it
 generates (e.g. metabarcode_name <- "12S_V5F1").}
 
-\item{accession_taxa_sql_path}{the path to sql created by taxonomizr
-(e.g. accession_taxa_sql_path <- "/my/accessionTaxa.sql")}
+\item{output_directory_path}{the parent directory to place the data in
+(e.g. "/path/to/output/12S_V5F1_local_111122_e300_111122").}
 
-\item{blast_db_path}{a directory containing one or more blast-formatted database.
-For multiple blast databases, separate them with a space and add an extra set of quotes.
+\item{accession_taxa_sql_path}{the path to local SQL database created by \code{taxonomizr}}
+
+\item{blast_db_path}{a directory containing one or more blast-formatted database. Rememeber to
+include the database name in the file path. For multiple blast databases, separate them with a space and add an extra set of quotes.
 (e.g blast_db_path <- "/my/ncbi_nt/nt" or blast_db_path <- '"/my/ncbi_nt/nt  /my/ncbi_ref_euk_rep_genomes/ref_euk_rep_genomes"')}
+
+\item{return_table}{whether to return the table \verb{some table}}
 
 \item{mismatch}{the highest acceptable mismatch value per hit. get_seeds_local removes each
 row with a mismatch greater than the specified value.
@@ -79,49 +69,18 @@ The default is num_rprimers_to_blast = 50}
 The default is max_to_blast = 2. - Increasing this number will decrease
 overall run time, but increase the amount of RAM required.}
 
-\item{align}{is the maximum number of subject hits to return per query
-blasted. The default is align = '10000000'. - to few alignments will
-result in no matching pairs of forward and reverse primers.  To many
-alignments can result in an error due to RAM limitations.}
-
-\item{num_threads}{is the number of CPUs to engage in the blastn search. The
-default num_treads = NULL, uses \code{\link[parallel:detectCores]{parallel::detectCores()}} to determine the user's
-number of CPUs automatically and use that for the value of -num_threads.}
-
-\item{task}{(passed to \code{\link[=run_primer_blastn]{run_primer_blastn()}}) the task for blastn to
-perform - default here is "blastn_short", which is optimized
-for searches with queries < 50 bp}
-
-\item{word_size}{(passed to \code{\link[=run_primer_blastn]{run_primer_blastn()}}) is the fragment size
-used for blastn search - smaller word sizes increase sensitivity and
-time of the search. The default is word_size =  7}
-
-\item{evalue}{(passed to \code{\link[=run_primer_blastn]{run_primer_blastn()}}) is the number of
-expected hits with a similar quality score found by chance.
-The default is evalue = '3e-7'.}
-
-\item{coverage}{(passed to \code{\link[=run_primer_blastn]{run_primer_blastn()}}) is the minimum
-percent of the query length recovered in the subject hits.
-The default is coverage = 90.}
-
-\item{perID}{(passed to \code{\link[=run_primer_blastn]{run_primer_blastn()}}) is the minimum percent
-identity of the query relative to the subject hits.
-The default is perID = 50.}
-
-\item{reward}{(passed to \code{\link[=run_primer_blastn]{run_primer_blastn()}}) is the reward for
-nucleotide match. The default is reward = 2.}
-
-\item{ncbi_bin}{passed to \code{\link[=run_primer_blastn]{run_primer_blastn()}}) is the path to blast+
-tools if not in the user's path.  Specify only if blastn and is not in
-your path. The default is ncbi_bin = NULL - if not specified in path
-do the following: ncbi_bin = "/my/local/ncbi-blast-2.10.1+/bin".}
+\item{...}{passed to \code{\link[=run_primer_blastn]{run_primer_blastn()}}}
+}
+\value{
+Nothing or a data.frame if \code{return_table = TRUE}
 }
 \description{
-get_seeds_local is a local interpretation of \code{\link[=get_seeds_remote]{get_seeds_remote()}} that avoids
+\code{get_seeds_local()} is a local interpretation of \code{\link[=get_seeds_remote]{get_seeds_remote()}} that avoids
 querying NCBI's \href{https://www.ncbi.nlm.nih.gov/tools/primer-blast/}{primer BLAST}
-tool. Although it is slower than remotely generating blast seeds, it is not
+online tool. Although it is slower than remotely generating blast seeds, it is not
 subject to the arbitrary throttling of jobs that require significant memory.
-It creates a 'get_seeds_local' directory at \code{output_directory_path} if one
+
+It creates a \code{get_seeds_local} directory at \code{output_directory_path} if one
 doesn't yet exist, then creates a subdirectory inside \code{output_directory_path}
 named after \code{metabarcode_name}. It creates four permenant files inside that
 directory. Several temporary files are generated during the run for keeping
@@ -167,6 +126,7 @@ implemented in \code{\link[=iterative_primer_search]{iterative_primer_search()}}
 }
 \examples{
 
+\dontrun{
 # Non degenerate primer example: 12S_V5F1 (Riaz et al. 2011)
 
 forward_primer_seq = "TAGAACAGGCTCCTCTAG"
@@ -232,7 +192,5 @@ get_seeds_local(forward_primer_seq,
                 max_to_blast = 1)
 
 # blasting two primers at a time can max out a system's RAM, however blasting one at a time is more feasible for personal computers with 16 GB RAM
-
-
-
+}
 }

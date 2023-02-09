@@ -13,7 +13,7 @@ run_blastn(
   align = 50000,
   coverage = 50,
   perID = 70,
-  num_threads = NULL
+  num_threads = 1
 )
 }
 \arguments{

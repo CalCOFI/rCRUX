@@ -174,7 +174,7 @@ As of 2022-08-16, the primer blast GUI contains some options that are not implem
 }
 }
 \examples{
-
+\dontrun{
 forward_primer_seq = "TAGAACAGGCTCCTCTAG"
 reverse_primer_seq =  "TTAGATACCCCACTATGC"
 output_directory_path <- "/my/directory/12S_V5F1_remote_111122_modified_params"
@@ -198,6 +198,5 @@ get_seeds_remote(forward_primer_seq,
 
 # This results in approximately 111500 blast seed returns (there is some variation due to database updates, etc.), note the default generated approximately 1047.
 # This assumes the user is not throttled by memory limitations.
-
-
+}
 }
