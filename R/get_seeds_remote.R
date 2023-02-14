@@ -66,7 +66,8 @@
 #' after for = and add it to get_seeds_remote as the name of a parameter,
 #' setting it equal to whatever you like.
 #'
-#' As of 2022-08-16, the primer blast GUI contains some options that are not implemented by primer_search. The table below documents some of the available options.
+#' As of 2022-08-16, the primer blast GUI contains some options that are not implemented 
+#' by primer_search. The table below documents some of the available options.
 #'
 #' | Name                                   |       Default  |
 #' |----------------------------------------|----------------|
@@ -85,11 +86,11 @@
 #'
 #'
 #'
-#' @param forward_primer_seq passed to [rCRUX::primer_search()], which turns it
+#' @param forward_primer_seq passed to `rCRUX::primer_search()`, which turns it
 #'        into a list of all possible non degenerate primers, then passes
 #'        a user defined number of primer set combinations to NCBI.
 #'        (e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG")
-#' @param reverse_primer_seq passed to [rCRUX::primer_search()], which turns it
+#' @param reverse_primer_seq passed to `rCRUX::primer_search()`, which turns it
 #'        into a list of all possible non degenerate primers, then passes
 #'        a user defined number of primer set combinations to NCBI.
 #'        (e.g. reverse_primer_seq <-  "TTAGATACCCCACTATGC")
@@ -117,11 +118,11 @@
 #'        returns a table with a mismatch column. get_seeds_remote removes each
 #'        row with a mismatch greater than the specified value.
 #'        The default is mismatch = 3 - Note this is smaller than [rCRUX::get_seeds_local()]
-#' @param minimum_length [rCRUX::parse_primer_hits()] returns a table with a product_length
+#' @param minimum_length `rCRUX::parse_primer_hits()` returns a table with a product_length
 #'        column. get_seeds_remote removes each row that has a value less than
 #'        minimum_length in the product_length column.
 #'        The default is minimum_length = 5
-#' @param maximum_length [rCRUX::parse_primer_hits()] returns a table with a
+#' @param maximum_length `rCRUX::parse_primer_hits()` returns a table with a
 #'        product_length column. get_seeds_remote removes each row that has a
 #'        value greater than maximum_length in the product_length column
 #'        The default is maximum_length = 500
@@ -167,8 +168,10 @@
 #'                 organism = c("1476529", "7776"), return_table = FALSE)
 #'
 #'
-#' # This results in approximately 111500 blast seed returns (there is some variation due to database updates, etc.), note the default generated approximately 1047.
-#' # This assumes the user is not throttled by memory limitations.
+#' # This results in approximately 111500 blast seed returns (there is some 
+#' # variation due to database updates, etc.), note the default generated 
+#' # approximately 1047. This assumes the user is not throttled by memory 
+#' # limitations.
 #'}
 get_seeds_remote <- function(forward_primer_seq, reverse_primer_seq,
                              output_directory_path, metabarcode_name,
@@ -214,11 +217,11 @@ get_seeds_remote <- function(forward_primer_seq, reverse_primer_seq,
                                   accession_taxa_sql_path)
   
   # save output
-  write.csv(taxonomized_table,
+  utils::write.csv(taxonomized_table,
             file = file.path(out, paste0(metabarcode_name, "_filtered_get_seeds_remote_output_with_taxonomy.csv")),
             row.names = FALSE)
   
-  write.csv(raw_table,
+  utils::write.csv(raw_table,
             file = file.path(out, paste0(metabarcode_name, "_unfiltered_get_seeds_remote_output.csv")),
             row.names = FALSE)
   
@@ -230,7 +233,7 @@ get_seeds_remote <- function(forward_primer_seq, reverse_primer_seq,
     )
   
   # Write output to blast_seeds_output
-  write.csv(tax_rank_sum,
+  utils::write.csv(tax_rank_sum,
             file = file.path(out, paste0(metabarcode_name, "_filtered_get_seeds_remote_unique_taxonomic_rank_counts.csv")),
             row.names = FALSE)
   

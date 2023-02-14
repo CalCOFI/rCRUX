@@ -6,13 +6,12 @@
 saves the results}
 \usage{
 run_blastdbcmd_blastn_and_aggregate_resuts(
-  sample_indices = sample_indices,
+  sample_indices,
   save_dir,
   blast_seeds_m,
   ncbi_bin = NULL,
   db,
   too_many_ns,
-  db_dir,
   blastdbcmd_failed,
   unsampled_indices,
   output_table,
@@ -35,12 +34,10 @@ blastn and blastdbcmd  are not in your path.
 The default is ncbi_bin = NULL - if not specified in path do the
 following: ncbi_bin = "/my/local/ncbi-blast-2.10.1+/bin/".}
 
-\item{db}{the type of blast db - e.g. nt}
+\item{db}{path to the blast db}
 
 \item{too_many_ns}{a vector of indices that result
 in a fasta with too many Ns}
-
-\item{db_dir}{path to the blast db}
 
 \item{blastdbcmd_failed}{the indicies not found in your blast db}
 

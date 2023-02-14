@@ -39,65 +39,9 @@ unique ranks.(e.g. metabarcode_name <- "12S_V5F1").}
 and not_in db into real tables and write them in the output directory.
 the default is expand_vectors = TRUE.}
 
-\item{minimum_length}{removes each row that has a value less than
-minimum_length in the product_length column.
-The default is minimum_length = 5}
-
-\item{maximum_length}{removes each row that has a
-value greater than maximum_length in the product_length column
-The default is maximum_length = 500}
-
 \item{warnings}{value to set the "warn" option to during the function call.
 On exit it returns to the previous value. Setting this argument to
 NULL will not change the option.}
-
-\item{...}{additional arguments passed to \code{\link[=blast_datatable]{blast_datatable()}}}
-
-\item{sample_size}{passed to \code{\link[=blast_datatable]{blast_datatable()}} is the the number of
-entries to sample per rank. The default sample_size = 1 - is recommended
-unless the user is sampling higher order taxonomy.  If there are not
-enough seeds to sample per rank the run will end in an error.}
-
-\item{max_to_blast}{passed to \code{\link[=blast_datatable]{blast_datatable()}} and is the maximum
-number of entries to accumulate into a fasta before calling blastn.
-The default is max_to_blast = 1000 - the optimal number of reads to
-blast will depend on the user's environment (available RAM) and the
-number of possible hits (determined by marker and parameters)}
-
-\item{wildcards}{passed to \code{\link[=blast_datatable]{blast_datatable()}} us a character vector
-that represents the minimum number of consecutive Ns the user will
-tolerate in a given seed or hit sequence. The default is
-wildcards = "NNNN"}
-
-\item{rank}{passed to \code{\link[=blast_datatable]{blast_datatable()}} is the data column
-representing the taxonomic rank to randomly sample. The default is
-rank = 'genus' - sampling a lower rank  (e.g. species) will generate
-more total hits and take more time, conversely sampling a higher rank
-(e.g. family) will generate fewer total hits and take less time.}
-
-\item{ncbi_bin}{passed to \code{\link[=run_blastdbcmd]{run_blastdbcmd()}} \code{\link[=run_blastn]{run_blastn()}} is
-the path to blast+ tools if not in the user's path.  Specify only if
-blastn and blastdbcmd  are not in your path.
-The default is ncbi_bin = NULL - if not specified in path do the
-following: ncbi_bin = "/my/local/ncbi-blast-2.10.1+/bin".}
-
-\item{evalue}{passed to \code{\link[=run_blastn]{run_blastn()}} is the number of expected hits
-with a similar quality score found by chance. The default is
-evalue = 1e-6.}
-
-\item{coverage}{passed to \code{\link[=run_blastn]{run_blastn()}} is the minimum percent of the
-query length recovered in the subject hits. The default is
-coverage = 50.}
-
-\item{perID}{passed to \code{\link[=run_blastn]{run_blastn()}} is the minimum percent identity
-of the query relative to the subject hits. The default is perID = 70.}
-
-\item{align}{passed to \code{\link[=run_blastn]{run_blastn()}} is the maximum number of subject
-hits to return per query blasted. The default is align = 50000.}
-
-\item{num_threads}{is the number of CPUs to engage in the blastn search. The
-default num_treads = NULL, uses \code{\link[parallel:detectCores]{parallel::detectCores()}} to determine the user's
-number of CPUs automatically and use that for the value of -num_threads.}
 }
 \description{
 blast_seeds uses \code{\link[=blast_datatable]{blast_datatable()}} to search against a blast
@@ -144,7 +88,11 @@ but not the local blast database. This is relevant for the results of
 
 \dontrun{
 
-seeds_output_path <- "/my/directory/12S_V5F1_remote_111122_modified_params/blast_seeds_output/summary.csv"
+seeds_output_path <- 
+  file.path("my/directory", 
+   "12S_V5F1_remote_111122_modified_params/blast_seeds_output", 
+   "summary.csv")
+   
 output_directory_path <- "/my/directory/12S_V5F1_remote_111122_modified_params"
 metabarcode_name <- "12S_V5F1"
 accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql"
@@ -160,6 +108,7 @@ blast_seeds(seeds_output_path,
             max_to_blast = 750)
 
 # using the rank of species will increase the number of total unique blast hits
-# modifying the max_to_blast submits fewer reads simultaneously and reduces overall RAM while extending the run
+# modifying the max_to_blast submits fewer reads simultaneously and reduces 
+# overall RAM while extending the run
 }
 }

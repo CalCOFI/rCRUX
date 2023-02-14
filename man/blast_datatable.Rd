@@ -65,7 +65,7 @@ The random sample entires are sent to
 to convert entries into fasta files, passes them to blastn to query local
 blast formatted databases with those sequences. It compiles the results
 of blastn into a data.frame that it cleans and returns with taxonomy added
-using \link{get_taxonomizr_from_accession}. Additionally, it saves its
+using \link{get_taxonomy_from_accession}. Additionally, it saves its
 state as text files in a specified directory with each iteration, allowing
 the user to restart an interrupted run of \code{\link[=blast_seeds]{blast_seeds()}}.
 }
@@ -103,7 +103,7 @@ overall blast returns. The local files are written to \code{save_dir} by
 \code{\link[=save_state]{save_state()}}. Manually changing these files is not suggested as
 it can change the behavior of blast_datatable.
 
-Restarting an interrupted \code{\link[=blast_seed]{blast_seed()}} run:
+Restarting an interrupted \code{\link[=blast_seeds]{blast_seeds()}} run:
 To restart from an incomplete blast_datatable, submit the previous command
 again. Do not modify the paths specified in the previous command, however
 parameter arguments (e.g. rank, max_to_blast) can be modified. blast_datable

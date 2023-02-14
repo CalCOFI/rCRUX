@@ -153,9 +153,9 @@ run_blastdbcmd_blastn_and_aggregate_resuts <-
       # Remove duplicated accessions, keeping the longest sequence
       output_table <- 
         output_table %>%
-        dplyr::group_by(accession) %>%
-        dplyr::filter(amplicon_length == max(amplicon_length)) %>%
-        dplyr::filter(!(duplicated(accession))) %>% 
+        dplyr::group_by(.data$accession) %>%
+        dplyr::filter(.data$amplicon_length == max(.data$amplicon_length)) %>%
+        dplyr::filter(!(duplicated(.data$accession))) %>% 
         dplyr::ungroup()
       
     }
