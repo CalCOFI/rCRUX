@@ -21,7 +21,6 @@
 #' @return httr response object of the query, pass to \code{\link{parse_primer_hits}} to parse the results.
 #' @noRd
 
-
 primer_search = function(forward, reverse, num_permutations=25, ..., .parallel=FALSE, .progress='none'){
   if(missing(forward) || missing(reverse))
     BLAST_primer()
@@ -170,6 +169,7 @@ parse_primer_hits = function(response){
   content = parsable_html(response)
   plyr::rbind.fill(XML::xpathApply(content, '//pre', parse_pre))
 }
+
 parse_a = function(a){
   #links like entrez/viewer.fcgi?db=nucleotide&id=452085006
   m = regexpr('id=\\d+', XML::xmlAttrs(a)['href'])
@@ -210,6 +210,7 @@ parse_pre = function(pre){
              product_stop=max(as.numeric(values[c(2,4,5,7)]))
              )
 }
+
 get_refresh_from_meta = function(response){
   content = parsable_html(response)
   meta = content['//meta[@http-equiv="Refresh"]']

@@ -22,7 +22,7 @@ library(rCRUX)
 
 ```{r, include=F}
 knitr::opts_chunk$set(
-  eval = has_blast_plus_binaries('123')
+  eval = has_blast_plus_binaries()
 )
 ```
 

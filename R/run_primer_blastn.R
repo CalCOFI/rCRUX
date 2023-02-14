@@ -133,7 +133,7 @@ run_primer_blastn <-
     
     blastn_output %>%
       tibble::as_tibble() %>%
-      tidyr::separate(col = value, 
+      tidyr::separate(col = .data$value, 
                       into = column_names,
                       sep = "\t")
     

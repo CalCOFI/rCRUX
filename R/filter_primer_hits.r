@@ -9,7 +9,7 @@
 #' @param reverse_primer_seq passed to primer_search, which turns it into a list of
 #'        each primer it could be based on its degenerate primers, then passes
 #'        each one in turn to NCBI (e.g. reverse_primer_seq <-  "TTAGATACCCCACTATGC")
-#' @param mismatch the highest acceptable mismatch value. [rCRUX::parse_primer_hits()]
+#' @param mismatch the highest acceptable mismatch value. `rCRUX::parse_primer_hits()`
 #'        returns a table with a mismatch column. [rCRUX::get_seeds_remote()] removes each
 #'        row with a mismatch greater than the specified value.
 #'        The default is mismatch = 3 - Note this is smaller than [rCRUX::get_seeds_local()]
@@ -24,26 +24,32 @@
 #'
 #' @return a data.table with problematic rows removed
 #' @export
-
-
-filter_primer_hits <- function(hits_table, forward_primer_seq, reverse_primer_seq,
-                                mismatch = 3, minimum_length = 5,
-                                maximum_length = 500) {
+filter_primer_hits <-
+  function(hits_table,
+           forward_primer_seq,
+           reverse_primer_seq,
+           mismatch = 3,
+           minimum_length = 5,
+           maximum_length = 500) {
+    
     # filter like get_seeds_local or get_seeds_remote used to
-    output <- dplyr::filter(hits_table, !(accession == " "))
-    output <- output %>%
-        dplyr::filter(mismatch_forward <= mismatch) %>%
-        dplyr::filter(mismatch_reverse <= mismatch) %>%
-        dplyr::filter(product_length >= minimum_length) %>%
-        dplyr::filter(product_length <= maximum_length)
-
+    output <- dplyr::filter(hits_table, !(.data$accession == " "))
+    output <- 
+      output %>%
+      dplyr::filter(.data$mismatch_forward <= mismatch) %>%
+      dplyr::filter(.data$mismatch_reverse <= mismatch) %>%
+      dplyr::filter(.data$product_length >= minimum_length) %>%
+      dplyr::filter(.data$product_length <= maximum_length)
+    
     # Add amplicon_length column
     # This needs to know the size of the forward and reverse primers
     # That means we either need to pass the forward and reverse primers
     # to this function or we need to pass their lengths here
     # Or maybe that is supposed to happen in another function?
-    output <- dplyr::mutate(output, amplicon_length = product_length -
-                            nchar(forward_primer_seq) - nchar(reverse_primer_seq))
-}
-
-`%>%` <- magrittr::`%>%`
+    output <- 
+      dplyr::mutate(output, 
+                    amplicon_length = .data$product_length -
+                      nchar(.data$forward_primer_seq) - nchar(.data$reverse_primer_seq))
+    
+    output
+  }

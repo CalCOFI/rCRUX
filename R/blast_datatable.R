@@ -90,6 +90,7 @@
 #' @param rank the column representing the taxonomic rank to randomly sample (default = genus)
 #' @param ... additional arguments passed to [rCRUX::run_blastdbcmd_blastn_and_aggregate_resuts()]
 #' @return A data.frame representing the output of blastn
+#' 
 #' @export
 
 
@@ -137,10 +138,10 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
       unsampled_indices <- as.numeric(readLines(con = unsampled_indices_path))
 
       output_table_path <- file.path(save_dir, "output_table.txt")
-      output_table <- read.csv(output_table_path, colClasses = "character")
+      output_table <- utils::read.csv(output_table_path, colClasses = "character")
 
       blast_seeds_m_path <- file.path(save_dir, "blast_seeds_passed_filter.txt")
-      blast_seeds_m <- read.csv(blast_seeds_m_path, colClasses = "character")
+      blast_seeds_m <- utils::read.csv(blast_seeds_m_path, colClasses = "character")
 
     }
 
@@ -219,10 +220,10 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
         unsampled_indices <- as.numeric(readLines(con = unsampled_indices_path))
 
         output_table_path <- file.path(save_dir, "output_table.txt")
-        output_table <- read.csv(output_table_path, colClasses = "character")
+        output_table <- utils::read.csv(output_table_path, colClasses = "character")
 
         blast_seeds_m_path <- file.path(save_dir, "blast_seeds_passed_filter.txt")
-        blast_seeds_m <- read.csv(blast_seeds_m_path, colClasses = "character")
+        blast_seeds_m <- utils::read.csv(blast_seeds_m_path, colClasses = "character")
 
       }
 

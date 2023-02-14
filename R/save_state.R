@@ -22,10 +22,10 @@ save_state <- function(save_dir, output_table, unsampled_indices, too_many_ns,
     if (!dir.exists(save_dir)) {
         dir.create(save_dir, showWarnings = FALSE)
     }
-    write.csv(output_table,
+    utils::write.csv(output_table,
             file = file.path(save_dir, "output_table.txt"),
             row.names = FALSE)
-    write.csv(blast_seeds_m,
+    utils::write.csv(blast_seeds_m,
             file = file.path(save_dir, "blast_seeds_passed_filter.txt"),
             row.names = FALSE)
     writeLines(as.character(unsampled_indices),

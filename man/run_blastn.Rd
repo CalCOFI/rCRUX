@@ -6,8 +6,8 @@
 \usage{
 run_blastn(
   fasta,
-  db_dir,
-  temp = NULL,
+  db,
+  temp_fasta_path = NULL,
   ncbi_bin = NULL,
   evalue = 1e-06,
   align = 50000,
@@ -19,9 +19,11 @@ run_blastn(
 \arguments{
 \item{fasta}{a fasta-formatted string}
 
-\item{db_dir}{a path to a directory / directories containing one or more blast-formatted database.
+\item{db}{a path to a directory / directories containing one or more blast-formatted database.
 For multiple blast databases, separate them with a space and add an extra set of quotes.
 (e.g blast_db_path <- "/my/ncbi_nt/nt" or blast_db_path <- '"/my/ncbi_nt/nt  /my/ncbi_ref_euk_rep_genomes/ref_euk_rep_genomes"')}
+
+\item{temp_fasta_path}{a file path to write a temporary fasta to - blastn requires a file to query}
 
 \item{ncbi_bin}{is the path to blast+ tools if not in the user's path.
 Specify only if blastn and blastdbcmd  are not in your path.
@@ -40,10 +42,9 @@ subject hits. The default is coverage = 50.}
 \item{perID}{is the minimum percent identity of the query relative to the
 subject hits. The default is perID = 70.}
 
-\item{num_threads}{is the number of CPUs to engage in the blastn search. The default num_treads = NULL, uses \code{\link[parallel:detectCores]{parallel::detectCores()}} to determine the user's number of CPUs automatically and use that for the value of -num_threads.}
-
-\item{temp:}{a file path to write a temporary fasta to. The default is
-temp = NULL.}
+\item{num_threads}{is the number of CPUs to engage in the blastn search. The
+value num_treads = 'max', uses \code{\link[parallel:detectCores]{parallel::detectCores()}} to determine
+the user's number of CPUs automatically.}
 }
 \value{
 a tibble representing the blastn results
