@@ -20,12 +20,12 @@ get_seeds_remote(
 )
 }
 \arguments{
-\item{forward_primer_seq}{passed to \code{\link[=primer_search]{primer_search()}}, which turns it
+\item{forward_primer_seq}{passed to \code{rCRUX::primer_search()}, which turns it
 into a list of all possible non degenerate primers, then passes
 a user defined number of primer set combinations to NCBI.
 (e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG")}
 
-\item{reverse_primer_seq}{passed to \code{\link[=primer_search]{primer_search()}}, which turns it
+\item{reverse_primer_seq}{passed to \code{rCRUX::primer_search()}, which turns it
 into a list of all possible non degenerate primers, then passes
 a user defined number of primer set combinations to NCBI.
 (e.g. reverse_primer_seq <-  "TTAGATACCCCACTATGC")}
@@ -53,12 +53,12 @@ returns a table with a mismatch column. get_seeds_remote removes each
 row with a mismatch greater than the specified value.
 The default is mismatch = 3 - Note this is smaller than \code{\link[=get_seeds_local]{get_seeds_local()}}}
 
-\item{minimum_length}{\code{\link[=parse_primer_hits]{parse_primer_hits()}} returns a table with a product_length
+\item{minimum_length}{\code{rCRUX::parse_primer_hits()} returns a table with a product_length
 column. get_seeds_remote removes each row that has a value less than
 minimum_length in the product_length column.
 The default is minimum_length = 5}
 
-\item{maximum_length}{\code{\link[=parse_primer_hits]{parse_primer_hits()}} returns a table with a
+\item{maximum_length}{\code{rCRUX::parse_primer_hits()} returns a table with a
 product_length column. get_seeds_remote removes each row that has a
 value greater than maximum_length in the product_length column
 The default is maximum_length = 500}
@@ -67,7 +67,7 @@ The default is maximum_length = 500}
 to NCBI.  The default is primer_specificity_database = 'nt'.}
 
 \item{...}{additional arguments passed to primer_search, see
-\code{\link[primerTree:primer_search]{primerTree::primer_search()}} and \link{NCBI primer-blast tool}](https://www.ncbi.nlm.nih.gov/tools/primer-blast/)
+\code{primerTree::primer_search()} and \href{https://www.ncbi.nlm.nih.gov/tools/primer-blast/}{NCBI primer-blast tool}
 for more information.}
 
 \item{num_permutations}{the number of primer permutations to search, if the
@@ -93,7 +93,7 @@ throttling due to memory limitations}
 a data.frame containing the same information as the .csv it generates
 }
 \description{
-get_seeds_remote combines modified versions of \code{\link[primerTree:primer_search]{primerTree::primer_search()}}
+get_seeds_remote combines modified versions of \code{primerTree::primer_search()}
 and primerTree's parse_primer to make \code{\link[=iterative_primer_search]{iterative_primer_search()}}
 which is called to query NCBI's
 \href{https://www.ncbi.nlm.nih.gov/tools/primer-blast/}{primer BLAST}
@@ -121,7 +121,7 @@ calculate and append amplicon size to the dataframe. Only hits that pass with de
 or user modified length and number of mismatches parameters are retained.
 
 Taxonomy is appended to these filtered hits using
-\code{\link[=get_taxonomizr_from_accession]{get_taxonomizr_from_accession()}}. The results are written to
+\code{\link[=get_taxonomy_from_accession]{get_taxonomy_from_accession()}}. The results are written to
 to file with the suffix \verb{_filtered_get_seeds_remote_output_with_taxonomy.csv}.
 The number of unique instances for each rank in the taxonomic path for the
 filtered hits are tallied (NAs are counted once per rank) and written to a
@@ -138,13 +138,13 @@ after for = and add it to get_seeds_remote as the name of a parameter, setting
 it equal to whatever you like.
 
 As of 2022-08-16, the primer blast GUI contains some options that are not
-implemented by \code{\link[primerTree:primer_search]{primerTree::primer_search()}} and by extension \code{\link[=iterative_primer_search]{iterative_primer_search()}}
+implemented by \code{primerTree::primer_search()} and by extension \code{\link[=iterative_primer_search]{iterative_primer_search()}}
 primer_search doesn't include explicit documentation of allowed options, but
 it will quickly report if an option isn't allowed, so trial and error will
 not be very time consuming.
 
 Note:
-See \code{\link[=iterative_primer_search]{iterative_primer_search()}} and \link{modifiedPrimerTree_Functions}
+See \code{\link[=iterative_primer_search]{iterative_primer_search()}} and \code{rCRUX::modifiedPrimerTree_Functions}
 for additional run parameters not included below.
 
 Check NCBI's primer blast for additional search options**
@@ -157,7 +157,8 @@ Inside the label tag, it says for = "<name_of_parameter>". Copy the string
 after for = and add it to get_seeds_remote as the name of a parameter,
 setting it equal to whatever you like.
 
-As of 2022-08-16, the primer blast GUI contains some options that are not implemented by primer_search. The table below documents some of the available options.\tabular{ll}{
+As of 2022-08-16, the primer blast GUI contains some options that are not implemented
+by primer_search. The table below documents some of the available options.\tabular{ll}{
    Name \tab Default \cr
    PRIMER_SPECIFICITY_DATABASE \tab nt \cr
    EXCLUDE_ENV \tab unchecked \cr
@@ -196,7 +197,9 @@ get_seeds_remote(forward_primer_seq,
                 organism = c("1476529", "7776"), return_table = FALSE)
 
 
-# This results in approximately 111500 blast seed returns (there is some variation due to database updates, etc.), note the default generated approximately 1047.
-# This assumes the user is not throttled by memory limitations.
+# This results in approximately 111500 blast seed returns (there is some 
+# variation due to database updates, etc.), note the default generated 
+# approximately 1047. This assumes the user is not throttled by memory 
+# limitations.
 }
 }

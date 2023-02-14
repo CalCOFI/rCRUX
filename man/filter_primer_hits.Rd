@@ -26,7 +26,7 @@ each one in turn to NCBI (e.g. forward_primer_seq <- "TAGAACAGGCTCCTCTAG")}
 each primer it could be based on its degenerate primers, then passes
 each one in turn to NCBI (e.g. reverse_primer_seq <-  "TTAGATACCCCACTATGC")}
 
-\item{mismatch}{the highest acceptable mismatch value. \code{\link[=parse_primer_hits]{parse_primer_hits()}}
+\item{mismatch}{the highest acceptable mismatch value. \code{rCRUX::parse_primer_hits()}
 returns a table with a mismatch column. \code{\link[=get_seeds_remote]{get_seeds_remote()}} removes each
 row with a mismatch greater than the specified value.
 The default is mismatch = 3 - Note this is smaller than \code{\link[=get_seeds_local]{get_seeds_local()}}}

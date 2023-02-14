@@ -35,7 +35,7 @@ taxid bases on the status of NCBI.accession.}
 }
 \description{
 combine_fasta_and_taxonomy takes a fasta file and a corresponding taxonomy file, and turns it
-into an output .csv that can be used in \code{\link[=derep_and_clean_db]{derep_and_clean_db()}} and \code{\link[=compare_db]{compare_db()}}.
+into an output .csv that can be used in \code{\link[=derep_and_clean_db]{derep_and_clean_db()}} and \code{rCRUX::compare_db()}.
 }
 \details{
 Fasta files are converted to a dataframe with columns accession and sequence. The product length
@@ -48,13 +48,20 @@ output directory indicated by output_directory_path.
 }
 \examples{
 
+\dontrun{
+
 output_directory_path <- "/my/directory/12S_mifish"
 metabarcode_name <- "12S_mifish"
 fasta_path = "/my/directory/12S_fasta_and_taxonomy/12S_.fasta"
 taxonomy_path = "/my/directory/12S_fasta_and_taxonomy/12S_fasta_and_taxonomy/12S_taxonomy.txt"
 
-
-combine_fasta_and_taxonomy(output_directory_path, metabarcode_name, fasta_path, taxonomy_path, accession_taxa_sql_path)
-
+combine_fasta_and_taxonomy(
+ output_directory_path = output_directory_path
+ metabarcode_name = metabarcode_name,
+ fasta_path = fasta_path, 
+ taxonomy_path = taxonomy_path, 
+ accession_taxa_sql_path = taxonomy_path
+)
+}
 
 }

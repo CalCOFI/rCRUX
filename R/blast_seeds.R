@@ -110,7 +110,11 @@
 #' 
 #' \dontrun{
 #'
-#' seeds_output_path <- "/my/directory/12S_V5F1_remote_111122_modified_params/blast_seeds_output/summary.csv"
+#' seeds_output_path <- 
+#'   file.path("my/directory", 
+#'    "12S_V5F1_remote_111122_modified_params/blast_seeds_output", 
+#'    "summary.csv")
+#'    
 #' output_directory_path <- "/my/directory/12S_V5F1_remote_111122_modified_params"
 #' metabarcode_name <- "12S_V5F1"
 #' accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql"
@@ -126,7 +130,8 @@
 #'             max_to_blast = 750)
 #'
 #' # using the rank of species will increase the number of total unique blast hits
-#' # modifying the max_to_blast submits fewer reads simultaneously and reduces overall RAM while extending the run
+#' # modifying the max_to_blast submits fewer reads simultaneously and reduces 
+#' # overall RAM while extending the run
 #'}
 
 blast_seeds <-
@@ -211,7 +216,7 @@ blast_seeds <-
     taxa_table <- 
       output_table %>% 
       dplyr::select('accession', 'superkingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species') %>% 
-      tidyr::unite(col = 'taxonomic_path', superkingdom:species, sep = ";", remove = TRUE, na.rm = FALSE) %>% 
+      tidyr::unite(col = 'taxonomic_path', 'superkingdom':'species', sep = ";", remove = TRUE, na.rm = FALSE) %>% 
       dplyr::slice(-1)
     
     taxa_table_path <- file.path(output_dir, paste0(metabarcode_name, "_taxonomy.txt"))

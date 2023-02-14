@@ -112,7 +112,7 @@ sequence are matched and checked to see if they generate plausible amplicon
 a PCR product). These hits are written to a file with the suffix
 \verb{_unfiltered_get_seeds_local_output.csv}.  These hits are further filtered for
 length and number of mismatches. Taxonomy is appended to these filtered hits
-using \code{\link[=get_taxonomizr_from_accession]{get_taxonomizr_from_accession()}}. The results are written to
+using \code{\link[=get_taxonomy_from_accession]{get_taxonomy_from_accession()}}. The results are written to
 to a file with the suffix \verb{_filtered_get_seeds_local_output_with_taxonomy.csv}.
 The number of unique instances for each rank in the taxonomic path for the
 filtered hits are tallied (NAs are counted once per rank) and written to a
@@ -146,7 +146,9 @@ get_seeds_local(forward_primer_seq,
                 minimum_length = 80,
                 maximum_length = 150)
 
-# adjusting the minimum_length and maximum_length parameters reduces the number of total hits by removing reads that could result from off target amplification
+# adjusting the minimum_length and maximum_length parameters reduces the 
+# number of total hits by removing reads that could result from off 
+# target amplification
 
 
 # Degenerate primer example - mlCOIintF/jgHC02198 (Leray et al. 2013)
@@ -191,6 +193,7 @@ get_seeds_local(forward_primer_seq,
                 maximum_length = 350,
                 max_to_blast = 1)
 
-# blasting two primers at a time can max out a system's RAM, however blasting one at a time is more feasible for personal computers with 16 GB RAM
+# blasting two primers at a time can max out a system's RAM, however 
+# blasting one at a time is more feasible for personal computers with 16 GB RAM
 }
 }

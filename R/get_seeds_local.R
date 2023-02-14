@@ -150,7 +150,9 @@
 #'                 minimum_length = 80,
 #'                 maximum_length = 150)
 #'
-#' # adjusting the minimum_length and maximum_length parameters reduces the number of total hits by removing reads that could result from off target amplification
+#' # adjusting the minimum_length and maximum_length parameters reduces the 
+#' # number of total hits by removing reads that could result from off 
+#' # target amplification
 #'
 #'
 #' # Degenerate primer example - mlCOIintF/jgHC02198 (Leray et al. 2013)
@@ -195,7 +197,8 @@
 #'                 maximum_length = 350,
 #'                 max_to_blast = 1)
 #'
-#' # blasting two primers at a time can max out a system's RAM, however blasting one at a time is more feasible for personal computers with 16 GB RAM
+#' # blasting two primers at a time can max out a system's RAM, however 
+#' # blasting one at a time is more feasible for personal computers with 16 GB RAM
 #'}
 get_seeds_local <- 
   function(
@@ -333,7 +336,7 @@ get_seeds_local <-
       
       message('Previous primer blast files found. Continuing from there.')
       fasta_path = left_to_blast_path
-      append_table = read.csv(append_table_path, colClasses = "character")
+      append_table = utils::read.csv(append_table_path, colClasses = "character")
       
     }
     
@@ -366,17 +369,17 @@ get_seeds_local <-
       # remove duplicates
       append_table <- 
         append_table %>% 
-        dplyr::group_by(saccver, sstart) %>% 
-        dplyr::filter(mismatch == min(mismatch)) %>% 
-        dplyr::distinct(saccver, sstart, .keep_all = TRUE)
+        dplyr::group_by(.data$saccver, .data$sstart) %>% 
+        dplyr::filter(mismatch == min(.data$mismatch)) %>% 
+        dplyr::distinct(.data$saccver, .data$sstart, .keep_all = TRUE)
       
       # update the file that contains primers to be blasted
       input = input[-(0:remove)]
-      na.omit(input)
+      #stats::na.omit(input) 
       writeLines(input, left_to_blast_path)
       
       #save results for later
-      write.csv(append_table,
+      utils::write.csv(append_table,
                 file = append_table_path,
                 row.names = FALSE)
     }
@@ -387,7 +390,7 @@ get_seeds_local <-
     message('\nBlasting complete.\n')
     message('Wrangling results.\n')
     
-    append_table <- read.csv(append_table_path, colClasses = "character")
+    append_table <- utils::read.csv(append_table_path, colClasses = "character")
     
     # if output table is empty and give warning and stop
     if (nrow(append_table) <= 1){
@@ -402,24 +405,24 @@ get_seeds_local <-
     # First isolate forward and reverse reads and rename columns
     F_only <-
       append_table %>%
-      dplyr::filter(grepl('forward', qseqid)) %>%
+      dplyr::filter(grepl('forward', .data$qseqid)) %>%
       dplyr::rename(
-        gi = sgi,
-        accession = saccver,
-        mismatch_forward = mismatch,
-        forward_start = sstart,
-        forward_stop = send
+        gi = .data$sgi,
+        accession = .data$saccver,
+        mismatch_forward = .data$mismatch,
+        forward_start = .data$sstart,
+        forward_stop = .data$send
       )
     
     R_only <-
       append_table %>%
-      dplyr::filter(grepl('reverse', qseqid)) %>%
+      dplyr::filter(grepl('reverse', .data$qseqid)) %>%
       dplyr::rename(
-        gi = sgi,
-        accession = saccver,
-        mismatch_reverse = mismatch,
-        reverse_start = sstart,
-        reverse_stop = send
+        gi = .data$sgi,
+        accession = .data$saccver,
+        mismatch_reverse = .data$mismatch,
+        reverse_start = .data$sstart,
+        reverse_stop = .data$send
       )
     
     
@@ -444,7 +447,7 @@ get_seeds_local <-
       ))
     
     # remove all F and R primer pairs that would not make an amplicon
-    f_and_r <- dplyr::filter(f_and_r, !is.na(product_length))
+    f_and_r <- dplyr::filter(f_and_r, !is.na(.data$product_length))
     
     # if table is empty and give warning and stop
     if (nrow( f_and_r ) <= 1){
@@ -455,15 +458,15 @@ get_seeds_local <-
     }
     
     #save unfiltered seeds output
-    write.csv(f_and_r, 
+    utils::write.csv(f_and_r, 
               file = file.path(out, paste0(metabarcode_name, "_unfiltered_get_seeds_local_output.csv")),
               row.names = FALSE)
     
     # keep only hits with acceptable product length
-    f_and_r <- dplyr::filter(f_and_r, dplyr::between(product_length, minimum_length, maximum_length))
+    f_and_r <- dplyr::filter(f_and_r, dplyr::between(.data$product_length, minimum_length, maximum_length))
     
     # keep hits with accaptable number of mismatches
-    f_and_r <- dplyr::filter(f_and_r, mismatch_forward <= mismatch & mismatch_reverse <= mismatch)
+    f_and_r <- dplyr::filter(f_and_r, .data$mismatch_forward <= mismatch & .data$mismatch_reverse <= mismatch)
     
     # if table is empty and give warning and stop
     if (nrow( f_and_r ) <= 1){
@@ -476,11 +479,11 @@ get_seeds_local <-
     
     taxonomized_table <- 
       suppressWarnings(
-        get_taxonomy_from_accession(f_and_r, accession_taxa_sql_path)
+        get_taxonomy_from_accession(f_and_r, accession_taxa_sql_path = accession_taxa_sql_path)
       )
     
     # save output
-    write.csv(taxonomized_table, 
+    utils::write.csv(taxonomized_table, 
               file = file.path(out, paste0(metabarcode_name, "_filtered_get_seeds_local_output_with_taxonomy.csv")),
               row.names = FALSE)
     
@@ -492,7 +495,7 @@ get_seeds_local <-
       )
     
     # Write output to blast_seeds_output
-    write.csv(tax_rank_sum, 
+    utils::write.csv(tax_rank_sum, 
               file = file.path(out, paste0(metabarcode_name, "_filtered_get_seeds_local_unique_taxonomic_rank_counts.csv")),
               row.names = FALSE)
     

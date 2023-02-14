@@ -105,7 +105,7 @@ run_blastn <- function(fasta, db, temp_fasta_path = NULL, ncbi_bin = NULL,
   # as_tibble creates a one-column tibble with "value" as its col name
   blastn_output %>%
     tibble::as_tibble() %>%
-    tidyr::separate(col = value, into = column_names,
+    tidyr::separate(col = .data$value, into = column_names,
                     sep = "\t")
   
 }

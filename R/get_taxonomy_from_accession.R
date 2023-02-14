@@ -62,7 +62,7 @@ get_taxonomy_from_accession <-
     if (arrange_taxonomy) {
       output <- 
         output %>%
-        dplyr::arrange(superkingdom, phylum, class, order, family, genus, species)
+        dplyr::arrange('superkingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species')
     }
     
     output

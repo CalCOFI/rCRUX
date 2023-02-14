@@ -28,12 +28,12 @@ entry will be queried separately.
 a data.table summarizing the results of several primer_searches
 }
 \description{
-This function acts like \code{\link[primerTree:primer_search]{primerTree::primer_search()}} and
+This function acts like \code{primerTree::primer_search()} and
 primerTree's parse_primer() hits all in one.
 }
 \details{
-It calls \code{\link[=modifiedPrimerTree_Functions]{modifiedPrimerTree_Functions()}} to perform tasks. Its parameters
-are very similar to \code{\link[primerTree:primer_search]{primerTree::primer_search()}}, but it takes vectors for
+It calls \code{rCRUX::modifiedPrimerTree_Functions()} to perform tasks. Its parameters
+are very similar to \code{primerTree::primer_search()}, but it takes vectors for
 organism and for database and performs a primer search for each combination.
 It downgrades errors from primer_search and parse_primer_hits into warnings.
 This is useful when searching for a large number of different combinations,
