@@ -2,9 +2,7 @@
 % Please edit documentation in R/blast_datatable.R
 \name{blast_datatable}
 \alias{blast_datatable}
-\title{Controls the iterative blast search implemented by
-\link{run_blastdbcmd_blastn_and_aggregate_resuts}, cleans the output, and
-adds taxonomy}
+\title{Wrapper and controller of the iterative blast search implemented by \link{run_blastdbcmd_blastn_and_aggregate_resuts}}
 \usage{
 blast_datatable(
   blast_seeds,
@@ -57,6 +55,9 @@ fasta before calling blastn (default = 1000)}
 A data.frame representing the output of blastn
 }
 \description{
+#' Controls the iterative blast search implemented by
+\link{run_blastdbcmd_blastn_and_aggregate_resuts}, cleans the output, and
+adds taxonomy.
 Given a datatable with the column names of the datatable returned by
 \code{\link[=get_seeds_remote]{get_seeds_remote()}}, or \code{\link[=get_seeds_local]{get_seeds_local()}}, uses a random
 stratified sample based on taxonomic rank to iteratively process the data

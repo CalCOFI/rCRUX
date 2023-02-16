@@ -1,9 +1,9 @@
-#' Controls the iterative blast search implemented by
-#' [rCRUX::run_blastdbcmd_blastn_and_aggregate_resuts], cleans the output, and
-#' adds taxonomy
-#'
+#' Wrapper and controller of the iterative blast search implemented by [rCRUX::run_blastdbcmd_blastn_and_aggregate_resuts]
 #'
 #' @description
+#' #' Controls the iterative blast search implemented by
+#'  [rCRUX::run_blastdbcmd_blastn_and_aggregate_resuts], cleans the output, and
+#' adds taxonomy.
 #' Given a datatable with the column names of the datatable returned by
 #' [rCRUX::get_seeds_remote()], or [rCRUX::get_seeds_local()], uses a random
 #' stratified sample based on taxonomic rank to iteratively process the data
