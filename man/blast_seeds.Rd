@@ -14,7 +14,6 @@ blast_seeds(
   expand_vectors = TRUE,
   minimum_length = 5,
   maximum_length = 500,
-  warnings = 0,
   ...
 )
 }
@@ -39,17 +38,26 @@ unique ranks.(e.g. metabarcode_name <- "12S_V5F1").}
 and not_in db into real tables and write them in the output directory.
 the default is expand_vectors = TRUE.}
 
-\item{warnings}{value to set the "warn" option to during the function call.
-On exit it returns to the previous value. Setting this argument to
-NULL will not change the option.}
+\item{minimum_length}{removes each blast result that has a value less than
+minimum_length in the product_length column.
+The default is minimum_length = 5}
+
+\item{maximum_length}{removes removes each blast that has a
+value greater than maximum_length in the product_length column
+The default is maximum_length = 500}
+
+\item{...}{additional arguments passed to \code{\link[=blast_datatable]{blast_datatable()}}}
 }
 \description{
-blast_seeds uses \code{\link[=blast_datatable]{blast_datatable()}} to search against a blast
-formatted database. It creates a permanent directory \code{blast_seeds_output} and
-a temporary directory 'blast_seeds_save' in the \code{output_directory_path}. It saves from
-and passes files to \code{\link[=blast_datatable]{blast_datatable()}} while the run is in progress.
-During the final steps of the function the final data is saved in
-\code{rblast_seeds_output} recording the results of the blast.
+\code{blast_seeds()} is a wrapper function for \code{\link[=blast_datatable]{blast_datatable()}} -
+to search seeds from \verb{get_seeds_*} functions against a blast formatted
+database - while wrangling the output for downstream use.\cr
+
+It creates a permanent directory \code{blast_seeds_output} and
+a temporary directory \code{blast_seeds_save} in the \code{output_directory_path}.
+It saves from, and passes files to, \code{\link[=blast_datatable]{blast_datatable()}} while the run
+is in progress. During the final steps of the function the final data is saved in
+\code{blast_seeds_output} recording the results of the blast.
 }
 \details{
 The \code{\link[=blast_datatable]{blast_datatable()}} call saves intermediate results and

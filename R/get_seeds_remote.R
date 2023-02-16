@@ -101,6 +101,7 @@
 #'        generates (e.g. metabarcode_name <- "12S_V5F1").
 #' @param accession_taxa_sql_path the path to sql created by taxonomizr
 #'          (e.g. accession_taxa_sql_path <- "/my/accessionTaxa.sql")
+#' @param return_table whether to return the table `some table`
 #' @param organism a vector of character vectors. Each character vector is
 #'        passed in turn to primer_search, which passes them to NCBI.
 #'        get_seeds_remote aggregates all of the results into a single file.
@@ -108,12 +109,6 @@
 #'        rank (e.g. increasing from order to class) for this parameter can
 #'        maximize primer hits, but can also lead to API run throttling due to
 #'        memory limitations
-#' @param num_permutations the number of primer permutations to search, if the
-#'        degenerate bases cause more than this number of permutations to exist,
-#'        this number will be sampled from all possible permutations.
-#'        The default is num_permutations = 50 - Note for very degenerate bases,
-#'        searches may be empty due to poor mutual matches for a given forward
-#'        and reverse primer combination.
 #' @param mismatch the highest acceptable mismatch value. parse_primer_hits
 #'        returns a table with a mismatch column. get_seeds_remote removes each
 #'        row with a mismatch greater than the specified value.
@@ -128,19 +123,26 @@
 #'        The default is maximum_length = 500
 #' @param primer_specificity_database passed to [rCRUX::primer_search()], which passes it
 #'        to NCBI.  The default is primer_specificity_database = 'nt'.
-#' @param HITSIZE a primer BLAST search parameter set high to maximize the
-#'        number of observations returned.
-#'        The default HITSIZE = 50000 - note increasing this parameter can
-#'        maximize primer hits, but can also lead to API run throttling due to
-#'        memory limitations
-#' @param NUM_TARGETS_WITH_PRIMERS a primer BLAST search parameter set high to
-#'        maximize the number of observations returned.
-#'        The default is NCBI NUM_TARGETS_WITH_PRIMERS = 1000 - - note increasing
-#'        this parameter can maximize primer hits, but can also lead to API run
-#'        throttling due to memory limitations
-#' @param ... additional arguments passed to primer_search, see
+#' @param ... additional arguments passed to [rCRUX::iterative_primer_search()], see
 #'        `primerTree::primer_search()` and [NCBI primer-blast tool](https://www.ncbi.nlm.nih.gov/tools/primer-blast/)
 #'        for more information.
+# Parameters for iterative_primer_search commented out
+# @param num_permutations the number of primer permutations to search, if the
+#        degenerate bases cause more than this number of permutations to exist,
+#        this number will be sampled from all possible permutations.
+#        The default is num_permutations = 50 - Note for very degenerate bases,
+#        searches may be empty due to poor mutual matches for a given forward
+#        and reverse primer combination.
+# @param HITSIZE a primer BLAST search parameter set high to maximize the
+#        number of observations returned.
+#        The default HITSIZE = 50000 - note increasing this parameter can
+#        maximize primer hits, but can also lead to API run throttling due to
+#        memory limitations
+# @param NUM_TARGETS_WITH_PRIMERS a primer BLAST search parameter set high to
+#        maximize the number of observations returned.
+#        The default is NCBI NUM_TARGETS_WITH_PRIMERS = 1000 - - note increasing
+#        this parameter can maximize primer hits, but can also lead to API run
+#        throttling due to memory limitations
 #'
 #' @return a data.frame containing the same information as the .csv it generates
 #' 
@@ -173,13 +175,19 @@
 #' # approximately 1047. This assumes the user is not throttled by memory 
 #' # limitations.
 #'}
-get_seeds_remote <- function(forward_primer_seq, reverse_primer_seq,
-                             output_directory_path, metabarcode_name,
+get_seeds_remote <- function(forward_primer_seq,
+                             reverse_primer_seq,
+                             output_directory_path,
+                             metabarcode_name,
                              accession_taxa_sql_path,
-                             organism, mismatch = 3,
-                             minimum_length = 5, maximum_length = 500,
-                             primer_specificity_database = "nt", ...,
+                             organism,
+                             mismatch = 3,
+                             minimum_length = 5,
+                             maximum_length = 500,
+                             primer_specificity_database = "nt",
+                             ...,
                              return_table = TRUE) {
+  
   
   # Check paths provided
   if (!file.exists(accession_taxa_sql_path)) {

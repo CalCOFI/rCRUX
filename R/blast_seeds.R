@@ -2,12 +2,15 @@
 #' seed sequences
 #'
 #' @description
-#' blast_seeds uses [rCRUX::blast_datatable()] to search against a blast
-#' formatted database. It creates a permanent directory `blast_seeds_output` and
-#' a temporary directory 'blast_seeds_save' in the `output_directory_path`. It saves from
-#' and passes files to [rCRUX::blast_datatable()] while the run is in progress.
-#' During the final steps of the function the final data is saved in
-#' `rblast_seeds_output` recording the results of the blast.
+#' `blast_seeds()` is a wrapper function for [rCRUX::blast_datatable()] -
+#' to search seeds from `get_seeds_*` functions against a blast formatted 
+#' database - while wrangling the output for downstream use.\cr
+#' 
+#' It creates a permanent directory `blast_seeds_output` and
+#' a temporary directory `blast_seeds_save` in the `output_directory_path`. 
+#' It saves from, and passes files to, [rCRUX::blast_datatable()] while the run 
+#' is in progress. During the final steps of the function the final data is saved in
+#' `blast_seeds_output` recording the results of the blast.
 #'
 #' @details
 #' The [rCRUX::blast_datatable()] call saves intermediate results and
@@ -56,11 +59,14 @@
 #' @param expand_vectors logical, determines whether to expand too_many_Ns
 #'        and not_in db into real tables and write them in the output directory.
 #'        the default is expand_vectors = TRUE.
-#' @param warnings value to set the "warn" option to during the function call.
-#'        On exit it returns to the previous value. Setting this argument to
-#'        NULL will not change the option.
+#' @param minimum_length removes each blast result that has a value less than
+#'        minimum_length in the product_length column.
+#'        The default is minimum_length = 5
+#' @param maximum_length removes removes each blast that has a
+#'        value greater than maximum_length in the product_length column
+#'        The default is maximum_length = 500
+#' @param ... additional arguments passed to [rCRUX::blast_datatable()]
 # blast_datatable arugments commented out
-# @param ... additional arguments passed to [rCRUX::blast_datatable()]
 # @param sample_size passed to [rCRUX::blast_datatable()] is the the number of
 #        entries to sample per rank. The default sample_size = 1 - is recommended
 #        unless the user is sampling higher order taxonomy.  If there are not
@@ -143,7 +149,6 @@ blast_seeds <-
            expand_vectors = TRUE,
            minimum_length = 5,
            maximum_length = 500,
-           warnings = 0,
            ...) {
     
     # Setup ----

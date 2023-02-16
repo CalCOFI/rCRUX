@@ -66,28 +66,11 @@ The default is maximum_length = 500}
 \item{primer_specificity_database}{passed to \code{\link[=primer_search]{primer_search()}}, which passes it
 to NCBI.  The default is primer_specificity_database = 'nt'.}
 
-\item{...}{additional arguments passed to primer_search, see
+\item{...}{additional arguments passed to \code{\link[=iterative_primer_search]{iterative_primer_search()}}, see
 \code{primerTree::primer_search()} and \href{https://www.ncbi.nlm.nih.gov/tools/primer-blast/}{NCBI primer-blast tool}
 for more information.}
 
-\item{num_permutations}{the number of primer permutations to search, if the
-degenerate bases cause more than this number of permutations to exist,
-this number will be sampled from all possible permutations.
-The default is num_permutations = 50 - Note for very degenerate bases,
-searches may be empty due to poor mutual matches for a given forward
-and reverse primer combination.}
-
-\item{HITSIZE}{a primer BLAST search parameter set high to maximize the
-number of observations returned.
-The default HITSIZE = 50000 - note increasing this parameter can
-maximize primer hits, but can also lead to API run throttling due to
-memory limitations}
-
-\item{NUM_TARGETS_WITH_PRIMERS}{a primer BLAST search parameter set high to
-maximize the number of observations returned.
-The default is NCBI NUM_TARGETS_WITH_PRIMERS = 1000 - - note increasing
-this parameter can maximize primer hits, but can also lead to API run
-throttling due to memory limitations}
+\item{return_table}{whether to return the table \verb{some table}}
 }
 \value{
 a data.frame containing the same information as the .csv it generates

@@ -128,6 +128,18 @@ cat(sep = "\n",
 )
 ```
 
+```{r}
+read.csv(
+  file.path(output_directory_path, 'derep_and_clean_db/Sequences_with_single_taxonomic_path.csv') 
+)
+```
+
+```{r}
+read.csv(
+  file.path(output_directory_path, 'derep_and_clean_db/Sequences_with_multiple_taxonomic_paths.csv') 
+)
+```
+
 ### 12S
 
 ```{r}
@@ -210,5 +222,16 @@ derep_and_clean_db(output_directory_path = output_directory_path,
 # files in derep_and_clean_db/
 cat(sep = "\n",
     list.files(file.path(output_directory_path, 'derep_and_clean_db'))
+)
+```
+
+```{r}
+read.csv(
+  file.path(output_directory_path, 'derep_and_clean_db/Sequences_with_multiple_taxonomic_paths.csv') 
+)
+``` 
+```{r}
+read.csv(
+  file.path(output_directory_path, 'derep_and_clean_db/Sequences_with_single_taxonomic_path.csv') 
 )
 ```

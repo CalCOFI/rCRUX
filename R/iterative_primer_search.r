@@ -18,11 +18,12 @@
 #'        entry will be queried separately.
 #'        (e.g. organism = c("1476529", "7776"))
 #' @param db which NCBI database to search. The default is db = 'nt' (e.g. nr).
+#' @param ... arguments passed on to [rCRUX::primer_search()]
 #' @return a data.table summarizing the results of several primer_searches
 #' @export
 #'
 
-iterative_primer_search <- function(forwar_primer_seq, reverse_primer_seq, organisms,
+iterative_primer_search <- function(forward_primer_seq, reverse_primer_seq, organisms,
                                     db = "nt", ...) {
   output <- NULL
   # Use for loops to iterate over all the vector options
