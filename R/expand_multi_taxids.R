@@ -77,7 +77,7 @@ expand_multi_taxids <- function(output_table, max_to_blast, blast_db_path, ncbi_
               args = c("-db", blast_db_path,
                        "-dbtype", "nucl",
                        "-entry", find,
-                       "-outfmt", "'%a %T'"),
+                       "-outfmt", '"%a %T"'),
               stdout = TRUE, stderr = FALSE)
     
     
@@ -93,10 +93,11 @@ expand_multi_taxids <- function(output_table, max_to_blast, blast_db_path, ncbi_
                      "BLAST_db_taxids")
   
   accession_output_table <- tibble::as_tibble(expand_multi_taxids_output)
+  
   accession_output_table <-  
     tidyr::separate(accession_output_table, 
                     col = .data$value, 
-                    into = 'column_names',
+                    into = column_names,
                     sep = " ")
   
   # add row_id for sorting later
