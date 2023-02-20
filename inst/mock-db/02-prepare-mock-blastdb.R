@@ -11,6 +11,8 @@
 #' will can be used by end users if needed starting with `system.file(package = 'rCRUX', 'mock-db')`
 #' 
 
+stopifnot('Expecting to be in the rCRUX root project folder' = basename(getwd()) == 'rCRUX')
+
 #' Build DB
 result <-
   system2('makeblastdb', 
@@ -28,11 +30,20 @@ stopifnot('Previous system command returned an error result code' = result == 0)
 # Test DB
 result_text <-
   system(
-    'blastdbcmd -db inst/mock-db/blastdb/mock-db -dbtype nucl -entry S000008088 -range 1-50',
+    'blastdbcmd -db inst/mock-db/blastdb/mock-db -dbtype nucl -entry X56576.1 -range 1-50',
     intern = TRUE
   )
 
-stopifnot('Returned value not does not have the entry value' = grepl('S000008088', paste(result_text, collapse = '')))
+stopifnot('Returned value not does not have the entry value' = grepl('X56576.1', paste(result_text, collapse = '')))
+
+result_text <-
+  system(
+    'blastdbcmd -db inst/mock-db/blastdb/mock-db -dbtype nucl -entry LC091907.1 -range 1-50',
+    intern = TRUE
+  )
+
+stopifnot('Returned value not does not have the entry value' = grepl('LC091907.1', paste(result_text, collapse = '')))
+
 
 
 
