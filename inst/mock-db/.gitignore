@@ -1,3 +1,6 @@
 taxonomizr-ncbi-db-raw.sql
 names.dmp
 nodes.dmp
+sequence.gb
+sequence.fasta.xml
+archive

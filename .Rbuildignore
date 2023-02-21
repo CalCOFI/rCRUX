@@ -16,3 +16,5 @@ inst/mock-db/names.dmp
 inst/mock-db/nodes.dmp
 inst/mock-db/taxonomizr-ncbi-db-raw.sql
 .github
+^inst/mock-db/archive$
+^inst/mock-db/sequence\.fasta\.xml$

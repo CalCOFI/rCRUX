@@ -1,12 +1,11 @@
-#' Runs blastn with the seed amplicon input fasta as a query
+#' Run blastn with the seed amplicon sequences
+#'
+#' Calls `blastn` with a fasta file created from a character vector as the query. 
+#' The user can not add additional search parameters, but can modify the available parameters.
 #'
 #' @details
-#' Calls blastn with a fasta file as the query. The user can not add
-#' additional search parameters, but can modify the available parameters.
-#'
-#' @details
-#' run_blastn takes a fasta file, and query them to a blast formatted database.
-#' The result is an output table with
+#' [rCRUX::run_blastn()] takes a character vector fasta, converts to a  fasta file, 
+#' and queries them against a BLAST formatted database. The result is an output table with
 #' the following columns of data: accession, amplicon_length, pident,
 #' query_accession, accession_sequence_length, amplicon_start, amplicon_stop,
 #' sequence, evalue, BLAST_db_taxids.

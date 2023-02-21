@@ -9,17 +9,26 @@
 #' will can be used by end users if needed starting with `system.file(package = 'rCRUX', 'mock-db')`
 #' 
 
+stopifnot('Expecting to be in the rCRUX root project folder' = basename(getwd()) == 'rCRUX')
+
 library(magrittr)
 library(dplyr)
 library(RSQLite)
 
 taxonomizr_db <- "inst/mock-db/taxonomizr-ncbi-db-raw.sql"
+taxonomizr_small_db <- "inst/mock-db/taxonomizr-ncbi-db-small.sql"
+
+if (file.exists(taxonomizr_small_db)){
+  unlink(taxonomizr_small_db)
+}
 
 # Produces ~ 400 mb file
-#taxonomizr::prepareDatabase(taxonomizr_db, getAccessions=FALSE, tmpDir = 'inst/mock-db/')
+if (!file.exists(taxonomizr_db)){
+  taxonomizr::prepareDatabase(taxonomizr_db, getAccessions=FALSE, tmpDir = 'inst/mock-db/')
+}
 
 # Create a smaller version with out own accessions
-small_db <- RSQLite::dbConnect(RSQLite::SQLite(), "inst/mock-db/taxonomizr-ncbi-db-small.sql")
+small_db <- RSQLite::dbConnect(RSQLite::SQLite(), taxonomizr_small_db)
 
 # - Create accessionTaxa table
 # need column names accession and taxa

@@ -2,7 +2,7 @@
 % Please edit documentation in R/run_blastn.R
 \name{run_blastn}
 \alias{run_blastn}
-\title{Runs blastn with the seed amplicon input fasta as a query}
+\title{Run blastn with the seed amplicon sequences}
 \usage{
 run_blastn(
   fasta,
@@ -50,14 +50,12 @@ the user's number of CPUs automatically.}
 a tibble representing the blastn results
 }
 \description{
-Runs blastn with the seed amplicon input fasta as a query
+Calls \code{blastn} with a fasta file created from a character vector as the query.
+The user can not add additional search parameters, but can modify the available parameters.
 }
 \details{
-Calls blastn with a fasta file as the query. The user can not add
-additional search parameters, but can modify the available parameters.
-
-run_blastn takes a fasta file, and query them to a blast formatted database.
-The result is an output table with
+\code{\link[=run_blastn]{run_blastn()}} takes a character vector fasta, converts to a  fasta file,
+and queries them against a BLAST formatted database. The result is an output table with
 the following columns of data: accession, amplicon_length, pident,
 query_accession, accession_sequence_length, amplicon_start, amplicon_stop,
 sequence, evalue, BLAST_db_taxids.

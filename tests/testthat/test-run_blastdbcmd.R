@@ -1,7 +1,8 @@
 test_that("run_blastdbcmd works on mock-db", {
+  
   query_row <-
     data.frame(
-      accession = 'S002305130',
+      accession = 'HM485589.1',
       forward_stop = '668',
       reverse_stop = '1484'
     )
@@ -10,7 +11,8 @@ test_that("run_blastdbcmd works on mock-db", {
   
   result <- run_blastdbcmd(query_row = query_row, db = blast_db_path)
   
-  expect_true(grepl('^>S002305130', result[1]))
+  # return accession with expanded by 1 range
+  expect_true(grepl('>HM485589.1:667-1485', result[1]))
   
 })
 
