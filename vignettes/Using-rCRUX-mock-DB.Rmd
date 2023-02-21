@@ -186,6 +186,12 @@ read.csv(
 ```
 
 ```{r}
+read.csv(
+  file.path(output_directory_path, 'get_seeds_local/12S_filtered_get_seeds_local_unique_taxonomic_rank_counts.csv') 
+)
+```
+
+```{r}
 seeds_output_path <- 
   file.path(output_directory_path, 'get_seeds_local/12S_filtered_get_seeds_local_output_with_taxonomy.csv') 
 
@@ -230,6 +236,7 @@ read.csv(
   file.path(output_directory_path, 'derep_and_clean_db/Sequences_with_multiple_taxonomic_paths.csv') 
 )
 ``` 
+
 ```{r}
 read.csv(
   file.path(output_directory_path, 'derep_and_clean_db/Sequences_with_single_taxonomic_path.csv') 

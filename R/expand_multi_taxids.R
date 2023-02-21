@@ -114,10 +114,10 @@ expand_multi_taxids <- function(output_table, max_to_blast, blast_db_path, ncbi_
   accession_df <- dplyr::left_join(accession_df, multi_taxids, by = c("accession.x" = "accession"))
   
   # remove unnecessary columns
-  accession_df <- dplyr::select(accession_df, -c(.data$accession.x, .data$BLAST_db_taxids.y, .data$row_id))
+  accession_df <- dplyr::select(accession_df, -c('accession.x', 'BLAST_db_taxids.y', 'row_id'))
   
   # change name of columns for concatonating with the clean data
-  accession_df <- dplyr::rename(accession_df, accession = .data$accession.y, BLAST_db_taxids = .data$BLAST_db_taxids.x)
+  accession_df <- dplyr::rename(accession_df, accession = 'accession.y', BLAST_db_taxids = 'BLAST_db_taxids.x')
   
   # add the expanded blastdbcmd output with the single taxid table.
   output_table <- rbind(accession_df, clean_tax)

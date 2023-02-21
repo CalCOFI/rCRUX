@@ -16,11 +16,11 @@ stopifnot('Expecting to be in the rCRUX root project folder' = basename(getwd())
 #' Build DB
 result <-
   system2('makeblastdb', 
-          args =  c('-in inst/mock-db/mock-db-sequences.fasta',
+          args =  c('-in',  'inst/mock-db/mock-db-sequences.fasta',
                     '-dbtype nucl',
                     '-parse_seqids',
                     '-title "Mock rCRUX source database"',
-                    '-taxid_map inst/mock-db/mock-db-sequences-taxid.map',
+                    '-taxid_map', 'inst/mock-db/mock-db-sequences-taxid.map',
                     '-out inst/mock-db/blastdb/mock-db'
           )
   )
@@ -28,6 +28,27 @@ result <-
 stopifnot('Previous system command returned an error result code' = result == 0)
 
 # Test DB
+# Nseqs
+result_text <-
+  system(
+    'blastdbcmd -db inst/mock-db/blastdb/mock-db -info',
+    intern = TRUE
+  )
+
+sequence_number <-
+  strsplit(paste(result_text, collapse = ''), split = '\t')[[1]][2]
+
+stopifnot('expecting 34 sequences in db' = grepl('^34', sequence_number))
+
+# By id
+result_text <-
+  system(
+    'blastdbcmd -db inst/mock-db/blastdb/mock-db -dbtype nucl -entry KY815345.1',
+    intern = TRUE
+  )
+
+stopifnot('Returned value not does not have the entry value' = grepl('KY815345.1', paste(result_text, collapse = '')))
+
 result_text <-
   system(
     'blastdbcmd -db inst/mock-db/blastdb/mock-db -dbtype nucl -entry X56576.1 -range 1-50',

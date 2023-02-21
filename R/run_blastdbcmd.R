@@ -28,8 +28,8 @@ run_blastdbcmd <- function(query_row, db, ncbi_bin = NULL) {
   }
   
   # Massage/extend forward and reverse range values
-  forward <- forward + 1
-  reverse <- reverse - 1
+  forward <- forward - 1
+  reverse <- reverse + 1
   
   seq_range <- paste0(forward, "-", reverse)
   
