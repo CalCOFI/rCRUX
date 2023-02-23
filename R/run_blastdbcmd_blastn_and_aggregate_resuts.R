@@ -34,6 +34,7 @@
 #' @param num_rounds number of rounds of blast
 #' @param blastdbcmd_failed the indicies not found in your blast db
 #' @param ... additional arguments passed to [rCRUX::run_blastn()]
+#' @inheritDotParams run_blastn
 #'
 #' @return NULL
 #' @export
@@ -161,7 +162,7 @@ run_blastdbcmd_blastn_and_aggregate_resuts <-
     }
     
     # report number of total unique blast hits
-    message(nrow(output_table), " unique blast hits after this round.")
+    message('  ', nrow(output_table), " unique blast hits after this round.\n")
     
     # add new blast round
     num_rounds <- num_rounds + 1

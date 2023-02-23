@@ -51,7 +51,23 @@ sequence. The default is wildcards = "NNNN"}
 
 \item{num_rounds}{number of rounds of blast}
 
-\item{...}{additional arguments passed to \code{\link[=run_blastn]{run_blastn()}}}
+\item{...}{
+  Arguments passed on to \code{\link[=run_blastn]{run_blastn}}
+  \describe{
+    \item{\code{fasta}}{a fasta-formatted string}
+    \item{\code{temp_fasta_path}}{a file path to write a temporary fasta to - blastn requires a file to query}
+    \item{\code{evalue}}{is the number of expected hits with a similar quality score
+found by chance. The default is evalue = 1e-6.}
+    \item{\code{coverage}}{is the minimum percent of the query length recovered in the
+subject hits. The default is coverage = 50.}
+    \item{\code{perID}}{is the minimum percent identity of the query relative to the
+subject hits. The default is perID = 70.}
+    \item{\code{align}}{is the maximum number of subject hits to return per query
+blasted. The default is align = 50000.}
+    \item{\code{num_threads}}{is the number of CPUs to engage in the blastn search. The
+value num_treads = 'max', uses \code{\link[parallel:detectCores]{parallel::detectCores()}} to determine
+the user's number of CPUs automatically.}
+  }}
 }
 \description{
 It uses \code{\link[=run_blastdbcmd]{run_blastdbcmd()}} to find a seed sequence that corresponds to

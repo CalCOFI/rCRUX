@@ -46,7 +46,25 @@ The default is minimum_length = 5}
 value greater than maximum_length in the product_length column
 The default is maximum_length = 500}
 
-\item{...}{additional arguments passed to \code{\link[=blast_datatable]{blast_datatable()}}}
+\item{...}{
+  Arguments passed on to \code{\link[=blast_datatable]{blast_datatable}}
+  \describe{
+    \item{\code{blast_seeds}}{a data.frame formatted like the output from
+get_seeds_remote or get_seeds_local}
+    \item{\code{save_dir}}{a directory in which to create files representing the
+current state}
+    \item{\code{ncbi_bin}}{the directory that the blast+ suite is in. If NULL, the
+program will use your PATH environmental variable to locate them}
+    \item{\code{force_db}}{if true, try to use blast databases that don't appear to
+be blast databases}
+    \item{\code{sample_size}}{the number of entries to sample per rank
+before calling blastn - errors if not enough entries per rank (default = 1)}
+    \item{\code{max_to_blast}}{is the maximum number of entries to accumulate into a
+fasta before calling blastn (default = 1000)}
+    \item{\code{wildcards}}{a character vector representing the number of wildcards to
+discard (default = "NNNN")}
+    \item{\code{rank}}{the column representing the taxonomic rank to randomly sample (default = genus)}
+  }}
 }
 \description{
 \code{blast_seeds()} is a wrapper function for \code{\link[=blast_datatable]{blast_datatable()}} -

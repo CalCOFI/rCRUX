@@ -38,7 +38,8 @@ result_text <-
 sequence_number <-
   strsplit(paste(result_text, collapse = ''), split = '\t')[[1]][2]
 
-stopifnot('expecting 34 sequences in db' = grepl('^34', sequence_number))
+# 312 unique seqs, 347 taxids
+stopifnot('expecting 34 sequences in db' = grepl('^312', sequence_number))
 
 # By id
 result_text <-
@@ -47,24 +48,49 @@ result_text <-
     intern = TRUE
   )
 
+result_text
+
 stopifnot('Returned value not does not have the entry value' = grepl('KY815345.1', paste(result_text, collapse = '')))
 
 result_text <-
   system(
-    'blastdbcmd -db inst/mock-db/blastdb/mock-db -dbtype nucl -entry X56576.1 -range 1-50',
+    'blastdbcmd -db inst/mock-db/blastdb/mock-db -dbtype nucl -entry KY815345.1 -outfmt "%a %T"',
     intern = TRUE
   )
 
-stopifnot('Returned value not does not have the entry value' = grepl('X56576.1', paste(result_text, collapse = '')))
+result_text
+
+stopifnot('Should be two hits' = length(result_text) == 2)
+
+temp_fasta <- tempfile()
+
+writeLines(con = temp_fasta, 
+           text = c('>multitaxid', 
+                    "GCCATCAGCTTTAACTAAACTTACACATGCGAGTATCCGCACCCCTGTGAGAATGCCCCGCTACCTCCTGATTGGAGACG
+AGGAGCTGGCATCAGGCACAATCTTCTTTAGCCCACGACGCCTTGCTAAGCCACACCCCCAAGGGAATTCAGCAGTGATA
+AATATTAAGCCATGAGTGAAAACTTGACTTAGTTAGTGTTTACAGGGCCGGTAAACCTCGTGCCAGCCACCGCGGTTAGA
+CGAGAGACCCAAGTGGATGGCCCTCGGCGTAAAGAGTGGTTAAGATAGTCCCAAACTAAGGCCAAACGACTTTTTAGCTG
+TTATACGCGCGAGAAGACATGAAGCCCAACTACGAAAGTGGCCTTAAGCCCCTGACCCCACGAAAGCTAGGATACAAACT
+GGGATTAGATACCCCACTATGCCTAGCCCTAAACATTGATAACACCCTACCCAGTTTATCCGCCCGGGAACTACGAGCGT
+CAGCTTGAAACCCAAAGGACTTGGCGGTGCTTTAGATCCACCTAGAGGAGCCTGTTCTAGAACCGATAATCCCCGTTCAA
+CCTCACCTTTTCTTGCTTATTCCGCCTATATACCACCGTCGTCAGCTTACTCTTTGAGGAACTAGCCGTAAGCGCAACTG
+GTACAACCTAAAACGCCAGGTCGAGGTGTAGCGAATGGAAAGGGAAGAAATGGGCTACATTCAGTAATAATAATGCATAC
+GAACGATGTTCTGAAATAAACATCTGAAGGAGGATTTAGTAGTAAGTAGAGAGCAGAGTGCTCTACTGAAGCCGGCCCTG
+AAGCGCGTACACACCGCCCGTCACTCTCCCCGAGCTAACCAAACACATTACTAATAAACAAAACTTGCAAAGGGGAGGC"
+           ))
 
 result_text <-
-  system(
-    'blastdbcmd -db inst/mock-db/blastdb/mock-db -dbtype nucl -entry LC091907.1 -range 1-50',
-    intern = TRUE
-  )
+  system2(command = 'blastn',
+          args = c("-db", "inst/mock-db/blastdb/mock-db",
+                   "-query", temp_fasta,
+                   "-outfmt", paste("\"6", "saccver", "length",
+                                    "pident", "qacc", "slen", "sstart",
+                                    "send", "evalue", "staxids\"")),
+          wait = TRUE,
+          stdout = TRUE)
 
-stopifnot('Returned value not does not have the entry value' = grepl('LC091907.1', paste(result_text, collapse = '')))
+result_text_staxids <-
+  do.call(rbind.data.frame, 
+          strsplit(result_text, split = '\t'))[,9]
 
-
-
-
+stopifnot('Should be mutlitaxids with ; ' = any(grepl(';', result_text_staxids)))

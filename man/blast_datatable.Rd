@@ -49,7 +49,19 @@ discard (default = "NNNN")}
 \item{max_to_blast}{is the maximum number of entries to accumulate into a
 fasta before calling blastn (default = 1000)}
 
-\item{...}{additional arguments passed to \code{\link[=run_blastdbcmd_blastn_and_aggregate_resuts]{run_blastdbcmd_blastn_and_aggregate_resuts()}}}
+\item{...}{
+  Arguments passed on to \code{\link[=run_blastdbcmd_blastn_and_aggregate_resuts]{run_blastdbcmd_blastn_and_aggregate_resuts}}
+  \describe{
+    \item{\code{sample_indices}}{the indices to sample}
+    \item{\code{blast_seeds_m}}{blast seeds table but with blast status update}
+    \item{\code{too_many_ns}}{a vector of indices that result
+in a fasta with too many Ns}
+    \item{\code{db}}{path to the blast db}
+    \item{\code{unsampled_indices}}{the indices that need to be sampled}
+    \item{\code{output_table}}{the table of results}
+    \item{\code{num_rounds}}{number of rounds of blast}
+    \item{\code{blastdbcmd_failed}}{the indicies not found in your blast db}
+  }}
 }
 \value{
 A data.frame representing the output of blastn

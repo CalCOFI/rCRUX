@@ -89,6 +89,8 @@
 #'        discard (default = "NNNN")
 #' @param rank the column representing the taxonomic rank to randomly sample (default = genus)
 #' @param ... additional arguments passed to [rCRUX::run_blastdbcmd_blastn_and_aggregate_resuts()]
+#' @inheritDotParams run_blastdbcmd_blastn_and_aggregate_resuts
+#' 
 #' @return A data.frame representing the output of blastn
 #' 
 #' @export
