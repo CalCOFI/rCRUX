@@ -3,6 +3,7 @@ Getting taxonomy IDs manually for mock db
 1. Create a file with all the accessions (>XXXX)
 2. Go to Batch Entrez https://www.ncbi.nlm.nih.gov/sites/batchentrez
 3. Upload file 
-4. Results shold have Retrieve records link
-5. Send to > complete Record > file .. saves as 'genebank' to 'sequence.gb'
-6. Wrangle in R to extract accession and taxid
+4. Results should have Retrieve records link
+5. Ensure 200 records per page selected
+6. Send to > complete Record > file .. saves as 'tiny xml' to 'sequence.gb'
+7. Wrangle in R to extract accession and taxid

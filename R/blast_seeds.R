@@ -66,6 +66,8 @@
 #'        value greater than maximum_length in the product_length column
 #'        The default is maximum_length = 500
 #' @param ... additional arguments passed to [rCRUX::blast_datatable()]
+#' 
+#' @inheritDotParams blast_datatable
 # blast_datatable arugments commented out
 # @param sample_size passed to [rCRUX::blast_datatable()] is the the number of
 #        entries to sample per rank. The default sample_size = 1 - is recommended
@@ -152,17 +154,6 @@ blast_seeds <-
            ...) {
     
     # Setup ----
-    # 2023/02/09 - run_blastdbcmd updated to suppress warnings, and we use object attributes
-    
-    # So that run_blastdbcmd doesn't overwhelm the user with errors
-    # Possibly we should discard the warnings from blastdb as it's entirely
-    # expected to encounter so values that are not in the database.
-    # if (!is.null(warnings)) {
-    #   old_warnings <- getOption("warn")
-    #   on.exit(options(warn = old_warnings))
-    #   options(warn = warnings)
-    # }
-    
     output_dir <- file.path(output_directory_path, "blast_seeds_output")
     
     message('Output directory: ', output_dir, '\n')

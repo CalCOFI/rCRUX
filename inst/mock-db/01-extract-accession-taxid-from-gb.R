@@ -18,6 +18,8 @@ accession_taxid <-
       xml2::xml_text()
   )
 
+stopifnot('There should be 347 records' = nrow(accession_taxid) == 347)
+
 accession_taxid |>
   write.table(file = 'inst/mock-db/mock-db-sequences-taxid.map',
               sep = '\t', row.names = FALSE, col.names = FALSE, quote = FALSE)

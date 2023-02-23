@@ -97,6 +97,7 @@ blast_seeds(seeds_output_path = seeds_output_path,
             output_directory_path = output_directory_path,
             metabarcode_name = metabarcode_name, 
             maximum_length = 900,
+            perID = 90,
             num_threads = 'max')
 ```
 
@@ -156,7 +157,6 @@ accession_taxa_sql_path <- system.file(package = 'rCRUX', 'mock-db/taxonomizr-nc
 # 12S probes
 forward_primer_seq = "TAGAACAGGCTCCTCTAG"
 reverse_primer_seq =  "TTAGATACCCCACTATGC"
-
 metabarcode_name <- "12S"
 ```
 
@@ -182,7 +182,7 @@ cat(sep = "\n",
 ```{r}
 read.csv(
   file.path(output_directory_path, 'get_seeds_local/12S_filtered_get_seeds_local_output_with_taxonomy.csv') 
-)
+)[1:10,]
 ```
 
 ```{r}
