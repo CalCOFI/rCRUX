@@ -67,7 +67,7 @@ in a fasta with too many Ns}
 A data.frame representing the output of blastn
 }
 \description{
-#' Controls the iterative blast search implemented by
+Controls the iterative blast search implemented by
 \link{run_blastdbcmd_blastn_and_aggregate_resuts}, cleans the output, and
 adds taxonomy.
 Given a datatable with the column names of the datatable returned by
