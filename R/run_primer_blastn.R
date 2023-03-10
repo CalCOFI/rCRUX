@@ -1,5 +1,5 @@
 #' Run blastn with a fasta file
-#' 
+#'
 #' @details
 #' Calls blastn with a primer fasta file as the query. The user can not add
 #' additional search parameters, but can modify the available parameters.
@@ -14,9 +14,6 @@
 #' Information about the blastn parameters can be found by accessing blastn -help
 #' and at [NCBI](https://www.ncbi.nlm.nih.gov/books/NBK279684/).
 #'
-#' Note:
-#' The number of alignments returned for a given blast search is hardcoded at
-#' "-num_alignments 10000000".
 #'
 #' @param primer_fasta path to the primer fasta file
 #' @param db a path to a directory / or directories containing one or more blast-formatted database.
@@ -37,32 +34,32 @@
 #'        result in no matching pairs of forward and reverse primers.  To many
 #'        alignments can result in an error due to RAM limitations.
 #' @param num_threads number, the number of CPUs to engage in the blastn search. The
-#'        value 'max' can be used and which uses [parallel::detectCores()] to determine 
-#'        the user's maximum number of CPUs automatically (use with caution).
+#'        value 'max' can be used and which uses [parallel::detectCores()] to determine
+#'        the user's maximum number of CPUs automatically (use with caution; Default = 1)
 #' @param reward is the reward for nucleotide match. The default is reward = 2.
 #' @param ncbi_bin is the path to blast+ tools if not in the user's PATH
 #'        Specify only if blastn and blastdbcmd  are not in your path.
 #'        The default is ncbi_bin = NULL - if not specified in path do the
 #'        following: ncbi_bin = "/my/local/ncbi-blast-2.10.1+/bin/".
-#' 
-#' 
+#'
+#'
 #' @return a tibble 'output_table' representing the blastn results
-#' 
-#' @examples 
-#' 
+#'
+#' @examples
+#'
 #' temp_fasta <- tempfile(fileext = '.fasta')
-#' 
+#'
 #' test_primers <-
-#'   c('>primer_forward', 'AGAGGAGCGCGGAATTCC', 
+#'   c('>primer_forward', 'AGAGGAGCGCGGAATTCC',
 #'   '>primer_reverse', 'TACCTTGTTACGACTT')
-#'   
+#'
 #' writeLines(test_primers, temp_fasta)
-#' 
+#'
 #' blast_db_path <- file.path(system.file(package = 'rCRUX', 'mock-db/blastdb'), 'mock-db')
-#' 
+#'
 #' # Returns a data.frame of results
 #' result <- run_primer_blastn(primer_fasta = temp_fasta, db = blast_db_path)
-#' 
+#'
 #' @export
 run_primer_blastn <-
   function(primer_fasta,
@@ -76,25 +73,25 @@ run_primer_blastn <-
            reward = 2,
            num_threads = 1,
            ncbi_bin = NULL) {
-    
+
     # Assume paths to things have been checked?
     check_blast_plus_installation(ncbi_bin = ncbi_bin)
     check_blast_db(db)
-    
+
     # Not sure this is the best default
     if (num_threads == 'max') {
       cores <- parallel::detectCores()
     } else {
       cores <- num_threads
     }
-    
+
     # Prepare call to blastn
     if (!is.null(ncbi_bin)){
       blastn <- file.path(ncbi_bin, 'blastn')
     } else {
       blastn = 'blastn'
     }
-    
+
     args <-
       c("-db", db,
         "-task", task,
@@ -107,19 +104,19 @@ run_primer_blastn <-
         "-reward", reward,
         "-word_size", word_size,
         "-num_threads", cores)
-    
+
     message("Calling blastn for primers. This may take a long time.\n")
     message(paste(blastn, paste(args, collapse = ' ')))
-    
+
     # Catch stdout to character vector (a tab-delimited table)
-    blastn_output <- 
+    blastn_output <-
       system2(command = blastn,
               args = args,
               wait = TRUE,
               stdout = TRUE)
-    
+
     file.remove(primer_fasta)
-    
+
     # Wrangle return data to a tibble
     column_names <-
       c("qseqid",
@@ -129,13 +126,12 @@ run_primer_blastn <-
         "sstart",
         "send",
         "staxids")
-    
-    
+
+
     blastn_output %>%
       tibble::as_tibble() %>%
-      tidyr::separate(col = .data$value, 
+      tidyr::separate(col = .data$value,
                       into = column_names,
                       sep = "\t")
-    
-  }
 
+  }

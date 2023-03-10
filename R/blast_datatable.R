@@ -88,7 +88,7 @@
 #' @param wildcards a character vector representing the number of wildcards to
 #'        discard (default = "NNNNNNNNNNNN")
 #' @param rank the column representing the taxonomic rank to randomly sample (default = genus)
-#' @param random_seed sets the random value generator for random stratified sampling within [dplyr::slice_sample()]. Change the default = NULL for reproducible results.
+#' @param random_seed sets the random value generator for random stratified sampling. Change the default (random_seed = NULL) for reproducible results.
 #' @param ... additional arguments passed to [rCRUX::run_blastdbcmd_blastn_and_aggregate_resuts()]
 #' @inheritDotParams run_blastdbcmd_blastn_and_aggregate_resuts
 #'

@@ -49,7 +49,7 @@ subject hits. The default is perID = 50.}
 
 \item{num_threads}{number, the number of CPUs to engage in the blastn search. The
 value 'max' can be used and which uses \code{\link[parallel:detectCores]{parallel::detectCores()}} to determine
-the user's maximum number of CPUs automatically (use with caution).}
+the user's maximum number of CPUs automatically (use with caution; Default = 1)}
 
 \item{ncbi_bin}{is the path to blast+ tools if not in the user's PATH
 Specify only if blastn and blastdbcmd  are not in your path.
@@ -75,19 +75,15 @@ the subject a query), sstart (subject start), send (subject end), staxids
 
 Information about the blastn parameters can be found by accessing blastn -help
 and at \href{https://www.ncbi.nlm.nih.gov/books/NBK279684/}{NCBI}.
-
-Note:
-The number of alignments returned for a given blast search is hardcoded at
-"-num_alignments 10000000".
 }
 \examples{
 
 temp_fasta <- tempfile(fileext = '.fasta')
 
 test_primers <-
-  c('>primer_forward', 'AGAGGAGCGCGGAATTCC', 
+  c('>primer_forward', 'AGAGGAGCGCGGAATTCC',
   '>primer_reverse', 'TACCTTGTTACGACTT')
-  
+
 writeLines(test_primers, temp_fasta)
 
 blast_db_path <- file.path(system.file(package = 'rCRUX', 'mock-db/blastdb'), 'mock-db')

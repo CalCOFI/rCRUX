@@ -42,9 +42,9 @@ subject hits. The default is coverage = 50.}
 \item{perID}{is the minimum percent identity of the query relative to the
 subject hits. The default is perID = 70.}
 
-\item{num_threads}{is the number of CPUs to engage in the blastn search. The
-value num_treads = 'max', uses \code{\link[parallel:detectCores]{parallel::detectCores()}} to determine
-the user's number of CPUs automatically.}
+\item{num_threads}{number, the number of CPUs to engage in the blastn search. The
+value 'max' can be used and which uses \code{\link[parallel:detectCores]{parallel::detectCores()}} to determine
+the user's maximum number of CPUs automatically (use with caution; Default = 1)}
 }
 \value{
 a tibble representing the blastn results
