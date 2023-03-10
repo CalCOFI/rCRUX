@@ -86,19 +86,20 @@
 #' @param max_to_blast is the maximum number of entries to accumulate into a
 #'        fasta before calling blastn (default = 1000)
 #' @param wildcards a character vector representing the number of wildcards to
-#'        discard (default = "NNNN")
+#'        discard (default = "NNNNNNNNNNNN")
 #' @param rank the column representing the taxonomic rank to randomly sample (default = genus)
+#' @param random_seed sets the random value generator for random stratified sampling within [dplyr::slice_sample()]. Change the default = NULL for reproducible results.
 #' @param ... additional arguments passed to [rCRUX::run_blastdbcmd_blastn_and_aggregate_resuts()]
 #' @inheritDotParams run_blastdbcmd_blastn_and_aggregate_resuts
-#' 
+#'
 #' @return A data.frame representing the output of blastn
-#' 
+#'
 #' @export
 
 
 blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa_sql_path,
                             ncbi_bin = NULL, force_db = FALSE,
-                            sample_size = 1, wildcards = "NNNN", rank = 'genus', max_to_blast = 1000, ...) {
+                            sample_size = 1, wildcards = "NNNNNNNNNNNN", rank = 'genus', max_to_blast = 1000, random_seed = NULL ...) {
 
   check_blast_plus_installation(ncbi_bin = if('ncbi_bin' %in% names(list(...))) ncbi_bin else NULL)
   check_blast_db(blast_db_path)
@@ -172,6 +173,11 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
       # if more indices than the max_to_blast are present
       # randomly select entries (default is n=1) for each rank then turn the
       # accession numbers into a vector
+      # set random.seed for reproducible results
+      if (!is.null(random_seed)){
+        set.seed(random_seed)
+      }
+
       seeds_by_rank_indices <-
         blast_seeds_m %>%
         dplyr::group_by(!!!rlang::syms(rank)) %>%
