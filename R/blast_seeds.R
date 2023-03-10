@@ -81,14 +81,14 @@
 # @param wildcards passed to [rCRUX::blast_datatable()] us a character vector
 #        that represents the minimum number of consecutive Ns the user will
 #        tolerate in a given seed or hit sequence. The default is
-#        wildcards = "NNNN"
+#        wildcards = "NNNNNNNNNNNN"
 # @param rank passed to [rCRUX::blast_datatable()] is the data column
 #        representing the taxonomic rank to randomly sample. The default is
 #        rank = 'genus' - sampling a lower rank  (e.g. species) will generate
 #        more total hits and take more time, conversely sampling a higher rank
 #        (e.g. family) will generate fewer total hits and take less time.
-# @param random_seed rank passed to [rCRUX::blast_datatable()] sets the random value generator for random stratified sampling
-#        within [dplyr::slice_sample()]. Change the default = NULL for reproducible results.
+# @param random_seed passed to [rCRUX::blast_datatable()] sets the random value generator for random stratified sampling
+#        within [dplyr::slice_sample()]. Change the default (random_seed = NULL) for reproducible results.
 # @param ncbi_bin passed to [rCRUX::run_blastdbcmd()] [rCRUX::run_blastn()] is
 #        the path to blast+ tools if not in the user's path.  Specify only if
 #        blastn and blastdbcmd  are not in your path.

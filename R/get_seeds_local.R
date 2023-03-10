@@ -90,7 +90,7 @@
 #' @param max_to_blast is the number of primers to blast simultaneously.
 #'        The default is max_to_blast = 2. - Increasing this number will decrease
 #'        overall run time, but increase the amount of RAM required.
-#' @param random_seed sets the random value generator for random stratified sampling within [dplyr::sample_n()]. Change the default = NULL for reproducible results.
+#' @param random_seed sets the random value generator for random stratified sampling within [dplyr::sample_n()]. Change the default (random_seed = NULL) for reproducible results.
 
 
 # run_primer_blastn parameters
