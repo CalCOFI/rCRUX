@@ -87,7 +87,7 @@
 #        rank = 'genus' - sampling a lower rank  (e.g. species) will generate
 #        more total hits and take more time, conversely sampling a higher rank
 #        (e.g. family) will generate fewer total hits and take less time.
-# @param random_seed sets the random value generator for random stratified sampling
+# @param random_seed rank passed to [rCRUX::blast_datatable()] sets the random value generator for random stratified sampling
 #        within [dplyr::slice_sample()]. Change the default = NULL for reproducible results.
 # @param ncbi_bin passed to [rCRUX::run_blastdbcmd()] [rCRUX::run_blastn()] is
 #        the path to blast+ tools if not in the user's path.  Specify only if
