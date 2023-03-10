@@ -118,6 +118,9 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
   blast_seeds_m$blast_status <- "not_done"
   unsampled_indices <- seq_along(blast_seeds_m$accession)
 
+  if (!is.null(random_seed)){
+    set.seed(random_seed)
+  }
 
   while (length(unsampled_indices) > 0) {
 
@@ -174,9 +177,6 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
       # randomly select entries (default is n=1) for each rank then turn the
       # accession numbers into a vector
       # set random.seed for reproducible results
-      if (!is.null(random_seed)){
-        set.seed(random_seed)
-      }
 
       seeds_by_rank_indices <-
         blast_seeds_m %>%
