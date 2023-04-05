@@ -103,10 +103,10 @@ compare_ref_db <- function(ref_db_1_path, ref_db_2_path,ref_db_1_name,ref_db_2_n
 
 # identify taxonomic similarity and differences between datasets
 
-  prob::setdiff(ref_db_1$accession, ref_db_2$accession) -> in_1_not_2
-  prob::setdiff(ref_db_2$accession, ref_db_1$accession) -> in_2_not_1
-  prob::intersect(ref_db_2$accession, ref_db_1$accession) -> in_1_and_2
-  prob::union(ref_db_2$accession, ref_db_1$accession) -> in_1_or_2
+  setdiff(ref_db_1$accession, ref_db_2$accession) -> in_1_not_2
+  setdiff(ref_db_2$accession, ref_db_1$accession) -> in_2_not_1
+  intersect(ref_db_2$accession, ref_db_1$accession) -> in_1_and_2
+  union(ref_db_2$accession, ref_db_1$accession) -> in_1_or_2
 
 #make summary table
   table_1 <- data.frame(length(in_1_not_2),
