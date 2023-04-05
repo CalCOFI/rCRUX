@@ -128,13 +128,13 @@ compare_ref_db <- function(ref_db_1_path, ref_db_2_path,ref_db_1_name,ref_db_2_n
 
   names(x) <- c(ref_db_1_name,ref_db_2_name)
 
-  p1 <- ggVennDiagram::ggVennDiagram(x) + scale_color_brewer(palette = "Paired") +
-    theme(panel.background=element_rect(fill = "white",colour = "white"),
+  p1 <- ggVennDiagram::ggVennDiagram(x) + ggplot2::scale_color_brewer(palette = "Paired") +
+    ggplot2::theme(panel.background=element_rect(fill = "white",colour = "white"),
           plot.background = element_rect(fill = "white",colour = "white"),
           legend.key = element_rect(fill = "white"),
           legend.background = element_rect(fill = "white", colour="white"))
   p1
-  ggsave(filename = paste0(out_dir,"Venn_diagram.png"),
+  ggplot2::ggsave(filename = paste0(out_dir,"Venn_diagram.png"),
          plot=p1,
          width = 10,
          height=6)
@@ -159,7 +159,7 @@ compare_ref_db <- function(ref_db_1_path, ref_db_2_path,ref_db_1_name,ref_db_2_n
   hashes_unique <- hashes_unique %>% dplyr::mutate(number = paste0("taxon_",number))
 
   combined_db %>%
-    left_join(hashes_unique) %>%
+    dplyr::left_join(hashes_unique) %>%
     tidyr::pivot_longer(., cols = ref_db_1_name:ref_db_2_name, names_to="sample_Sample", values_to = "Detected")-> combined_data_long
 
   # add Metadata
