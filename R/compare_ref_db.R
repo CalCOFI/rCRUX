@@ -94,9 +94,9 @@ compare_ref_db <- function(ref_db_1_path, ref_db_2_path,ref_db_1_name,ref_db_2_n
 
 #remove duplicates if they exist
 
-  ref_db_1 <- ref_db_1 %>% distinct()
+  ref_db_1 <- ref_db_1 %>% dplyr::distinct()
 
-  ref_db_2 <- ref_db_2 %>% distinct()
+  ref_db_2 <- ref_db_2 %>% dplyr::distinct()
 
 
 
@@ -164,7 +164,7 @@ compare_ref_db <- function(ref_db_1_path, ref_db_2_path,ref_db_1_name,ref_db_2_n
 
   # add Metadata
   combined_data_long %>%
-    dplyr::select(sample_Sample) %>% distinct() %>% as.data.frame -> sampledata
+    dplyr::select(sample_Sample) %>% dplyr::distinct() %>% as.data.frame -> sampledata
 
   rownames(sampledata) <- sampledata$sample_Sample
   sample_data(sampledata) -> sampledata
