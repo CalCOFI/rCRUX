@@ -128,7 +128,7 @@ compare_ref_db <- function(ref_db_1_path, ref_db_2_path,ref_db_1_name,ref_db_2_n
 
   names(x) <- c(ref_db_1_name,ref_db_2_name)
 
-  p1 <- ggVennDiagram(x) + scale_color_brewer(palette = "Paired") +
+  p1 <- ggVennDiagram::ggVennDiagram(x) + scale_color_brewer(palette = "Paired") +
     theme(panel.background=element_rect(fill = "white",colour = "white"),
           plot.background = element_rect(fill = "white",colour = "white"),
           legend.key = element_rect(fill = "white"),
@@ -160,7 +160,7 @@ compare_ref_db <- function(ref_db_1_path, ref_db_2_path,ref_db_1_name,ref_db_2_n
 
   combined_db %>%
     left_join(hashes_unique) %>%
-    tidyR::ivot_longer(., cols = ref_db_1_name:ref_db_2_name, names_to="sample_Sample", values_to = "Detected")-> combined_data_long
+    tidyr::pivot_longer(., cols = ref_db_1_name:ref_db_2_name, names_to="sample_Sample", values_to = "Detected")-> combined_data_long
 
   # add Metadata
   combined_data_long %>%
