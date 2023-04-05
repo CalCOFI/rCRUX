@@ -1,6 +1,6 @@
 Package: rCRUX
 Title: Generate CRUX metabarcoding reference libraries in R
-Version: 0.0.1.000
+Version: 0.1.0.000
 Authors@R:
     person(given = "Luna",
            family = "Gal",
@@ -9,6 +9,9 @@ Authors@R:
            family = "Gold",
            role = c("aut"),
            comment = c(ORCID = "0000-0003-0490-7630"))
+    person(given = "Shaun",
+           family = "Nielsen",
+           role = c("aut"))
     person(given = "Ramon",
            family = "Gallego",
            role = c("aut"))
@@ -40,7 +43,12 @@ Imports:
     phylotools,
     rlang,
     purrr,
-    utils
+    utils,
+    tidyverse,
+    DECIPHER,
+    ggVennDiagram,
+    psadd,
+    phyloseq
 Encoding: UTF-8
 #LazyData: true
 Roxygen: list(markdown = TRUE)
