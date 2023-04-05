@@ -86,10 +86,10 @@ compare_ref_db <- function(ref_db_1_path, ref_db_2_path,ref_db_1_name,ref_db_2_n
 
 # import files.  A bit redundant if you just made them...
 
-  ref_db_1 <- read.table(ref_db_1_path, header=F, sep = "\t") %>%  as_tibble() %>% dplyr::rename(accession=V1, sum.taxonomy=V2)%>%
+  ref_db_1 <- read.table(ref_db_1_path, header=F, sep = "\t") %>%  tibble::as_tibble() %>% dplyr::rename(accession=V1, sum.taxonomy=V2)%>%
     tidyr::separate(sum.taxonomy, into = c("superkingdom","phylum","class","order","family","genus","species"), sep=";")
 
-  ref_db_2 <- read.table(ref_db_2_path, header=F, sep = "\t") %>%  as_tibble() %>% dplyr::rename(accession=V1, sum.taxonomy=V2)%>%
+  ref_db_2 <- read.table(ref_db_2_path, header=F, sep = "\t") %>%  tibble::as_tibble() %>% dplyr::rename(accession=V1, sum.taxonomy=V2)%>%
     tidyr::separate(sum.taxonomy, into = c("superkingdom","phylum","class","order","family","genus","species"), sep=";")
 
 #remove duplicates if they exist
@@ -155,7 +155,7 @@ compare_ref_db <- function(ref_db_1_path, ref_db_2_path,ref_db_1_name,ref_db_2_n
     dplyr::distinct() -> hashes_unique
 
 
-  hashes_unique <- hashes_unique %>% as_tibble(rownames = "number")
+  hashes_unique <- hashes_unique %>% tibble::as_tibble(rownames = "number")
   hashes_unique <- hashes_unique %>% dplyr::mutate(number = paste0("taxon_",number))
 
   combined_db %>%
