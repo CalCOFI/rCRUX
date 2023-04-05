@@ -129,10 +129,10 @@ compare_ref_db <- function(ref_db_1_path, ref_db_2_path,ref_db_1_name,ref_db_2_n
   names(x) <- c(ref_db_1_name,ref_db_2_name)
 
   p1 <- ggVennDiagram::ggVennDiagram(x) + ggplot2::scale_color_brewer(palette = "Paired") +
-    ggplot2::theme(panel.background=element_rect(fill = "white",colour = "white"),
-          plot.background = element_rect(fill = "white",colour = "white"),
-          legend.key = element_rect(fill = "white"),
-          legend.background = element_rect(fill = "white", colour="white"))
+    ggplot2::theme(panel.background=ggplot2::element_rect(fill = "white",colour = "white"),
+          plot.background = ggplot2::element_rect(fill = "white",colour = "white"),
+          legend.key = ggplot2::element_rect(fill = "white"),
+          legend.background = ggplot2::element_rect(fill = "white", colour="white"))
   p1
   ggplot2::ggsave(filename = paste0(out_dir,"Venn_diagram.png"),
          plot=p1,
@@ -148,7 +148,7 @@ compare_ref_db <- function(ref_db_1_path, ref_db_2_path,ref_db_1_name,ref_db_2_n
   ref_db_2 %>%
     dplyr::mutate(., db= ref_db_2_name, value=1) -> ref_db_2_db
 
-  full_join(ref_db_1_db,ref_db_2_db) %>%
+  dplyr::full_join(ref_db_1_db,ref_db_2_db) %>%
     tidyr::pivot_wider(names_from = db, values_from = value, values_fill = 0) -> combined_db
 
   combined_db[,-c((length(colnames(combined_db))-1):length(colnames(combined_db)))] %>%
