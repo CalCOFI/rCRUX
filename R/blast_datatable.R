@@ -193,7 +193,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     if (length(sample_indices) <= 2 ) {
       message(
       rank, " has ", length(sample_indices), " unique occurrences in the blast seeds data table.\n",
-      "The remaining indices will be randomly sampled in subsets of", max_to_blast, "  ...\n"
+      "The remaining indices will be randomly sampled in subsets of ", max_to_blast, "  ...\n"
       # if zero more genera exist, but more indices than the max_to_blast are present
       # randomly select indices up to the max_to_blast value
       # accession numbers into a vector
@@ -202,8 +202,8 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
       seeds_left_indices <-
         blast_seeds_m %>%
-        dplyr::slice_sample(n = max_to_blast) %>%
         dplyr::filter(.data$blast_status == 'not_done') %>%
+        dplyr::slice_sample(n = max_to_blast) %>%
         dplyr::pull(.data$accession)
       # search the original output blast_seeds for the indices (row numbers) to
       # be used as blast seeds and make vector or sample indices
