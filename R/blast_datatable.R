@@ -203,6 +203,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
       # randomly select indices up to the max_to_blast value
       # accession numbers into a vector
       # set random.seed for reproducible results
+      )
 
       seeds_left_indices <-
         blast_seeds_m %>%
@@ -212,8 +213,6 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
       # search the original output blast_seeds for the indices (row numbers) to
       # be used as blast seeds and make vector or sample indices
       sample_indices <- which(blast_seeds_m$accession %in% seeds_left_indices)
-
-      )
 
 
     } else {
