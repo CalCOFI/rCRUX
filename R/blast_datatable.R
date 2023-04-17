@@ -195,7 +195,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
         rank, " has ", length(sample_indices), " unique occurrences in the blast seeds data table.\n",
         "These may be subset ...\n"
       )
-    } else if (length(sample_indices) == 0 || length(unsampled_indices) < max_to_blast) {
+    } else if (length(sample_indices) < 10 || length(unsampled_indices) < max_to_blast) {
       message(
       rank, " has ", length(sample_indices), " unique occurrences in the blast seeds data table.\n",
       "The remaining indices will be randomly sampled in subsets of", max_to_blast, "  ...\n"
