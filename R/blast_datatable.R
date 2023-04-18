@@ -190,7 +190,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     }
 
     # clean up messages
-    if (length(sample_indices) <= max_to_blast ) {
+    if (length(sample_indices) <= 25 ) {
       message(
       rank, " has ", length(sample_indices), " unique occurrences in the blast seeds data table.\n",
       "The remaining indices will be randomly sampled in subsets of ", max_to_blast, "  ...\n"
