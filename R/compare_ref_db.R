@@ -204,7 +204,7 @@ compare_ref_db <- function(ref_db_1_path, ref_db_2_path,ref_db_1_name,ref_db_2_n
   i=1
 
   physeq_obj_int = phyloseq::prune_taxa(phyloseq::taxa_sums(physeq_obj) > 1, physeq_obj)
-  names <- sample_names(physeq_obj_int)
+  names <- phyloseq::sample_names(physeq_obj_int)
   physeq_obj_int_2 = phyloseq::prune_samples(names[1], physeq_obj_int)
 
   phyloseq::sample_data(physeq_obj_int_2)$sample_Sample <- c("Overlapping_Accessions")

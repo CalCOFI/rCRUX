@@ -31,7 +31,7 @@
 #'
 #' @export
 #' @examples
-#' 
+#'
 #' \dontrun{
 #'
 #' output_directory_path <- "/my/directory/12S_mifish"
@@ -42,9 +42,9 @@
 #' combine_fasta_and_taxonomy(
 #'  output_directory_path = output_directory_path
 #'  metabarcode_name = metabarcode_name,
-#'  fasta_path = fasta_path, 
-#'  taxonomy_path = taxonomy_path, 
-#'  accession_taxa_sql_path = taxonomy_path
+#'  fasta_path = fasta_path,
+#'  taxonomy_path = taxonomy_path,
+#'  accession_taxa_sql_path = accession_taxa_sql_path
 #')
 #'}
 #'
@@ -58,35 +58,35 @@ combine_fasta_and_taxonomy <-
            accession_taxa_sql_path,
            NCBI.accession = TRUE,
            add.taxid = TRUE) {
-    
+
   # turn a fasta file and taxonomy file into a dataframe with tax id and amplicon length
-  
+
   # convert the fasta to a df get amplicon length
   fasta.df = phylotools::read.fasta(fasta_path)
   fasta.df <- dplyr::rename(fasta.df, accession = .data$seq.name, sequence = .data$seq.text)
   fasta.df <- dplyr::mutate(fasta.df, amplicon_length = nchar(sequence))
-  
+
   # split taxonomic path
   tax <- utils::read.delim(taxonomy_path, header=FALSE)
   tax <- dplyr::rename(tax, accession = 1 , tax_path = 2)
   tax <- tidyr::separate(tax, col = 'tax_path', into = c("superkingdom", "phylum", "class", "order", "family", "genus", "species"), ";")
-  
+
   # join sequence and taxonomy
   full.df <- dplyr::left_join(fasta.df,tax, by = "accession", keep=FALSE)
-  
+
   # add taxid from accession if ncbi accession is true, and from species name if accession is false - from species is a little less precise.
   if (NCBI.accession == TRUE & add.taxid == TRUE) {
     input_taxids <- taxonomizr::accessionToTaxa(full.df$accession, sqlFile = accession_taxa_sql_path)
     full.df <- dplyr::mutate(full.df, taxid = input_taxids)
-    
+
   } else if (NCBI.accession == FALSE & add.taxid == TRUE) {
     taxid <- taxonomizr::getId(full.df$species,accession_taxa_sql_path)
     full.df <- dplyr::mutate(full.df, taxid_from_species = taxid)
-    
+
   }
-  
-  utils::write.csv(full.df, 
-                     file = file.path(output_directory_path, paste0(metabarcode_name, "_rCRUX_formatted_summary.csv" )), 
-                     row.names = FALSE, col.names=TRUE)
-  
+
+  suppressWarnings(utils::write.csv(full.df,
+                     file = file.path(output_directory_path, paste0(metabarcode_name, "_rCRUX_formatted_summary.csv" )),
+                     row.names = FALSE, col.names=TRUE))
+
 }
