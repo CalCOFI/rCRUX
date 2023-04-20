@@ -194,7 +194,7 @@ compare_ref_db <- function(ref_db_1_path, ref_db_2_path,ref_db_1_name,ref_db_2_n
   physeq_obj = phyloseq::phyloseq(OTU, TAX, sampledata)
 
 # error if there are zero differences
-  physeq_obj_diff = phyloseq::prune_taxa(taxa_sums(physeq_obj) < 2, physeq_obj)
+  physeq_obj_diff = phyloseq::prune_taxa(phyloseq::taxa_sums(physeq_obj) < 2, physeq_obj)
 
   phyloseq::sample_data(physeq_obj_diff)$sample_Sample <- c(paste("Unique_to_", ref_db_1_name),paste("Unique_to_", ref_db_2_name))
   phyloseq::sample_names(physeq_obj_diff)<-c(paste("Unique_to_", ref_db_1_name),paste("Unique_to_", ref_db_2_name))
@@ -203,7 +203,7 @@ compare_ref_db <- function(ref_db_1_path, ref_db_2_path,ref_db_1_name,ref_db_2_n
   psadd::plot_krona(physeq_obj_diff,paste0(out_dir,"db_comparison_unique"),"sample_Sample",trim=T)
   i=1
 
-  physeq_obj_int = phyloseq::prune_taxa(taxa_sums(physeq_obj) > 1, physeq_obj)
+  physeq_obj_int = phyloseq::prune_taxa(phyloseq::taxa_sums(physeq_obj) > 1, physeq_obj)
   names <- sample_names(physeq_obj_int)
   physeq_obj_int_2 = phyloseq::prune_samples(names[1], physeq_obj_int)
 
