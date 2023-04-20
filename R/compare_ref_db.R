@@ -191,7 +191,7 @@ compare_ref_db <- function(ref_db_1_path, ref_db_2_path,ref_db_1_name,ref_db_2_n
   rownames(otu_table) <- combined_wide$number
 
   OTU = phyloseq::otu_table(otu_table, taxa_are_rows = TRUE)
-  physeq_obj = phyloseq(OTU, TAX, sampledata)
+  physeq_obj = phyloseq::phyloseq(OTU, TAX, sampledata)
 
 # error if there are zero differences
   physeq_obj_diff = phyloseq::prune_taxa(taxa_sums(physeq_obj) < 2, physeq_obj)
