@@ -10,7 +10,7 @@ compare_ref_db(
   ref_db_1_name,
   ref_db_2_name,
   out_dir,
-  format_ref_db_1 = TRUE,
+  format_ref_db_1 = FALSE,
   format_ref_db_2 = FALSE
 )
 }
