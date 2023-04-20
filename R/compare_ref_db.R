@@ -167,7 +167,7 @@ compare_ref_db <- function(ref_db_1_path, ref_db_2_path,ref_db_1_name,ref_db_2_n
     dplyr::select(sample_Sample) %>% dplyr::distinct() %>% as.data.frame -> sampledata
 
   rownames(sampledata) <- sampledata$sample_Sample
-  sample_data(sampledata) -> sampledata
+  phyloseq::sample_data(sampledata) -> sampledata
 
   #add TAXonomy
   combined_data_long %>%
@@ -196,8 +196,8 @@ compare_ref_db <- function(ref_db_1_path, ref_db_2_path,ref_db_1_name,ref_db_2_n
 # error if there are zero differences
   physeq_obj_diff = phyloseq::prune_taxa(taxa_sums(physeq_obj) < 2, physeq_obj)
 
-  sample_data(physeq_obj_diff)$sample_Sample <- c(paste("Unique_to_", ref_db_1_name),paste("Unique_to_", ref_db_2_name))
-  sample_names(physeq_obj_diff)<-c(paste("Unique_to_", ref_db_1_name),paste("Unique_to_", ref_db_2_name))
+  phyloseq::sample_data(physeq_obj_diff)$sample_Sample <- c(paste("Unique_to_", ref_db_1_name),paste("Unique_to_", ref_db_2_name))
+  phyloseq::sample_names(physeq_obj_diff)<-c(paste("Unique_to_", ref_db_1_name),paste("Unique_to_", ref_db_2_name))
 
 #plot Phyloseq object
   psadd::plot_krona(physeq_obj_diff,paste0(out_dir,"db_comparison_unique"),"sample_Sample",trim=T)
@@ -207,8 +207,8 @@ compare_ref_db <- function(ref_db_1_path, ref_db_2_path,ref_db_1_name,ref_db_2_n
   names <- sample_names(physeq_obj_int)
   physeq_obj_int_2 = phyloseq::prune_samples(names[1], physeq_obj_int)
 
-  sample_data(physeq_obj_int_2)$sample_Sample <- c("Overlapping_Accessions")
-  sample_names(physeq_obj_int_2)<-c("Overlapping_Accessions")
+  phyloseq::sample_data(physeq_obj_int_2)$sample_Sample <- c("Overlapping_Accessions")
+  phyloseq::sample_names(physeq_obj_int_2)<-c("Overlapping_Accessions")
 
   psadd::plot_krona(physeq_obj_int_2,paste0(out_dir,"db_comparison_overlap"),"sample_Sample",trim=T)
 
