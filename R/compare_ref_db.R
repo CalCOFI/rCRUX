@@ -67,7 +67,7 @@
 
 
 
-compare_ref_db <- function(ref_db_1_path, ref_db_2_path,ref_db_1_name,ref_db_2_name,out_dir, format_ref_db_1=TRUE, format_ref_db_2=FALSE) {
+compare_ref_db <- function(ref_db_1_path, ref_db_2_path,ref_db_1_name,ref_db_2_name,out_dir, format_ref_db_1=FALSE, format_ref_db_2=FALSE) {
 
   suppressWarnings(dir.create(out_dir))
 
@@ -86,10 +86,10 @@ compare_ref_db <- function(ref_db_1_path, ref_db_2_path,ref_db_1_name,ref_db_2_n
 
 # import files.  A bit redundant if you just made them...
 
-  ref_db_1 <- read.table(ref_db_1_path, header=F, sep = "\t") %>%  tibble::as_tibble() %>% dplyr::rename(accession=V1, sum.taxonomy=V2)%>%
+  ref_db_1 <- read.table(ref_db_1_path, header=F, sep = "\t") %>%  tibble::as_tibble() %>% dplyr::rename(accession=V1, sum.taxonomy=V2) %>%
     tidyr::separate(sum.taxonomy, into = c("superkingdom","phylum","class","order","family","genus","species"), sep=";")
 
-  ref_db_2 <- read.table(ref_db_2_path, header=F, sep = "\t") %>%  tibble::as_tibble() %>% dplyr::rename(accession=V1, sum.taxonomy=V2)%>%
+  ref_db_2 <- read.table(ref_db_2_path, header=F, sep = "\t") %>%  tibble::as_tibble() %>% dplyr::rename(accession=V1, sum.taxonomy=V2) %>%
     tidyr::separate(sum.taxonomy, into = c("superkingdom","phylum","class","order","family","genus","species"), sep=";")
 
 #remove duplicates if they exist

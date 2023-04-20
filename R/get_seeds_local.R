@@ -224,6 +224,12 @@ get_seeds_local <-
     # run_primer_blastn parameters
     ...) {
 
+    # Create output directories
+    out <- file.path(output_directory_path, "/get_seeds_local")
+    dir.create(out, showWarnings = FALSE)
+
+    message('Output directory: ', out, '\n')
+
 
     # Check paths provided
     check_blast_plus_installation(ncbi_bin = if('ncbi_bin' %in% names(list(...))) ncbi_bin else NULL)
@@ -236,11 +242,7 @@ get_seeds_local <-
            "Please revise the path provided:\n", accession_taxa_sql_path)
     }
 
-    # Create output directories
-    out <- file.path(output_directory_path, "get_seeds_local")
-    dir.create(out, showWarnings = FALSE)
 
-    message('Output directory: ', out, '\n')
 
     # Make file paths for storing primer blast runs
     fasta_path <- file.path(out, paste0(metabarcode_name, "_primers_selected_for_blastn.fasta"))
