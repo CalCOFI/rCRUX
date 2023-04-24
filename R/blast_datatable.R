@@ -86,19 +86,20 @@
 #' @param max_to_blast is the maximum number of entries to accumulate into a
 #'        fasta before calling blastn (default = 1000)
 #' @param wildcards a character vector representing the number of wildcards to
-#'        discard (default = "NNNN")
+#'        discard (default = "NNNNNNNNNNNN")
 #' @param rank the column representing the taxonomic rank to randomly sample (default = genus)
+#' @param random_seed sets the random value generator for random stratified sampling. Change the default (random_seed = NULL) for reproducible results.
 #' @param ... additional arguments passed to [rCRUX::run_blastdbcmd_blastn_and_aggregate_resuts()]
 #' @inheritDotParams run_blastdbcmd_blastn_and_aggregate_resuts
-#' 
+#'
 #' @return A data.frame representing the output of blastn
-#' 
+#'
 #' @export
 
 
 blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa_sql_path,
                             ncbi_bin = NULL, force_db = FALSE,
-                            sample_size = 1, wildcards = "NNNN", rank = 'genus', max_to_blast = 1000, ...) {
+                            sample_size = 1, wildcards = "NNNNNNNNNNNN", rank = 'genus', max_to_blast = 1000, random_seed = NULL, ...) {
 
   check_blast_plus_installation(ncbi_bin = if('ncbi_bin' %in% names(list(...))) ncbi_bin else NULL)
   check_blast_db(blast_db_path)
@@ -117,6 +118,9 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
   blast_seeds_m$blast_status <- "not_done"
   unsampled_indices <- seq_along(blast_seeds_m$accession)
 
+  if (!is.null(random_seed)){
+    set.seed(random_seed)
+  }
 
   while (length(unsampled_indices) > 0) {
 
@@ -172,11 +176,13 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
       # if more indices than the max_to_blast are present
       # randomly select entries (default is n=1) for each rank then turn the
       # accession numbers into a vector
+      # set random.seed for reproducible results
+
       seeds_by_rank_indices <-
         blast_seeds_m %>%
+        dplyr::filter(.data$blast_status == 'not_done') %>%
         dplyr::group_by(!!!rlang::syms(rank)) %>%
         dplyr::slice_sample(n = sample_size) %>%
-        dplyr::filter(.data$blast_status == 'not_done') %>%
         dplyr::pull(.data$accession)
       # search the original output blast_seeds for the indices (row numbers) to
       # be used as blast seeds and make vector or sample indices
@@ -184,14 +190,36 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     }
 
     # clean up messages
-    if (length(unsampled_indices) > max_to_blast) {
+    if (length(sample_indices) <= 25 ) {
+      message(
+      rank, " has ", length(sample_indices), " unique occurrences in the blast seeds data table.\n",
+      "The remaining indices will be randomly sampled in subsets of ", max_to_blast, "  ...\n"
+      # if zero more genera exist, but more indices than the max_to_blast are present
+      # randomly select indices up to the max_to_blast value
+      # accession numbers into a vector
+      # set random.seed for reproducible results
+      )
+
+      seeds_left_indices <-
+        blast_seeds_m %>%
+        dplyr::filter(.data$blast_status == 'not_done') %>%
+        dplyr::slice_sample(n = max_to_blast) %>%
+        dplyr::pull(.data$accession)
+      # search the original output blast_seeds for the indices (row numbers) to
+      # be used as blast seeds and make vector or sample indices
+      sample_indices <- which(blast_seeds_m$accession %in% seeds_left_indices)
+
+    } else if (length(unsampled_indices) > max_to_blast) {
       message(
         rank, " has ", length(sample_indices), " unique occurrences in the blast seeds data table.\n",
         "These may be subset ...\n"
       )
+
     } else {
       message("The number of unsampled indices is less than or equal to the maximum number to be blasted.\n")
     }
+
+
 
     # update unsampled_indices by removing the sample_indices from the list
     unsampled_indices <-

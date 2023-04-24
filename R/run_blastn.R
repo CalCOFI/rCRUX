@@ -1,10 +1,10 @@
 #' Run blastn with the seed amplicon sequences
 #'
-#' Calls `blastn` with a fasta file created from a character vector as the query. 
+#' Calls `blastn` with a fasta file created from a character vector as the query.
 #' The user can not add additional search parameters, but can modify the available parameters.
 #'
 #' @details
-#' [rCRUX::run_blastn()] takes a character vector fasta, converts to a  fasta file, 
+#' [rCRUX::run_blastn()] takes a character vector fasta, converts to a  fasta file,
 #' and queries them against a BLAST formatted database. The result is an output table with
 #' the following columns of data: accession, amplicon_length, pident,
 #' query_accession, accession_sequence_length, amplicon_start, amplicon_stop,
@@ -30,27 +30,27 @@
 #'        subject hits. The default is perID = 70.
 #' @param align is the maximum number of subject hits to return per query
 #'        blasted. The default is align = 50000.
-#' @param num_threads is the number of CPUs to engage in the blastn search. The 
-#'        value num_treads = 'max', uses [parallel::detectCores()] to determine 
-#'        the user's number of CPUs automatically.
+#' @param num_threads number, the number of CPUs to engage in the blastn search. The
+#'        value 'max' can be used and which uses [parallel::detectCores()] to determine
+#'        the user's maximum number of CPUs automatically (use with caution; Default = 1)
 #' @return a tibble representing the blastn results
 #' @export
 
 run_blastn <- function(fasta, db, temp_fasta_path = NULL, ncbi_bin = NULL,
                        evalue = 1e-6, align = 50000, coverage = 50, perID = 70, num_threads = 1) {
-  
+
   if (!is.null(ncbi_bin)){
     blastn <- file.path(ncbi_bin, 'blastn')
   } else {
     blastn = 'blastn'
   }
-  
+
   if (num_threads == 'max') {
     cores <- parallel::detectCores()
   } else {
     cores <- num_threads
   }
-  
+
   # This is a hacky workaround to deal with the fact
   # that blastn wants a file path as a query
   # Ideally, we would find a way (perhaps a process substitution?)
@@ -59,16 +59,16 @@ run_blastn <- function(fasta, db, temp_fasta_path = NULL, ncbi_bin = NULL,
   # 1) This way, the script can still generally be visualized functionally
   # 2) It allows for easy changes if we ever figure out an elegant way to do
   # the handoff
-  
+
   if (is.null(temp_fasta_path)) {
     temp_fasta_path <- tempfile(fileext = '.fasta')
   }
-  
+
   writeLines(fasta, con = temp_fasta_path)
-  
+
   message("Calling blastn. This may take a long time.")
-  
-  blastn_output <- 
+
+  blastn_output <-
     system2(command = blastn,
             args = c("-db", db,
                      "-query", temp_fasta_path,
@@ -82,13 +82,13 @@ run_blastn <- function(fasta, db, temp_fasta_path = NULL, ncbi_bin = NULL,
                      "-num_threads ", cores),
             wait = TRUE,
             stdout = TRUE)
-  
-  
-  
+
+
+
   file.remove(temp_fasta_path)
-  
+
   # Format output
-  column_names <- 
+  column_names <-
     c("accession",
       "amplicon_length",
       "pident",
@@ -99,13 +99,12 @@ run_blastn <- function(fasta, db, temp_fasta_path = NULL, ncbi_bin = NULL,
       "sequence",
       "evalue",
       "BLAST_db_taxids")
-  
+
   # blastn_output is a tab-delimited string, we need split it into columns
   # as_tibble creates a one-column tibble with "value" as its col name
   blastn_output %>%
     tibble::as_tibble() %>%
     tidyr::separate(col = .data$value, into = column_names,
                     sep = "\t")
-  
-}
 
+}

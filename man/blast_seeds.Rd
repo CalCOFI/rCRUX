@@ -62,8 +62,9 @@ before calling blastn - errors if not enough entries per rank (default = 1)}
     \item{\code{max_to_blast}}{is the maximum number of entries to accumulate into a
 fasta before calling blastn (default = 1000)}
     \item{\code{wildcards}}{a character vector representing the number of wildcards to
-discard (default = "NNNN")}
+discard (default = "NNNNNNNNNNNN")}
     \item{\code{rank}}{the column representing the taxonomic rank to randomly sample (default = genus)}
+    \item{\code{random_seed}}{sets the random value generator for random stratified sampling. Change the default (random_seed = NULL) for reproducible results.}
   }}
 }
 \description{
@@ -114,11 +115,11 @@ but not the local blast database. This is relevant for the results of
 
 \dontrun{
 
-seeds_output_path <- 
-  file.path("my/directory", 
-   "12S_V5F1_remote_111122_modified_params/blast_seeds_output", 
+seeds_output_path <-
+  file.path("my/directory",
+   "12S_V5F1_remote_111122_modified_params/blast_seeds_output",
    "summary.csv")
-   
+
 output_directory_path <- "/my/directory/12S_V5F1_remote_111122_modified_params"
 metabarcode_name <- "12S_V5F1"
 accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql"
@@ -134,7 +135,7 @@ blast_seeds(seeds_output_path,
             max_to_blast = 750)
 
 # using the rank of species will increase the number of total unique blast hits
-# modifying the max_to_blast submits fewer reads simultaneously and reduces 
+# modifying the max_to_blast submits fewer reads simultaneously and reduces
 # overall RAM while extending the run
 }
 }

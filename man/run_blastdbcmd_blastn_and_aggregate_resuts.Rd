@@ -64,9 +64,9 @@ subject hits. The default is coverage = 50.}
 subject hits. The default is perID = 70.}
     \item{\code{align}}{is the maximum number of subject hits to return per query
 blasted. The default is align = 50000.}
-    \item{\code{num_threads}}{is the number of CPUs to engage in the blastn search. The
-value num_treads = 'max', uses \code{\link[parallel:detectCores]{parallel::detectCores()}} to determine
-the user's number of CPUs automatically.}
+    \item{\code{num_threads}}{number, the number of CPUs to engage in the blastn search. The
+value 'max' can be used and which uses \code{\link[parallel:detectCores]{parallel::detectCores()}} to determine
+the user's maximum number of CPUs automatically (use with caution; Default = 1)}
   }}
 }
 \description{

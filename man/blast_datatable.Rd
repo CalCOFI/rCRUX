@@ -12,9 +12,10 @@ blast_datatable(
   ncbi_bin = NULL,
   force_db = FALSE,
   sample_size = 1,
-  wildcards = "NNNN",
+  wildcards = "NNNNNNNNNNNN",
   rank = "genus",
   max_to_blast = 1000,
+  random_seed = NULL,
   ...
 )
 }
@@ -42,12 +43,14 @@ be blast databases}
 before calling blastn - errors if not enough entries per rank (default = 1)}
 
 \item{wildcards}{a character vector representing the number of wildcards to
-discard (default = "NNNN")}
+discard (default = "NNNNNNNNNNNN")}
 
 \item{rank}{the column representing the taxonomic rank to randomly sample (default = genus)}
 
 \item{max_to_blast}{is the maximum number of entries to accumulate into a
 fasta before calling blastn (default = 1000)}
+
+\item{random_seed}{sets the random value generator for random stratified sampling. Change the default (random_seed = NULL) for reproducible results.}
 
 \item{...}{
   Arguments passed on to \code{\link[=run_blastdbcmd_blastn_and_aggregate_resuts]{run_blastdbcmd_blastn_and_aggregate_resuts}}

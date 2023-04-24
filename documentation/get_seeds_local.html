@@ -52,7 +52,7 @@ fasta of the primers used for blast.
   num_fprimers_to_blast = 50,
   num_rprimers_to_blast = 50,
   max_to_blast = 2,
-  align = "10000000",
+  align = "10000000", random_seed = NULL,
   ...,
   return_table = TRUE
 )
@@ -274,7 +274,7 @@ get_seeds_local(forward_primer_seq,
                 aligns = '10000',
                 num_rprimers_to_blast = 200,
                 num_rprimers_to_blast = 2000,
-                max_to_blast = 10)
+                max_to_blast = 10, random_seed = NULL)
 
 
 # Non Degenerate but high return primer example - 18S (Amaral-Zettler et al. 2009)

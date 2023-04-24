@@ -18,6 +18,7 @@ get_seeds_local(
   num_fprimers_to_blast = 50,
   num_rprimers_to_blast = 50,
   max_to_blast = 2,
+  random_seed = NULL,
   ...
 )
 }
@@ -68,6 +69,8 @@ The default is num_rprimers_to_blast = 50}
 \item{max_to_blast}{is the number of primers to blast simultaneously.
 The default is max_to_blast = 2. - Increasing this number will decrease
 overall run time, but increase the amount of RAM required.}
+
+\item{random_seed}{sets the random value generator for random stratified sampling within \code{\link[dplyr:sample_n]{dplyr::sample_n()}}. Change the default (random_seed = NULL) for reproducible results.}
 
 \item{...}{passed to \code{\link[=run_primer_blastn]{run_primer_blastn()}}}
 }
@@ -146,8 +149,8 @@ get_seeds_local(forward_primer_seq,
                 minimum_length = 80,
                 maximum_length = 150)
 
-# adjusting the minimum_length and maximum_length parameters reduces the 
-# number of total hits by removing reads that could result from off 
+# adjusting the minimum_length and maximum_length parameters reduces the
+# number of total hits by removing reads that could result from off
 # target amplification
 
 
@@ -193,7 +196,7 @@ get_seeds_local(forward_primer_seq,
                 maximum_length = 350,
                 max_to_blast = 1)
 
-# blasting two primers at a time can max out a system's RAM, however 
+# blasting two primers at a time can max out a system's RAM, however
 # blasting one at a time is more feasible for personal computers with 16 GB RAM
 }
 }
