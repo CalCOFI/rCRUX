@@ -25,6 +25,7 @@ Authors@R:
            comment = c(ORCID = "https://orcid.org/0000-0003-0336-6852"))
 Description: rCRUX is a Suite of Tools for Building environmental DNA (eDNA) Metabarcode Reference Libraries by Querying NCBI Databases and Filtering and Formatting the Resulting Data.
 License: GPL-3
+biocViews:
 Imports:
     tibble,
     dplyr,
@@ -49,6 +50,8 @@ Imports:
     ggVennDiagram,
     psadd,
     phyloseq
+Remotes:
+    cpauvert/psadd
 Encoding: UTF-8
 #LazyData: true
 Roxygen: list(markdown = TRUE)

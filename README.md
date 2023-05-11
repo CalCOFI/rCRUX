@@ -1,6 +1,11 @@
 # rCRUX: Generate CRUX metabarcoding reference libraries in R
 
+<!-- badges: start -->
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7349493.svg)](https://doi.org/10.5281/zenodo.7349493)
+![GitHub R package version](https://img.shields.io/github/r-package/v/LunaGal/rCRUX)
+[![check-standard](https://github.com/LunaGal/rCRUX/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/LunaGal/rCRUX/actions/workflows/check-standard.yaml)
+<!-- badges: end -->
+
 
 **Authors:** [Luna Gal](<https://github.com/LunaGal>), [Zachary Gold](<https://github.com/zjgold>), [Ramon Gallego](https://github.com/ramongallego), [Shaun Nielsen](https://github.com/Shaunson26), [Emily Curd](<https://github.com/limey-bean>)<br/>
 **Inspiration:**
