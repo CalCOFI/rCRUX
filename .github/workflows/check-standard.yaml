@@ -31,7 +31,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - uses: shaunson26/setup-ncbi-blast@v1.0
+      - uses: shaunson26/setup-ncbi-blast@v1.1
         with:
           blast-version: latest
 
