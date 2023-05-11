@@ -15,6 +15,12 @@ compare_ref_db(
 )
 }
 \arguments{
+\item{ref_db_1_path}{a data.frame formatted like the output from
+blast_seeds() metabarcode_name_taxonomy.txt}
+
+\item{ref_db_2_path}{a data.frame formatted like the output from
+blast_seeds() metabarcode_name_taxonomy.txt}
+
 \item{ref_db_1_name}{a text string of ref_db_1 name}
 
 \item{ref_db_2_name}{a text string of ref_db_2 name}
@@ -32,12 +38,6 @@ columns for accession, superkingdom, phylum, class, order, family, genus,
 species, into a taxonomy.txt formatted file with two columns:
 accession and superkingdom;phylum;class;order;family;genus;species
 default value is FALSE (format_ref_db_2=FALSE).}
-
-\item{ref_db_1}{a data.frame formatted like the output from
-blast_seeds() metabarcode_name_taxonomy.txt}
-
-\item{ref_db_2}{a data.frame formatted like the output from
-blast_seeds() metabarcode_name_taxonomy.txt}
 }
 \value{
 \enumerate{
@@ -58,7 +58,13 @@ Krona plot requires the installation of krona tools \href{https://github.com/mar
 \examples{
 
 \dontrun{
-ref_db_1_path <- "~/rCRUX_output/12S_parameters_test_1/get_seeds_local/12S_filtered_get_seeds_local_output_with_taxonomy.csv"
+
+ref_db_1_path <- 
+  file.path(
+  "~/rCRUX_output/12S_parameters_test_1",
+  "get_seeds_local/12S_filtered_get_seeds_local_output_with_taxonomy.csv"
+  )
+  
 ref_db_2_path <- "~/rCRUX_output/12S_parameters_test_1/blast_seeds_output/12S_taxonomy.txt"
 ref_db_1_name <- "get_seeds"
 ref_db_2_name <- "blast_seeds"

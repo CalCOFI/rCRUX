@@ -176,6 +176,7 @@ blast_seeds <-
 
     # BLAST ----
     message('Blasting seeds.\n')
+    
     blast_seeds <- utils::read.csv(seeds_output_path)
 
     output_table <-
