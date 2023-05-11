@@ -9,15 +9,14 @@ vignette: >
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
+  eval = FALSE,
   collapse = TRUE,
   comment = "#>"
 )
 ```
 
 ```{r setup}
-
 library(rCRUX)
-
 ```
 
 rCRUX is a suite of tools for querying NCBI databases and filtering and formatting the resulting
@@ -36,10 +35,8 @@ the taxonomic path is collapsed to the lowest taxonomic agreement.
 
 RCRUX can be installed using the following R code:
 
-```{devtools installation}
-
+```{r devtools installation}
 devtools::install_github("LunaGal/rCRUX")
-
 ```
 
 ## Dependencies
@@ -82,13 +79,11 @@ of internet connection can lead to partially downloaded files and taxonomizr run
 The following code can be used to build this database:
 
 
-```{set up taxonomizer database}
-
+```{r set up taxonomizer database}
 library(taxonomizr)
 
 accession_taxa_sql_path <- "/my/accessionTaxa.sql"
 prepareDatabase(accession_taxa_sql_path)
-
 ```
 
 #### Note:
@@ -106,7 +101,7 @@ There are two options to generate seeds for the database generating blast step b
 ## get_seeds_local()
 This example uses default parameters, with the exception of evalue to minimize run time.
 
-```{run get_seeds_local()}
+```{r run get_seeds_local()}
 
 forward_primer_seq = "TAGAACAGGCTCCTCTAG"
 reverse_primer_seq =  "TTAGATACCCCACTATGC"
@@ -136,7 +131,7 @@ Example output can be found [here](https://github.com/LunaGal/rCRUX/tree/main/ex
 #### If BLAST+ is not in your path do the following:
 
 
-```{add blast path to get_seeds_local()}
+```{r add blast path to get_seeds_local()}
 
 get_seeds_local(forward_primer_seq,
                  reverse_primer_seq,
@@ -155,7 +150,7 @@ This example uses default parameters to minimize run time.
 
 Searching jawless vertebrates (taxid: "1476529") and jawed vertebrates (taxid: "7776").
 
-```{run get_seeds_remote()}
+```{r run get_seeds_remote()}
 
 forward_primer_seq = "TAGAACAGGCTCCTCTAG"
 
@@ -197,7 +192,7 @@ Example output can be found [here](https://github.com/LunaGal/rCRUX/tree/main/ex
 Iterative searches are based on a stratified random sampling unique taxonomic groups for a given rank from the get_seeds_local or get_seeds_remote output table. For example, the default is to randomly sample one read from each genus.  The user can select any taxonomic rank present in the get_seeds_local output table. The number of seeds selected may cause blastn to exceed the users available RAM, and for that reason the user can choose the maximum number of reads to blast at one time (max_to_blast, default = 1000). blast_seeds will subsample each set of seeds based on max_to_blast and process all seeds before starting a new search for seeds to blast. It saves the output from each round of blastn.  
 
 
-```{run blast_seeds()}
+```{r run blast_seeds()}
 
 seeds_output_path <- '/my/directory/12S_V5F1_remote_111122/12S_V5F1_filtered_get_seeds_remote_output_with_taxonomy.csv' # this is output from get_seeds_local or get_seeds_remote
 
@@ -229,7 +224,7 @@ The output includes a summary table of all unique blast hits (summary.csv), a mu
 **If BLAST+ is not in your path do the following**
 
 
-```{specify blast path for blast_seeds()}
+```{r specify blast path for blast_seeds()}
 
 blast_seeds(seeds_output_path,
             blast_db_path,
@@ -250,7 +245,7 @@ There will be variability between runs due to primer blast return parameters and
 
 This function takes the output of blast_seeds and de-replicates identical sequences and collapses ambiguous taxonomy to generate a clean reference database.
 
-```{run derep_and_clean_db()}
+```{r run derep_and_clean_db()}
 
 output_directory_path <- '/my/directory/12S_V5F1_remote_111122/' # path to desired output directory
 
