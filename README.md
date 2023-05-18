@@ -31,7 +31,7 @@ Install from GitHub:
 
 ``` r
 # install.packages(devtools)
-devtools::install_github("LunaGal/rCRUX", build_vignettes = TRUE)
+devtools::install_github("CalCOFI/rCRUX", build_vignettes = TRUE)
 ```
 
 ``` r
