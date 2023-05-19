@@ -149,8 +149,8 @@ blast_db_path <- "/my/directory/ncbi_nt/nt"  # path to blast formatted database
 
 get_seeds_local(forward_primer_seq,
                  reverse_primer_seq,
-                 output_directory_path,
                  metabarcode_name,
+                 output_directory_path,
                  accession_taxa_sql_path,
                  blast_db_path, evalue = 300)
 
@@ -172,8 +172,8 @@ Example output can be found [here](/examples/12S_V5F1_generated_11-11-22).
 
 get_seeds_local(forward_primer_seq,
                  reverse_primer_seq,
-                 output_directory_path,
                  metabarcode_name,
+                 output_directory_path,
                  accession_taxa_sql_path,
                  blast_db_path, evalue = 300,
                  ncbi_bin = "/my/directory/ncbi-blast-2.10.1+/bin/")
@@ -203,8 +203,8 @@ accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql" # path to taxonomiz
 
 get_seeds_remote(forward_primer_seq,
           reverse_primer_seq,
-          output_directory_path,
           metabarcode_name,
+          output_directory_path,
           accession_taxa_sql_path,
           organism = c("1476529", "7776"),
           return_table = FALSE)
@@ -437,8 +437,8 @@ Information about the blastn parameters can be found in run_primer_blast, and by
 
  get_seeds_local(forward_primer_seq,
                  reverse_primer_seq,
-                 output_directory_path,
                  metabarcode_name,
+                 output_directory_path,
                  accession_taxa_sql_path,
                  blast_db_path,
                  minimum_length = 80,
@@ -458,8 +458,8 @@ Information about the blastn parameters can be found in run_primer_blast, and by
 
  get_seeds_local(forward_primer_seq,
                  reverse_primer_seq,
-                 output_directory_path,
                  metabarcode_name,
+                 output_directory_path,
                  accession_taxa_sql_path,
                  blast_db_path,
                  minimum_length = 200,
@@ -481,8 +481,8 @@ Information about the blastn parameters can be found in run_primer_blast, and by
 
  get_seeds_local(forward_primer_seq,
                  reverse_primer_seq,
-                 output_directory_path,
                  metabarcode_name,
+                 output_directory_path,
                  accession_taxa_sql_path,
                  blast_db_path,
                  minimum_length = 250,
@@ -660,8 +660,8 @@ accession_taxa_sql_path <- "/my/directory/accessionTaxa.sql"
 
 get_seeds_remote(forward_primer_seq,
                 reverse_primer_seq,
-                output_directory_path,
                 metabarcode_name,
+                output_directory_path,
                 accession_taxa_sql_path,
                 HITSIZE ='1000000',
                 evalue='100000',
