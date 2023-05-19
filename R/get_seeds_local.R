@@ -225,7 +225,7 @@ get_seeds_local <-
     ...) {
 
     # Create output directories
-    out <- file.path(output_directory_path, "/get_seeds_local")
+    out <- file.path(output_directory_path, "get_seeds_local")
     dir.create(out, showWarnings = FALSE)
 
     message('Output directory: ', out, '\n')
