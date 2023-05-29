@@ -31,7 +31,7 @@ test_that("get_seeds_local returns stuff", {
   expect_equal(length(get_seeds_local_files), 4)
 })
 
-test_that("ncbi_bin works", {
+test_that("ncbi_bin error works", {
   
   output_directory_path_top <- tempdir()
   output_directory_path <- file.path(output_directory_path_top, '16S')
@@ -63,10 +63,30 @@ test_that("ncbi_bin works", {
                     ncbi_bin = 'NO_REAL_PATH'),
     regexp = 'The NCBI binaries could not be found at NO_REAL_PATH'
   )
+
+})
+
+test_that("ncbi_bin works", {
+  
+  output_directory_path_top <- tempdir()
+  output_directory_path <- file.path(output_directory_path_top, '16S')
+  dir.create(output_directory_path, showWarnings = FALSE)
+  
+  # Source DBs
+  blast_db_path <- file.path(system.file(package = 'rCRUX', 'mock-db/blastdb'), 'mock-db')
+  accession_taxa_sql_path <- system.file(package = 'rCRUX', 'mock-db/taxonomizr-ncbi-db-small.sql')
+  
+  # Primers
+  # Nitrospira F probe, Bacteria 1492R
+  forward_primer_seq <- 'AGAGGAGCGCGGAATTCC'
+  reverse_primer_seq <- 'TACCTTGTTACGACTT'
+  
+  metabarcode_name <- "Nitrospira"
   
   # Extract NCBI path - assumes installed on runner for testing
+  message(Sys.getenv('PATH'))
   path_items <- strsplit(Sys.getenv('PATH'), ';')[[1]]
-  ncbi_path <- grep('NCBI.blast', path_items, ignore.case = TRUE, value = TRUE)
+  ncbi_path <- grep('blast', path_items, ignore.case = TRUE, value = TRUE)
   
   message('using [', ncbi_path, '] in testing')
   
@@ -85,5 +105,5 @@ test_that("ncbi_bin works", {
   # Tests
   get_seeds_local_files <- list.files(file.path(output_directory_path, 'get_seeds_local'), full.names = TRUE)
   expect_equal(length(get_seeds_local_files), 4)
-
+  
 })
