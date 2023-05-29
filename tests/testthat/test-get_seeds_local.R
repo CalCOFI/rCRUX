@@ -84,11 +84,11 @@ test_that("ncbi_bin works", {
   metabarcode_name <- "Nitrospira"
   
   # Extract NCBI path - assumes installed on runner for testing
-  message(Sys.getenv('PATH'))
-  path_items <- strsplit(Sys.getenv('PATH'), ';')[[1]]
+  split_char = ifelse(grepl('win', Sys.getenv('OS'), ignore.case = TRUE), ';', ':')
+  path_items <- strsplit(Sys.getenv('PATH'), split_char)[[1]]
   ncbi_path <- grep('blast', path_items, ignore.case = TRUE, value = TRUE)
   
-  message('using [', ncbi_path, '] in testing')
+  message('Using ', ncbi_path, ' as ncbi_bin in test ..')
   
   get_seeds_local(forward_primer_seq = forward_primer_seq,
                   reverse_primer_seq = reverse_primer_seq,
