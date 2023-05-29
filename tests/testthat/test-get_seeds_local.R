@@ -68,6 +68,8 @@ test_that("ncbi_bin works", {
   path_items <- strsplit(Sys.getenv('PATH'), ';')[[1]]
   ncbi_path <- grep('NCBI.blast', path_items, ignore.case = TRUE, value = TRUE)
   
+  message('using [', ncbi_path, '] in testing')
+  
   get_seeds_local(forward_primer_seq = forward_primer_seq,
                   reverse_primer_seq = reverse_primer_seq,
                   output_directory_path = output_directory_path,
