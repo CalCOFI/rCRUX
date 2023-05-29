@@ -223,6 +223,8 @@ get_seeds_local <-
     random_seed = NULL,
     # run_primer_blastn parameters
     ...) {
+    
+    dots <- list(...)
 
     # Create output directories
     out <- file.path(output_directory_path, "get_seeds_local")
@@ -232,7 +234,7 @@ get_seeds_local <-
 
 
     # Check paths provided
-    check_blast_plus_installation(ncbi_bin = if('ncbi_bin' %in% names(list(...))) ncbi_bin else NULL)
+    check_blast_plus_installation(ncbi_bin = if('ncbi_bin' %in% names(dots)) dots$ncbi_bin else NULL)
 
     check_blast_db(blast_db_path)
 
@@ -422,22 +424,22 @@ get_seeds_local <-
       append_table %>%
       dplyr::filter(grepl('forward', .data$qseqid)) %>%
       dplyr::rename(
-        gi = .data$sgi,
-        accession = .data$saccver,
-        mismatch_forward = .data$mismatch,
-        forward_start = .data$sstart,
-        forward_stop = .data$send
+        gi = 'sgi',
+        accession = 'saccver',
+        mismatch_forward = 'mismatch',
+        forward_start = 'sstart',
+        forward_stop = 'send'
       )
 
     R_only <-
       append_table %>%
       dplyr::filter(grepl('reverse', .data$qseqid)) %>%
       dplyr::rename(
-        gi = .data$sgi,
-        accession = .data$saccver,
-        mismatch_reverse = .data$mismatch,
-        reverse_start = .data$sstart,
-        reverse_stop = .data$send
+        gi = 'sgi',
+        accession = 'saccver',
+        mismatch_reverse = 'mismatch',
+        reverse_start = 'sstart',
+        reverse_stop = 'send'
       )
 
 
