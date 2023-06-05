@@ -4,6 +4,7 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7349493.svg)](https://doi.org/10.5281/zenodo.7349493)
 ![GitHub R package version](https://img.shields.io/github/r-package/v/LunaGal/rCRUX)
 [![check-standard](https://github.com/LunaGal/rCRUX/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/LunaGal/rCRUX/actions/workflows/check-standard.yaml)
+[![pre-print](https://biorxiv.org/cgi/content/short/2023.05.31.543005v1)
 <!-- badges: end -->
 
 
