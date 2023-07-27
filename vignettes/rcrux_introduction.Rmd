@@ -36,7 +36,7 @@ the taxonomic path is collapsed to the lowest taxonomic agreement.
 RCRUX can be installed using the following R code:
 
 ```{r devtools installation}
-devtools::install_github("LunaGal/rCRUX")
+devtools::install_github("CalCoFI/rCRUX")
 ```
 
 ## Dependencies
