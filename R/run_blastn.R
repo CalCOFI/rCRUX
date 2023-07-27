@@ -79,7 +79,9 @@ run_blastn <- function(fasta, db, temp_fasta_path = NULL, ncbi_bin = NULL,
                      "-num_alignments", align,
                      "-qcov_hsp_perc", coverage,
                      "-perc_identity", perID,
-                     "-num_threads ", cores),
+                     "-num_threads ", cores,
+                     "-mt_mode", 1
+                     ),
             wait = TRUE,
             stdout = TRUE)
 

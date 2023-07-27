@@ -103,7 +103,8 @@ run_primer_blastn <-
         "-perc_identity", perID,
         "-reward", reward,
         "-word_size", word_size,
-        "-num_threads", cores)
+        "-num_threads", cores,
+        "-mt_mode", 1)
 
     message("Calling blastn for primers. This may take a long time.\n")
     message(paste(blastn, paste(args, collapse = ' ')))
