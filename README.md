@@ -62,7 +62,7 @@ This [link](https://community.rstudio.com/t/adding-to-the-path-variable/12066) m
 
 rCRUX requires a local blast-formatted nucleotide database. These can be user generated or download a pre-formatted database from [NCBI](https://ftp.ncbi.nlm.nih.gov/blast/db/).  NCBI provides a tool (perl script) for downloading databases as part of the blast+ package. A brief help page can be found [here](https://www.ncbi.nlm.nih.gov/books/NBK569850/).
 
-The following shell script can be used to download the blast-formatted nucleotide database.
+The following shell script can be used to download the blast-formatted nucleotide database. There are also taxon specific databases (e.g. nt_euk, nt_prok, and nt_viruses).
 
 ```
 
@@ -70,7 +70,7 @@ mkdir NCBI_blast_nt
 
 cd NCBI_blast_nt
 
-wget ftp://ftp.ncbi.nlm.nih.gov/blast/db/nt\*
+wget "ftp://ftp.ncbi.nlm.nih.gov/blast/db/nt.??.tar.gz*"
 
 time for file in *.tar.gz; do tar -zxvf $file; done
 
