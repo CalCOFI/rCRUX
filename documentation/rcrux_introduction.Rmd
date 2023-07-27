@@ -38,7 +38,7 @@ RCRUX can be installed using the following R code:
 
 ```{devtools installation}
 
-devtools::install_github("LunaGal/rCRUX")
+devtools::install_github("CalCOFI/rCRUX")
 
 ```
 
