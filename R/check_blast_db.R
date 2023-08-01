@@ -9,10 +9,17 @@
 #' @return Nothing or an error
 check_blast_db <- function(path){
 
+   if (!is.null(ncbi_bin)){
+    blastdbcmd <- file.path(ncbi_bin, 'blastdbcmd')
+  } else {
+    blastdbcmd = 'blastdbcmd'
+  }
+
+  
   # We want to catch the output from blastdbcmd, and suppress warning if it failed
   result <- 
     suppressWarnings(
-      system2('blastdbcmd', args = c('-db', path, '-info'), stdout = TRUE, stderr = TRUE)
+      system2(blastdbcmd, args = c('-db', path, '-info'), stdout = TRUE, stderr = TRUE)
     )
 
   has_error <- grepl('BLAST Database error', result[1])
