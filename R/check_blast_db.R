@@ -7,7 +7,7 @@
 #' @param path path to BLAST DB
 #' 
 #' @return Nothing or an error
-check_blast_db <- function(path){
+check_blast_db <- function(path, ncbi_bin = NULL){
 
    if (!is.null(ncbi_bin)){
     blastdbcmd <- file.path(ncbi_bin, 'blastdbcmd')
