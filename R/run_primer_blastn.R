@@ -74,9 +74,10 @@ run_primer_blastn <-
            num_threads = 1,
            ncbi_bin = NULL) {
 
+    dots <- list(...)
     # Assume paths to things have been checked?
     check_blast_plus_installation(ncbi_bin = ncbi_bin)
-    check_blast_db(db)
+    check_blast_db(db, , ncbi_bin = if('ncbi_bin' %in% names(dots)) dots$ncbi_bin else NULL)
 
     # Not sure this is the best default
     if (num_threads == 'max') {
