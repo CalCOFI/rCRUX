@@ -18,7 +18,7 @@ check_blast_db <- function(path, ncbi_bin = NULL){
   # We want to catch the output from blastdbcmd, and suppress warning if it failed
   result <- 
     suppressWarnings(
-      system2('blastdbcmd', args = c('-db', path, '-info'), stdout = TRUE, stderr = TRUE)
+      system2(blastdbcmd, args = c('-db', path, '-info'), stdout = TRUE, stderr = TRUE)
     )
 
   has_error <- grepl('BLAST Database error', result[1])
