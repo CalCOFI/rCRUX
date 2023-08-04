@@ -227,6 +227,13 @@ get_seeds_local <-
     dots <- list(...)
 
     # Create output directories
+
+    if (!dir.exists(output_directory_path)){
+      dir.create(output_directory_path)
+    }  else{
+      print("output directory exists")
+    }
+    
     out <- file.path(output_directory_path, "get_seeds_local")
     dir.create(out, showWarnings = FALSE)
 
