@@ -236,7 +236,7 @@ get_seeds_local <-
     # Check paths provided
     check_blast_plus_installation(ncbi_bin = if('ncbi_bin' %in% names(dots)) dots$ncbi_bin else NULL)
 
-    check_blast_db(blast_db_path)
+    check_blast_db(blast_db_path, ncbi_bin = if('ncbi_bin' %in% names(dots)) dots$ncbi_bin else NULL)
 
     if (!file.exists(accession_taxa_sql_path)) {
       stop("accession_taxa_sql_path does not exist.\n",
