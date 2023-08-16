@@ -101,8 +101,10 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
                             ncbi_bin = NULL, force_db = FALSE,
                             sample_size = 1, wildcards = "NNNNNNNNNNNN", rank = 'genus', max_to_blast = 1000, random_seed = NULL, ...) {
   
- # check_blast_plus_installation(ncbi_bin = if('ncbi_bin' %in% names(list(...))) ncbi_bin else NULL) commenting for now because this breaks
-  check_blast_db(blast_db_path)
+    check_blast_plus_installation(ncbi_bin = if('ncbi_bin' %in% names(dots)) dots$ncbi_bin else NULL)
+
+    check_blast_db(blast_db_path, ncbi_bin = if('ncbi_bin' %in% names(dots)) dots$ncbi_bin else NULL)
+ 
   if (!file.exists(accession_taxa_sql_path)) {
     stop("accession_taxa_sql_path does not exist.\n",
          "The path to the taxonomizr SQL file cannot be found. ",
