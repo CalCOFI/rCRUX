@@ -43,7 +43,6 @@ run_blastdbcmd_blastn_and_aggregate_resuts <-
   function(sample_indices,
            save_dir,
            blast_seeds_m,
-           ncbi_bin = NULL,
            db,
            too_many_ns,
            blastdbcmd_failed,
