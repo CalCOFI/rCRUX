@@ -154,7 +154,7 @@ blast_seeds <-
            minimum_length = 5,
            maximum_length = 500,
            ...) {
-
+    dots <- list(...)
     # Setup ----
     output_dir <- file.path(output_directory_path, "blast_seeds_output")
 
