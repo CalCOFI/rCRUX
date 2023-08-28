@@ -454,7 +454,7 @@ get_seeds_local <-
 
                    while (nrow(vdf) > 0){
 
-               vec <- dplyr::slice_head(vdf, n=subset)
+               vec <- dplyr::slice_head(vdf, n=10000)
                remove <- nrow(vdf)-nrow(vec)
                vdf <- dplyr::slice_tail(vdf, n=remove)
 
