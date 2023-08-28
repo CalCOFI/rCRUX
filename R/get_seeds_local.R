@@ -439,6 +439,7 @@ get_seeds_local <-
       dplyr::summarize(distinct_entries = n_distinct(send)) %>% dplyr::filter(distinct_entries < 50) %>% dplyr::ungroup
 
       # make a tibble to store plausable amplicons
+      subset = 10000
   final_table <-
     tibble::tibble("qseqid.x" = character(0),
                    "gi" = character(0),
@@ -452,9 +453,9 @@ get_seeds_local <-
                    "reverse_start" = character(0),
                    "reverse_stop " = character(0))
 
-                   while (nrow(vdf) > 0){
+    while (nrow(vdf) > 0){
 
-               vec <- dplyr::slice_head(vdf, n=10000)
+               vec <- dplyr::slice_head(vdf, n=subset)
                remove <- nrow(vdf)-nrow(vec)
                vdf <- dplyr::slice_tail(vdf, n=remove)
 
