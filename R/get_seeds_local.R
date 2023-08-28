@@ -427,7 +427,7 @@ get_seeds_local <-
 
     #sort returns
     sorted <- dplyr::arrange(append_table,saccver,send,mismatch)
-    sorted <- sorted %>% dplyr::group_by(saccver) %>% dplyr::filter(any(grepl("forward",qseqid)) && any(grepl("reverse",qseqid)), mismatch < 4) %>% dplyr::ungroup()
+    sorted <- sorted %>% dplyr::group_by(saccver) %>% dplyr::filter(any(grepl("forward",qseqid)) && any(grepl("reverse",qseqid)), mismatch < 4)
     sorted <- sorted  %>% dplyr::group_by(saccver,send) %>% dplyr::filter(dplyr::row_number()==1) %>% dplyr::ungroup()
     sorted <- dplyr::arrange(sorted,saccver,sstart,mismatch)
     sorted <- sorted %>% dplyr::group_by(saccver,sstart) %>% dplyr::filter(dplyr::row_number()==1) %>% dplyr::ungroup()
