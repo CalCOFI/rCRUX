@@ -430,9 +430,9 @@ get_seeds_local <-
 
     sorted <- dplyr::arrange(append_table,saccver,send,mismatch)
     sorted <- sorted %>% dplyr::group_by(saccver) %>% dplyr::filter(any(grepl("forward",qseqid)) && any(grepl("reverse",qseqid)), mismatch < 4)
-    sorted <- sorted  %>% group_by(saccver,send) %>% dplyr::filter(row_number()==1) %>% dplyr::ungroup()
+    sorted <- sorted  %>% dplyr::group_by(saccver,send) %>% dplyr::filter(row_number()==1) %>% dplyr::ungroup()
     sorted <- dplyr::arrange(sorted,saccver,sstart,mismatch)
-    sorted <- sorted %>% group_by(saccver,sstart) %>% dplyr::filter(row_number()==1) %>% dplyr::ungroup()
+    sorted <- sorted %>% dplyr::group_by(saccver,sstart) %>% dplyr::filter(row_number()==1) %>% dplyr::ungroup()
 
 
 vdf <- sorted %>% dplyr::distinct(saccver)
