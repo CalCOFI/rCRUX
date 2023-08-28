@@ -439,7 +439,7 @@ vdf <- sorted %>% dplyr::distinct(saccver)
 
 
 vdf <- sorted %>% dplyr::group_by(saccver) %>%
-  dplyr::summarize(distinct_entries = n_distinct(send)) %>% dplyr::filter(distinct_entries < 50) %>% dplyr::ungroup()
+  dplyr::summarize(distinct_entries = dplyr::n_distinct(send)) %>% dplyr::filter(distinct_entries < 50) %>% dplyr::ungroup()
 
 
 
