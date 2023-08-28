@@ -426,17 +426,17 @@ get_seeds_local <-
     }
 
     #sort returns
-    sorted <- arrange(append_table,saccver,send,mismatch)
-    sorted <- sorted %>% group_by(saccver) %>% filter(any(grepl("forward",qseqid)) && any(grepl("reverse",qseqid)), mismatch < 4) %>% ungroup
-    sorted <- sorted  %>% group_by(saccver,send) %>% filter(row_number()==1) %>% ungroup()
-    sorted <- arrange(sorted,saccver,sstart,mismatch)
-    sorted <- sorted %>% group_by(saccver,sstart) %>% filter(row_number()==1) %>% ungroup()
+    sorted <- dplyr::arrange(append_table,saccver,send,mismatch)
+    sorted <- dplyr::sorted %>% dplyr::group_by(saccver) %>% dplyr::filter(any(grepl("forward",qseqid)) && any(grepl("reverse",qseqid)), mismatch < 4) %>% dplyr::ungroup()
+    sorted <- dplyr::sorted  %>% dplyr::group_by(saccver,send) %>% dplyr::filter(row_number()==1) %>% dplyr::ungroup()
+    sorted <- dplyr::arrange(sorted,saccver,sstart,mismatch)
+    sorted <- dplyr::sorted %>% dplyr::group_by(saccver,sstart) %>% dplyr::filter(row_number()==1) %>% dplyr::ungroup()
 
     # remove accessions with too many returns (>50)
-    vdf <- sorted %>% distinct(saccver)
+    vdf <- dplyr::sorted %>% dplyr::distinct(saccver)
 
-    vdf <- sorted %>% group_by(saccver) %>%
-      summarize(distinct_entries = n_distinct(send)) %>% filter(distinct_entries < 50) %>% ungroup
+    vdf <- dplyr::sorted %>% dplyr::group_by(saccver) %>%
+      dplyr::summarize(distinct_entries = n_distinct(send)) %>% dplyr::filter(distinct_entries < 50) %>% dplyr::ungroup
 
       # make a tibble to store plausable amplicons
   final_table <-
@@ -454,11 +454,11 @@ get_seeds_local <-
 
                    while (nrow(vdf) > 0){
 
-               vec <- slice_head(vdf, n=subset)
+               vec <- dplyr::slice_head(vdf, n=subset)
                remove <- nrow(vdf)-nrow(vec)
-               vdf <- slice_tail(vdf, n=remove)
+               vdf <- dplyr::slice_tail(vdf, n=remove)
 
-               sub <- inner_join(sorted, vec)
+               sub <- dplyr::inner_join(sorted, vec)
 
 
                F_only <-
