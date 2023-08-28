@@ -223,7 +223,7 @@ get_seeds_local <-
     random_seed = NULL,
     # run_primer_blastn parameters
     ...) {
-    
+
     dots <- list(...)
 
     # Create output directories
@@ -233,7 +233,7 @@ get_seeds_local <-
     }  else{
       print("output directory exists")
     }
-    
+
     out <- file.path(output_directory_path, "get_seeds_local")
     dir.create(out, showWarnings = FALSE)
 
@@ -425,56 +425,97 @@ get_seeds_local <-
 
     }
 
-    # parse amplicons from hits to forward and reverse hits
-    # First isolate forward and reverse reads and rename columns
-    F_only <-
-      append_table %>%
-      dplyr::filter(grepl('forward', .data$qseqid)) %>%
-      dplyr::rename(
-        gi = 'sgi',
-        accession = 'saccver',
-        mismatch_forward = 'mismatch',
-        forward_start = 'sstart',
-        forward_stop = 'send'
-      )
+    #sort returns
+    sorted <- arrange(append_table,saccver,send,mismatch)
+    sorted <- sorted %>% group_by(saccver) %>% filter(any(grepl("forward",qseqid)) && any(grepl("reverse",qseqid)), mismatch < 4) %>% ungroup
+    sorted <- sorted  %>% group_by(saccver,send) %>% filter(row_number()==1) %>% ungroup()
+    sorted <- arrange(sorted,saccver,sstart,mismatch)
+    sorted <- sorted %>% group_by(saccver,sstart) %>% filter(row_number()==1) %>% ungroup()
 
-    R_only <-
-      append_table %>%
-      dplyr::filter(grepl('reverse', .data$qseqid)) %>%
-      dplyr::rename(
-        gi = 'sgi',
-        accession = 'saccver',
-        mismatch_reverse = 'mismatch',
-        reverse_start = 'sstart',
-        reverse_stop = 'send'
-      )
+    # remove accessions with too many returns (>50)
+    vdf <- sorted %>% distinct(saccver)
+
+    vdf <- sorted %>% group_by(saccver) %>%
+      summarize(distinct_entries = n_distinct(send)) %>% filter(distinct_entries < 50) %>% ungroup
+
+      # make a tibble to store plausable amplicons
+  final_table <-
+    tibble::tibble("qseqid.x" = character(0),
+                   "gi" = character(0),
+                   "accession" = character(0),
+                   "mismatch_forward" = character(0),
+                   "forward_start" = character(0),
+                   "forward_stop " = character(0),
+                   "staxids" = character(0),
+                   "qseqid.y" = character(0),
+                   "mismatch_reverse" = character(0),
+                   "reverse_start" = character(0),
+                   "reverse_stop " = character(0))
+
+                   while (nrow(vdf) > 0){
+
+               vec <- slice_head(vdf, n=subset)
+               remove <- nrow(vdf)-nrow(vec)
+               vdf <- slice_tail(vdf, n=remove)
+
+               sub <- inner_join(sorted, vec)
 
 
-    # keep only the accessions with forward and reverse primer hits, and add a column for product length
-    f_and_r <-
-      dplyr::inner_join(x = F_only,
-                        y = R_only,
-                        by = c("accession", "gi", "staxids")) %>%
-      dplyr::mutate(product_length = 0,
-                    dplyr::across(c('forward_start', 'forward_stop', 'reverse_start', 'reverse_stop'), .fns = as.integer)
-      )
+               F_only <-
+                 sub %>%
+                 dplyr::filter(grepl('forward', .data$qseqid)) %>%
+                 dplyr::rename(
+                   gi = 'sgi',
+                   accession = 'saccver',
+                   mismatch_forward = 'mismatch',
+                   forward_start = 'sstart',
+                   forward_stop = 'send'
+                 )
 
-    # calculate product length if F and R primer pairs are in correct orientation to make amplicon
-    f_and_r <-
-      dplyr::mutate(f_and_r, product_length = dplyr::case_when(
-        (forward_start < reverse_start &
-           forward_start < forward_stop &
-           reverse_stop < reverse_start) ~ (as.numeric(reverse_start) - as.numeric(forward_start)),
-        (forward_start > reverse_start &
-           forward_start > forward_stop &
-           reverse_stop > reverse_start) ~ (as.numeric(forward_start) - as.numeric(reverse_start)),
-      ))
+               R_only <-
+                   sub %>%
+                   dplyr::filter(grepl('reverse', .data$qseqid)) %>%
+                   dplyr::rename(
+                     gi = 'sgi',
+                     accession = 'saccver',
+                     mismatch_reverse = 'mismatch',
+                     reverse_start = 'sstart',
+                     reverse_stop = 'send'
+                   )
 
-    # remove all F and R primer pairs that would not make an amplicon
-    f_and_r <- dplyr::filter(f_and_r, !is.na(.data$product_length))
+                 # keep only the accessions with forward and reverse primer hits, and add a column for product length
+                 f_and_r <-
+                   dplyr::inner_join(x = F_only,
+                                     y = R_only,
+                                     by = c("accession", "gi", "staxids"), relationship = "many-to-many") %>%
+                   dplyr::mutate(product_length = 0,
+                                 dplyr::across(c('forward_start', 'forward_stop', 'reverse_start', 'reverse_stop'), .fns = as.integer)
+                   )
+
+                 # calculate product length if F and R primer pairs are in correct orientation to make amplicon
+                 f_and_r <-
+                   dplyr::mutate(f_and_r, product_length = dplyr::case_when(
+                     (forward_start < reverse_start &
+                        forward_start < forward_stop &
+                        reverse_stop < reverse_start) ~ (as.numeric(reverse_start) - as.numeric(forward_start)),
+                     (forward_start > reverse_start &
+                        forward_start > forward_stop &
+                        reverse_stop > reverse_start) ~ (as.numeric(forward_start) - as.numeric(reverse_start)),
+                   ))
+
+                 # remove all F and R primer pairs that would not make an amplicon
+                 f_and_r <- dplyr::filter(f_and_r, !is.na(.data$product_length))
+
+                 f_and_r <- dplyr::filter(f_and_r, dplyr::between(.data$product_length, minimum_length, maximum_length))
+
+                 final_table <- rbind(final_table, f_and_r)
+
+
+               }
+
 
     # if table is empty and give warning and stop
-    if (nrow( f_and_r ) <= 1){
+    if (nrow( final_table ) <= 1){
 
       stop("No plausible amplicons were found. ",
            "Try modifying parameters to increase blast returns (e.g. num_fprimers_to_blast, num_rprimers_to_blast, align, evalue, etc.)")
@@ -482,12 +523,12 @@ get_seeds_local <-
     }
 
     #save unfiltered seeds output
-    utils::write.csv(f_and_r,
+    utils::write.csv(final_table,
               file = file.path(out, paste0(metabarcode_name, "_unfiltered_get_seeds_local_output.csv")),
               row.names = FALSE)
 
     # keep only hits with acceptable product length
-    f_and_r <- dplyr::filter(f_and_r, dplyr::between(.data$product_length, minimum_length, maximum_length))
+    f_and_r <- dplyr::filter(final_table, dplyr::between(.data$product_length, minimum_length, maximum_length))
 
     # keep hits with accaptable number of mismatches
     f_and_r <- dplyr::filter(f_and_r, .data$mismatch_forward <= mismatch & .data$mismatch_reverse <= mismatch)
