@@ -425,95 +425,99 @@ get_seeds_local <-
 
     }
 
-    #sort returns
-    sorted <- append_table %>% dplyr::arrange(saccver,send,mismatch)
-    sorted <- sorted %>% dplyr::group_by(saccver) %>% dplyr::filter(any(grepl("forward",qseqid)) && any(grepl("reverse",qseqid)), mismatch < 4) %>% dplyr::ungroup()
-    sorted <- sorted  %>% dplyr::group_by(saccver,send) %>% dplyr::filter(dplyr::row_number()==1) %>% dplyr::ungroup()
+    subset = 10000
+
+
+    sorted <- dplyr::arrange(append_table,saccver,send,mismatch)
+    sorted <- sorted %>% dplyr::group_by(saccver) %>% dplyr::filter(any(grepl("forward",qseqid)) && any(grepl("reverse",qseqid)), mismatch < 4)
+    sorted <- sorted  %>% group_by(saccver,send) %>% dplyr::filter(row_number()==1) %>% dplyr::ungroup()
     sorted <- dplyr::arrange(sorted,saccver,sstart,mismatch)
-    sorted <- sorted %>% dplyr::group_by(saccver,sstart) %>% dplyr::filter(dplyr::row_number()==1) %>% dplyr::ungroup()
+    sorted <- sorted %>% group_by(saccver,sstart) %>% dplyr::filter(row_number()==1) %>% dplyr::ungroup()
 
-    # remove accessions with too many returns (>50)
-    vdf <- sorted %>% dplyr::distinct(saccver)
 
-    vdf <- sorted %>% dplyr::group_by(saccver) %>%
-      dplyr::summarize(distinct_entries = n_distinct(send)) %>% dplyr::filter(distinct_entries < 50) %>% dplyr::ungroup
+vdf <- sorted %>% dplyr::distinct(saccver)
 
-      # make a tibble to store plausable amplicons
-      subset = 10000
-  final_table <-
-    tibble::tibble("qseqid.x" = character(0),
-                   "gi" = character(0),
-                   "accession" = character(0),
-                   "mismatch_forward" = character(0),
-                   "forward_start" = character(0),
-                   "forward_stop " = character(0),
-                   "staxids" = character(0),
-                   "qseqid.y" = character(0),
-                   "mismatch_reverse" = character(0),
-                   "reverse_start" = character(0),
-                   "reverse_stop " = character(0))
+
+vdf <- sorted %>% dplyr::group_by(saccver) %>%
+  dplyr::summarize(distinct_entries = n_distinct(send)) %>% dplyr::filter(distinct_entries < 50) %>% dplyr::ungroup()
+
+
+
+
+# make a tibble to store plausable amplicons
+final_table <-
+  tibble::tibble("qseqid.x" = character(0),
+                 "gi" = character(0),
+                 "accession" = character(0),
+                 "mismatch_forward" = character(0),
+                 "forward_start" = character(0),
+                 "forward_stop " = character(0),
+                 "staxids" = character(0),
+                 "qseqid.y" = character(0),
+                 "mismatch_reverse" = character(0),
+                 "reverse_start" = character(0),
+                 "reverse_stop " = character(0))
+
 
     while (nrow(vdf) > 0){
 
-               vec <- dplyr::slice_head(vdf, n=subset)
-               remove <- nrow(vdf)-nrow(vec)
-               vdf <- dplyr::slice_tail(vdf, n=remove)
+      vec <- dplyr::slice_head(vdf, n=subset)
+      remove <- nrow(vdf)-nrow(vec)
+      vdf <- dplyr::slice_tail(vdf, n=remove)
 
-               sub <- dplyr::inner_join(sorted, vec)
-
-
-               F_only <-
-                 sub %>%
-                 dplyr::filter(grepl('forward', .data$qseqid)) %>%
-                 dplyr::rename(
-                   gi = 'sgi',
-                   accession = 'saccver',
-                   mismatch_forward = 'mismatch',
-                   forward_start = 'sstart',
-                   forward_stop = 'send'
-                 )
-
-               R_only <-
-                   sub %>%
-                   dplyr::filter(grepl('reverse', .data$qseqid)) %>%
-                   dplyr::rename(
-                     gi = 'sgi',
-                     accession = 'saccver',
-                     mismatch_reverse = 'mismatch',
-                     reverse_start = 'sstart',
-                     reverse_stop = 'send'
-                   )
-
-                 # keep only the accessions with forward and reverse primer hits, and add a column for product length
-                 f_and_r <-
-                   dplyr::inner_join(x = F_only,
-                                     y = R_only,
-                                     by = c("accession", "gi", "staxids"), relationship = "many-to-many") %>%
-                   dplyr::mutate(product_length = 0,
-                                 dplyr::across(c('forward_start', 'forward_stop', 'reverse_start', 'reverse_stop'), .fns = as.integer)
-                   )
-
-                 # calculate product length if F and R primer pairs are in correct orientation to make amplicon
-                 f_and_r <-
-                   dplyr::mutate(f_and_r, product_length = dplyr::case_when(
-                     (forward_start < reverse_start &
-                        forward_start < forward_stop &
-                        reverse_stop < reverse_start) ~ (as.numeric(reverse_start) - as.numeric(forward_start)),
-                     (forward_start > reverse_start &
-                        forward_start > forward_stop &
-                        reverse_stop > reverse_start) ~ (as.numeric(forward_start) - as.numeric(reverse_start)),
-                   ))
-
-                 # remove all F and R primer pairs that would not make an amplicon
-                 f_and_r <- dplyr::filter(f_and_r, !is.na(.data$product_length))
-
-                 f_and_r <- dplyr::filter(f_and_r, dplyr::between(.data$product_length, minimum_length, maximum_length))
-
-                 final_table <- rbind(final_table, f_and_r)
+      sub <- dplyr::inner_join(sorted, vec)
 
 
-               }
+      F_only <-
+        sub %>%
+          dplyr::filter(grepl('forward', .data$qseqid)) %>%
+            dplyr::rename(
+            gi = 'sgi',
+            accession = 'saccver',
+            mismatch_forward = 'mismatch',
+            forward_start = 'sstart',
+            forward_stop = 'send'
+            )
 
+      R_only <-
+        sub %>%
+          dplyr::filter(grepl('reverse', .data$qseqid)) %>%
+          dplyr::rename(
+          gi = 'sgi',
+          accession = 'saccver',
+          mismatch_reverse = 'mismatch',
+          reverse_start = 'sstart',
+          reverse_stop = 'send'
+          )
+
+  # keep only the accessions with forward and reverse primer hits, and add a column for product length
+    f_and_r <-
+      dplyr::inner_join(x = F_only,
+                      y = R_only,
+                      by = c("accession", "gi", "staxids"), relationship = "many-to-many") %>%
+      dplyr::mutate(product_length = 0,
+                  dplyr::across(c('forward_start', 'forward_stop', 'reverse_start', 'reverse_stop'), .fns = as.integer))
+
+  # calculate product length if F and R primer pairs are in correct orientation to make amplicon
+    f_and_r <-
+      dplyr::mutate(f_and_r, product_length = dplyr::case_when(
+        (forward_start < reverse_start &
+         forward_start < forward_stop &
+         reverse_stop < reverse_start) ~ (as.numeric(reverse_start) - as.numeric(forward_start)),
+         (forward_start > reverse_start &
+         forward_start > forward_stop &
+         reverse_stop > reverse_start) ~ (as.numeric(forward_start) - as.numeric(reverse_start)),
+         ))
+
+  # remove all F and R primer pairs that would not make an amplicon
+    f_and_r <- dplyr::filter(f_and_r, !is.na(.data$product_length))
+
+    f_and_r <- dplyr::filter(f_and_r, dplyr::between(.data$product_length, minimum_length, maximum_length))
+
+    final_table <- rbind(final_table, f_and_r)
+
+
+  }
 
     # if table is empty and give warning and stop
     if (nrow( final_table ) <= 1){
