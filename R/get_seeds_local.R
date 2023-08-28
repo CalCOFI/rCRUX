@@ -427,15 +427,15 @@ get_seeds_local <-
 
     #sort returns
     sorted <- dplyr::arrange(append_table,saccver,send,mismatch)
-    sorted <- dplyr::sorted %>% dplyr::group_by(saccver) %>% dplyr::filter(any(grepl("forward",qseqid)) && any(grepl("reverse",qseqid)), mismatch < 4) %>% dplyr::ungroup()
-    sorted <- dplyr::sorted  %>% dplyr::group_by(saccver,send) %>% dplyr::filter(row_number()==1) %>% dplyr::ungroup()
+    sorted <- sorted %>% dplyr::group_by(saccver) %>% dplyr::filter(any(grepl("forward",qseqid)) && any(grepl("reverse",qseqid)), mismatch < 4) %>% dplyr::ungroup()
+    sorted <- sorted  %>% dplyr::group_by(saccver,send) %>% dplyr::filter(row_number()==1) %>% dplyr::ungroup()
     sorted <- dplyr::arrange(sorted,saccver,sstart,mismatch)
-    sorted <- dplyr::sorted %>% dplyr::group_by(saccver,sstart) %>% dplyr::filter(row_number()==1) %>% dplyr::ungroup()
+    sorted <- sorted %>% dplyr::group_by(saccver,sstart) %>% dplyr::filter(row_number()==1) %>% dplyr::ungroup()
 
     # remove accessions with too many returns (>50)
-    vdf <- dplyr::sorted %>% dplyr::distinct(saccver)
+    vdf <- sorted %>% dplyr::distinct(saccver)
 
-    vdf <- dplyr::sorted %>% dplyr::group_by(saccver) %>%
+    vdf <- sorted %>% dplyr::group_by(saccver) %>%
       dplyr::summarize(distinct_entries = n_distinct(send)) %>% dplyr::filter(distinct_entries < 50) %>% dplyr::ungroup
 
       # make a tibble to store plausable amplicons
