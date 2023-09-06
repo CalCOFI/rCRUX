@@ -7,7 +7,7 @@
 <!-- badges: end -->
 
 
-**Authors:** [Luna Gal](<https://github.com/LunaGal>), [Zachary Gold](<https://github.com/zjgold>), [Ramon Gallego](https://github.com/ramongallego), [Shaun Nielsen](https://github.com/Shaunson26), [Emily Curd](<https://github.com/limey-bean>)<br/>
+**Authors:** [Luna Gal](<https://github.com/LunaGal>), [Zachary Gold](<https://github.com/zjgold>), [Ramon Gallego](https://github.com/ramongallego), [Shaun Nielsen](https://github.com/Shaunson26), [Katherine Silliman](https://github.com/ksil91), [Emily Curd](<https://github.com/limey-bean>)<br/>
 **Inspiration:**
 The late, great [Jesse Gomer](<https://github.com/jessegomer?tab=repositories>). Coding extraordinaire and dear friend.<br/>
 **License:**
