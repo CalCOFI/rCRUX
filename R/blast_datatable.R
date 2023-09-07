@@ -223,13 +223,6 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
       # be used as blast seeds and make vector or sample indices
       sample_indices <- which(blast_seeds_m$accession %in% seeds_left_indices)
 
-      # remove accession numbers found by blast
-      # this is not the most elegant way to do it but it's not the worst...
-      in_output <- blast_seeds_m$accession %in% blastn_output$accession
-      in_output_indices <- seq_along(blast_seeds_m$accession)[in_output]
-
-      unsampled_indices <-
-        unsampled_indices[!unsampled_indices %in% sample_indices]
 
 
     } else if (length(unsampled_indices) > max_to_blast) {
