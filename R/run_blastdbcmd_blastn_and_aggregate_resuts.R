@@ -128,7 +128,9 @@ run_blastdbcmd_blastn_and_aggregate_resuts <-
 
       # remove accession numbers found by blast
       # this is not the most elegant way to do it but it's not the worst...
-      in_output <- blast_seeds_m$accession %in% blastn_output$accession
+      in_output <-
+      $accession %in% blastn_output$accession
+
       in_output_indices <- seq_along(blast_seeds_m$accession)[in_output]
 
       unsampled_indices <-
@@ -136,6 +138,8 @@ run_blastdbcmd_blastn_and_aggregate_resuts <-
 
       unsampled_indices <-
         unsampled_indices[!unsampled_indices %in% sample_indices]
+
+      blast_seeds_m$blast_status[-unsampled_indices] <- "done"
 
 
       # Add output to existing output
