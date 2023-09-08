@@ -167,10 +167,6 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     message("BLAST round: ", num_rounds)
     message('  ', length(unsampled_indices), " indices left to process.\n")
 
-    # for seeds collecting loop
-    filler <- 0
-    seeds_by_rank_indices <- 0
-
     # Update status of blast seeds by labeling all reads not in the upsampled
     # indicies list as "done"
     blast_seeds_m$blast_status[-unsampled_indices] <- "done"
@@ -202,10 +198,6 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
         dplyr::pull(.data$accession)
 
 
-      # if you are in the grey zone where you have fewer genera than max to blast but more indices left than max to blast. This should speed things up.
-
-
-
       if (length(seeds_by_rank_indices) < max_to_blast & nrow(blast_seeds_m) > max_to_blast){
 
         remainder = max_to_blast - length(seeds_by_rank_indices)
@@ -217,21 +209,19 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
       }
 
-      seeds_to_blast <- c(seeds_by_rank_indices,filler)
 
 
       # search the original output blast_seeds for the indices (row numbers) to
       # be used as blast seeds and make vector or sample indices
-      sample_indices <- which(blast_seeds_m$accession %in% seeds_to_blast)
+      sample_indices <- which(blast_seeds_m$accession %in% seeds_by_rank_indices)
     }
 
     # clean up messages
-    if (length(sample_indices) <= 25 ) {
+    if (length(sample_indices) <= 100 ) {
 
       message(
-        rank, " has ", length(seeds_by_rank_indices), " unique occurrences in the blast seeds data table.\n",
-        filler, " additional indices were randomly sampled for this round of blast.\n
-        The remaining indices will be randomly sampled in subsets of ", max_to_blast, "  ...\n"
+        rank, " has ", length(sample_indices), " unique occurrences in the blast seeds data table.\n",
+        "The remaining indices will be randomly sampled in subsets of ", max_to_blast, "  ...\n"
         # if zero more genera exist, but more indices than the max_to_blast are present
         # randomly select indices up to the max_to_blast value
         # accession numbers into a vector
