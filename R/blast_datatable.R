@@ -225,7 +225,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     }
 
     # clean up messages
-    if (length(sample_indices) <= 100 ) {
+    if (length(sample_indices) <= 25 ) {
 
       message(
         rank, " has ", length(seeds_by_rank_indices), " unique occurrences in the blast seeds data table.\n",
