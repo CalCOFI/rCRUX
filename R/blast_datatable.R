@@ -169,6 +169,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
     # for seeds collecting loop
     filler <- 0
+    seeds_by_rank_indices <- 0
 
     # Update status of blast seeds by labeling all reads not in the upsampled
     # indicies list as "done"
