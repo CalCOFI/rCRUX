@@ -167,6 +167,9 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     message("BLAST round: ", num_rounds)
     message('  ', length(unsampled_indices), " indices left to process.\n")
 
+    # for seeds collecting loop
+    filler <- 0
+
     # Update status of blast seeds by labeling all reads not in the upsampled
     # indicies list as "done"
     blast_seeds_m$blast_status[-unsampled_indices] <- "done"
@@ -200,7 +203,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
       # if you are in the grey zone where you have fewer genera than max to blast but more indices left than max to blast. This should speed things up.
 
-      filler <- 0
+
 
       if (length(seeds_by_rank_indices) < max_to_blast & nrow(blast_seeds_m) > max_to_blast){
 
