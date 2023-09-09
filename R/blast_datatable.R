@@ -117,6 +117,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
   blast_seeds_m <- blast_seeds
   blast_seeds_m$blast_status <- "not_done"
   unsampled_indices <- seq_along(blast_seeds_m$accession)
+  filler <- 0
 
   if (!is.null(random_seed)){
     set.seed(random_seed)
@@ -198,7 +199,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
         dplyr::pull(.data$accession)
 
 
-       filler <- 0
+
 
         if (length(seeds_by_rank_indices) < max_to_blast & nrow(blast_seeds_m) > max_to_blast){
 
