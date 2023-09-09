@@ -228,7 +228,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
       message(
         rank, " has ", length(sample_indices), " unique occurrences in the blast seeds data table.\n",
-        "An additional", filler, " indices will be randomly sampled."\n"
+        "An additional", filler, " indices will be randomly sampled.\n"
         # if zero more genera exist, but more indices than the max_to_blast are present
         # randomly select indices up to the max_to_blast value
         # accession numbers into a vector
