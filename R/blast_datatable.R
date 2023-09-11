@@ -249,7 +249,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
 
 
-    } else if (length(unsampled_indices) => max_to_blast) {
+    } else if (length(unsampled_indices) >= max_to_blast) {
       message(
         rank, " has ", length(sample_indices), " unique occurrences in the blast seeds data table.\n",
         "These may be subset ...\n"
