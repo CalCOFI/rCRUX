@@ -226,7 +226,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     }
 
     # clean up messages
-    if (seeds_by_rank_indices) < max_to_blast & nrow(blast_seeds_m) > max_to_blast) {
+    if (seeds_by_rank_indices < max_to_blast & nrow(blast_seeds_m) > max_to_blast) {
 
       message(
         rank, " has ", length(sample_indices), " unique occurrences in the blast seeds data table.\n",
