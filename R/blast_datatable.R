@@ -349,7 +349,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
                                                    ...)
 
         sample_indices <- sample_indices[!(sample_indices)]
-        blast_seeds_m$blast_status[-sampled_indices] <- "done"
+        blast_seeds_m$blast_status[-sample_indices] <- "done"
 
 
         break
@@ -376,7 +376,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
         # update sample indices
         sample_indices <- sample_indices[!(sample_indices %in% subset)]
-        blast_seeds_m$blast_status[-sampled_indices] <- "done"
+        blast_seeds_m$blast_status[-sample_indices] <- "done"
 
       }
 
