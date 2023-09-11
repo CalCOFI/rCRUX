@@ -204,6 +204,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
         if (length(seeds_by_rank_indices) < max_to_blast & nrow(blast_seeds_m) > max_to_blast){
 
         remainder = max_to_blast - length(seeds_by_rank_indices)
+
         filler <-
           blast_seeds_m %>%
           dplyr::filter(.data$blast_status == 'not_done') %>%
@@ -225,7 +226,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     }
 
     # clean up messages
-    if (length(sample_indices) <= 100 ) {
+    if (seeds_by_rank_indices) < max_to_blast & nrow(blast_seeds_m) > max_to_blast) {
 
       message(
         rank, " has ", length(sample_indices), " unique occurrences in the blast seeds data table.\n",
@@ -248,7 +249,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
 
 
-    } else if (length(unsampled_indices) > max_to_blast) {
+    } else if (length(unsampled_indices) => max_to_blast) {
       message(
         rank, " has ", length(sample_indices), " unique occurrences in the blast seeds data table.\n",
         "These may be subset ...\n"
@@ -263,6 +264,8 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     # update unsampled_indices by removing the sample_indices from the list
     unsampled_indices <-
       unsampled_indices[!(unsampled_indices %in% sample_indices)]
+
+
 
     # run blast command, blastn, and aggregate the results based on the the value
     # max_to_blast. If there are fewer indices for a rank than the max_to_blast
@@ -323,6 +326,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
                                                    ...)
 
         unsampled_indices <- unsampled_indices[!(unsampled_indices)]
+        blast_seeds_m$blast_status[-unsampled_indices] <- "done"
 
         break
 
@@ -344,6 +348,8 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
                                                    ...)
 
         sample_indices <- sample_indices[!(sample_indices)]
+        blast_seeds_m$blast_status[-sampled_indices] <- "done"
+
 
         break
 
@@ -369,6 +375,8 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
         # update sample indices
         sample_indices <- sample_indices[!(sample_indices %in% subset)]
+        blast_seeds_m$blast_status[-sampled_indices] <- "done"
+
       }
 
     }
