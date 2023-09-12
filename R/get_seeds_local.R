@@ -544,7 +544,7 @@ final_table <-
            "Try modifying parameters to allow more amplicons to pass filter (e.g. minimum_length, maximum_length, mismatch, etc.)")
     }
 
-    f_and_r <- dplyr::distinct(f_and_r, accession, keep=TRUE)
+    f_and_r <- dplyr::distinct(f_and_r, accession, .keep_all = TRUE)
 
 
     # issue with taxonomizr remove.file that leads to warnings that can be omitted
