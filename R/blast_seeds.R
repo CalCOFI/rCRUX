@@ -176,7 +176,7 @@ blast_seeds <-
 
     # BLAST ----
     message('Blasting seeds.\n')
-    
+
     blast_seeds <- utils::read.csv(seeds_output_path)
 
     output_table <-
@@ -197,7 +197,7 @@ blast_seeds <-
     }
 
     # using multiple blast databases leads to duplicates so get rid of those...
-    output_table <- unique(output_table)
+    output_table <- dplyr::distinct(output_table, accession, keep=TRUE)
 
     # Write output_table to dir/blast_seeds_output/summary.csv
     summary_csv_path <- file.path(output_dir, "summary.csv")
