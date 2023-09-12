@@ -184,6 +184,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     else if (rank == 'all') {
 
       sample_indices <- unsampled_indices
+      rank_number <- length(sample_indices)
 
     }
     else {
@@ -200,11 +201,11 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
         dplyr::pull(.data$accession)
 
 
+     rank_number <- length(seeds_by_rank_indices)
 
+        if (rank_number < max_to_blast & nrow(blast_seeds_m) > max_to_blast){
 
-        if (length(seeds_by_rank_indices) < max_to_blast & nrow(blast_seeds_m) > max_to_blast){
-
-        remainder = max_to_blast - length(seeds_by_rank_indices)
+        remainder = max_to_blast - rank_number
 
         filler <-
           blast_seeds_m %>%
@@ -227,11 +228,11 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
     }
 
     # clean up messages
-    if (length(sample_indices) < max_to_blast & nrow(blast_seeds_m) > max_to_blast) {
+    if (rank_number < max_to_blast & nrow(blast_seeds_m) > max_to_blast) {
 
       message(
-        rank, " has ", length(sample_indices), " unique occurrences in the blast seeds data table.\n",
-        "An additional", filler, " indices will be randomly sampled.\n"
+        rank, " has ", rank_number, " unique occurrences in the blast seeds data table.\n",
+        "An additional", length(filler), " indices will be randomly sampled.\n"
         # if zero more genera exist, but more indices than the max_to_blast are present
         # randomly select indices up to the max_to_blast value
         # accession numbers into a vector
@@ -249,9 +250,9 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
 
 
-    } else if (length(unsampled_indices) >= max_to_blast) {
+    } else if (length(unsampled_indices) >= max_to_blast & rank_number >= max_to_blast ) {
       message(
-        rank, " has ", length(sample_indices), " unique occurrences in the blast seeds data table.\n",
+        rank, " has ", rank_number, " unique occurrences in the blast seeds data table.\n",
         "These may be subset ...\n"
       )
 
