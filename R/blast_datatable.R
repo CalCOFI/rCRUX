@@ -119,6 +119,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
   unsampled_indices <- seq_along(blast_seeds_m$accession)
   filler <- 0
   seeds_by_rank_indices <- max_to_blast
+  rank_number <- 0
 
   if (!is.null(random_seed)){
     set.seed(random_seed)
