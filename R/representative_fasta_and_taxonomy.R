@@ -34,7 +34,7 @@ representative_fasta_and_taxonomy <- function(paths_to_summary_tables, metabarco
   # Taxonomy file format (tidyr and dplyr)
   taxa_table <-  dplyr::select(concat, 'rep_accession_number', 'superkingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species')
   taxa_table <- tidyr::unite(taxa_table, col = 'taxonomic_path', 'superkingdom':'species', sep = ";", remove = TRUE, na.rm = FALSE)
-  taxa_table <- dplyr::slice(taxa_table, -1)
+
 
   # Write the thing
   taxa_table_path <- file.path(output_directory_path, paste0(metabarcode_name, "_derep_and_clean_taxonomy.txt"))
