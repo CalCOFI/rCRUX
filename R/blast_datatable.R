@@ -229,7 +229,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
       # be used as blast seeds and make vector or sample indices
       #sample_indices <- which(blast_seeds_m$accession %in% seeds_by_rank_indices)
 
-    } else if (rank_number <= 1){
+    } else if (rank_number <= 10){
           seeds_to_blast <- unsampled_indices
     }
 
