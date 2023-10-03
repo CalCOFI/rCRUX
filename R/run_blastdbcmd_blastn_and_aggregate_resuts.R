@@ -77,10 +77,14 @@ run_blastdbcmd_blastn_and_aggregate_resuts <-
       if (blastdbcmd_failed_status) {
         blastdbcmd_failed <- append(blastdbcmd_failed, index)
         blast_seeds_m$blast_status[-blastdbcmd_failed] <- "done"
+        unsampled_indices <-
+          unsampled_indices[!(unsampled_indices %in% blastdbcmd_failed)]
       }
       else if (has_too_many_ns) {
         too_many_ns <- append(too_many_ns, index)
         blast_seeds_m$blast_status[-too_many_ns] <- "done"
+        unsampled_indices <-
+          unsampled_indices[!(unsampled_indices %in% too_many_ns)]
       }
       else {
         aggregate_fasta <- append(aggregate_fasta, fasta)
