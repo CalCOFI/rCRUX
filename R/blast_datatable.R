@@ -204,9 +204,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
      rank_number <- length(seeds_by_rank_indices)
 
-     if (rank_number == 0){
-      seeds_to_blast <- unsampled_indices
-     }
+
 
      if (rank_number < max_to_blast & nrow(blast_seeds_m) > max_to_blast){
 
@@ -230,6 +228,9 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
       # search the original output blast_seeds for the indices (row numbers) to
       # be used as blast seeds and make vector or sample indices
       #sample_indices <- which(blast_seeds_m$accession %in% seeds_by_rank_indices)
+
+    } else if (rank_number <= 1){
+          seeds_to_blast <- unsampled_indices
     }
 
     # clean up messages
