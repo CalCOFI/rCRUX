@@ -205,7 +205,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
      rank_number <- length(seeds_by_rank_indices)
 
      if (rank_number == 0){
-      seeds_by_rank_indices <- sample_indices
+      seeds_to_blast <- unsampled_indices
      }
 
      if (rank_number < max_to_blast & nrow(blast_seeds_m) > max_to_blast){
@@ -260,6 +260,12 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
         rank, " has ", rank_number, " unique occurrences in the blast seeds data table.\n",
         "These may be subset ...\n"
       )
+
+    } else if (length(rank_number) == 0  ) {
+        message(
+          rank, " has ", rank_number, " unique occurrences in the blast seeds data table.\n",
+          "These remaining indices will be blasted and may be subset ...\n"
+        )
 
     } else {
       message("The number of unsampled indices is less than or equal to the maximum number to be blasted.\n")
