@@ -204,6 +204,10 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
 
      rank_number <- length(seeds_by_rank_indices)
 
+     if (rank_number == 0){
+      seeds_by_rank_indices <- sample_indices
+     }
+
      if (rank_number < max_to_blast & nrow(blast_seeds_m) > max_to_blast){
 
         remainder = max_to_blast - rank_number - 1
