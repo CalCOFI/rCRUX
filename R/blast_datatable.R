@@ -264,7 +264,7 @@ blast_datatable <- function(blast_seeds, save_dir, blast_db_path, accession_taxa
         "These may be subset ...\n"
       )
 
-    } else if (length(rank_number) == 0  ) {
+    } else if (length(rank_number) <= 10  ) {
         message(
           rank, " has ", rank_number, " unique occurrences in the blast seeds data table.\n",
           "These remaining indices will be blasted and may be subset ...\n"
