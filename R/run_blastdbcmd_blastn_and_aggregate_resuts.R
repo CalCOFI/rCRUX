@@ -76,9 +76,11 @@ run_blastdbcmd_blastn_and_aggregate_resuts <-
 
       if (blastdbcmd_failed_status) {
         blastdbcmd_failed <- append(blastdbcmd_failed, index)
+        blast_seeds_m$blast_status[-blastdbcmd_failed] <- "done"
       }
       else if (has_too_many_ns) {
         too_many_ns <- append(too_many_ns, index)
+        blast_seeds_m$blast_status[-too_many_ns] <- "done"
       }
       else {
         aggregate_fasta <- append(aggregate_fasta, fasta)
@@ -97,6 +99,7 @@ run_blastdbcmd_blastn_and_aggregate_resuts <-
     if (!is.character(aggregate_fasta)) {
       #message("aggregate_fasta has value ", aggregate_fasta)
       message("No useable accession numbers. Proceeding to next round.")
+
     }
     else {
 
