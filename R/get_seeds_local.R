@@ -104,7 +104,7 @@
 #        time of the search. The default is word_size =  7
 # @param evalue (passed to [rCRUX::run_primer_blastn()]) is the number of
 #        expected hits with a similar quality score found by chance.
-#        The default is evalue = '3e-7'.
+#        The default is evalue = '3e+7'.
 # @param coverage (passed to [rCRUX::run_primer_blastn()]) is the minimum
 #        percent of the query length recovered in the subject hits.
 #        The default is coverage = 90.
