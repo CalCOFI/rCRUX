@@ -17,7 +17,7 @@ Support for the development of this tool was provided by [CalCOFI](<https://calc
 **Acknowledgments:**
 This work benefited from the amazing input of many including Lenore Pipes, Sarah Stinson, Gaurav Kandlikar, and Maura Palacios Mejia. <br/>
 <br/>
-**[Published-Manuscript](https://onlinelibrary.wiley.com/doi/epdf/10.1002/edn3.489)**
+**[Published-Manuscript](https://onlinelibrary.wiley.com/doi/epdf/10.1002/edn3.489)**<br/>
 <br/>
 **[pre-print](https://biorxiv.org/cgi/content/short/2023.05.31.543005v1)** <br/>
 <br/>
