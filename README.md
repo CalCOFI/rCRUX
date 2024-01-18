@@ -1,5 +1,5 @@
 <p align="center">
-<img src="crux_hex.png" height="250" width="500">
+<img src="crux_hex.png" height="250" width="250">
 </p>
 
 # rCRUX: Generate CRUX metabarcoding reference libraries in R
