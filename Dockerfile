@@ -27,7 +27,7 @@ RUN echo "remotes::install_github(\"cpauvert/psadd\")" | R --no-save
 
 RUN echo "devtools::install_github(\"CalCOFI/rCRUX\", build_vignettes = TRUE)" | R --no-save
 
-RUN wget https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.14.1/ncbi-blast-2.14.1+-x64-linux.tar.gz && \
+RUN wget https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.14.1+-x64-linux.tar.gz && \
     tar -xvzf ncbi-blast-2.14.1+-x64-linux.tar.gz && \
     rm ncbi-blast-2.14.1+-x64-linux.tar.gz
 
