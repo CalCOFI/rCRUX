@@ -79,7 +79,7 @@ mkdir NCBI_blast_nt
 
 cd NCBI_blast_nt
 
-wget "ftp://ftp.ncbi.nlm.nih.gov/blast/db/nt.??.tar.gz*"
+wget "ftp://ftp.ncbi.nlm.nih.gov/blast/db/nt.???.tar.gz*"
 
 time for file in *.tar.gz; do tar -zxvf $file; done
 
